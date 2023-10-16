@@ -45,12 +45,12 @@ class _FilterTglState extends State<FilterTgl> {
     final lWidth = MediaQuery.of(context).size.width;
     final lheight = MediaQuery.of(context).size.height;
     return SizedBox(
-      width: 450,
+      width: lWidth < 900 ? 190 : 450,
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(8),
-            width: 450,
+            width: lWidth < 900 ? 190 : 450,
             decoration: BoxDecoration(
                 color: MainStyle.secondaryColor,
                 borderRadius: BorderRadius.circular(10),
@@ -73,33 +73,41 @@ class _FilterTglState extends State<FilterTgl> {
                       blurRadius: 20,
                       spreadRadius: 0),
                 ]),
-            child: Row(
+            child: Wrap(
               children: [
                 SizedBox(
                     width: 100,
                     child: Text(
                       widget.title,
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 14),
+                      style: MyTextStyle.defaultFontCustom(Colors.black,
+                          (lWidth / lheight) < wide && lWidth > 900 ? 24 : 14),
                     )),
-                MyDropDown(
-                    items: hari,
-                    value: widget.hariValue,
-                    onChange: (value) {
-                      setState(() {
-                        widget.hariValue = value ?? "";
-                      });
-                    }),
-                const SizedBox(
-                  width: 10,
+                SizedBox(
+                  width: lWidth < 900 ? 190 : 320,
+                  child: Row(
+                    children: [
+                      MyDropDown(
+                          items: hari,
+                          value: widget.hariValue,
+                          onChange: (value) {
+                            setState(() {
+                              widget.hariValue = value ?? "";
+                            });
+                          }),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      MyDropDown(
+                          items: jam,
+                          value: widget.jamValue,
+                          onChange: (value) {
+                            setState(() {
+                              widget.jamValue = value ?? "";
+                            });
+                          }),
+                    ],
+                  ),
                 ),
-                MyDropDown(
-                    items: jam,
-                    value: widget.jamValue,
-                    onChange: (value) {
-                      setState(() {
-                        widget.jamValue = value ?? "";
-                      });
-                    }),
               ],
             ),
           )

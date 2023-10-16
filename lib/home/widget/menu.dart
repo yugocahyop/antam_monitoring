@@ -15,14 +15,17 @@ final grad_colors = [
   MainStyle.primaryColor.withAlpha(((255 * 0.1) * 0.3).toInt()),
 ];
 
+final double wide = 16 / 9;
+
 class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
     final lheight = MediaQuery.of(context).size.height;
     return Container(
-      width: 250,
-      height: lheight,
+      width: (lWidth / lheight) < wide ? 400 : 250,
+      // height: 740,
+      height: (lWidth / lheight) < wide ? 1500 : 800,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
           color: MainStyle.secondaryColor,
@@ -48,7 +51,7 @@ class _MenuState extends State<Menu> {
         children: [
           SvgPicture.asset(
             "assets/logo_antam.svg",
-            width: 150,
+            width: (lWidth / lheight) < wide ? 300 : 150,
           ),
           Expanded(
               child: Column(
@@ -68,7 +71,7 @@ class _MenuState extends State<Menu> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         margin: EdgeInsets.only(bottom: 20),
-                        width: 200,
+                        width: (lWidth / lheight) < wide ? 400 : 200,
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -127,24 +130,24 @@ class _MenuState extends State<Menu> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: 35,
+                              width: (lWidth / lheight) < wide ? 80 : 35,
                               child: Icon(
                                 e["icon"],
-                                size: 25,
+                                size: (lWidth / lheight) < wide ? 55 : 25,
                                 color: (e["isActive"] as bool)
                                     ? Colors.white
                                     : MainStyle.primaryColor,
                               ),
                             ),
                             SizedBox(
-                              width: 120,
+                              width: (lWidth / lheight) < wide ? 220 : 120,
                               child: Text(
                                 e["title"],
                                 style: MyTextStyle.defaultFontCustom(
                                     (e["isActive"] as bool)
                                         ? Colors.white
                                         : MainStyle.primaryColor,
-                                    15),
+                                    (lWidth / lheight) < wide ? 28 : 15),
                               ),
                             ),
                             Icon(

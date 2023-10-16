@@ -5,20 +5,35 @@ class Account_alarm extends StatelessWidget {
 
   List<Map> alarm;
 
+  final double wide = 16 / 9;
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
+    final lheight = MediaQuery.of(context).size.height;
     return SizedBox(
-      width: lWidth,
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
+      width: (lWidth / lheight) < wide
+          ? 1400
+          : lWidth < 900
+              ? lWidth < 500
+                  ? lWidth
+                  : lWidth * 0.4
+              : 1200,
+      child: Row(
+        mainAxisAlignment: lWidth < 900
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: 500,
+            width: lWidth < 900
+                ? lWidth < 800
+                    ? 300
+                    : lWidth * 0.4
+                : 500,
             child: Row(
               children: alarm
                   .map((e) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Icon(
                             Icons.circle,
@@ -27,13 +42,16 @@ class Account_alarm extends StatelessWidget {
                                 : Colors.grey,
                             size: 15,
                           ),
-                          const SizedBox(
-                            width: 2,
+                          SizedBox(
+                            width: (lWidth / lheight) < wide ? 3 : 2,
                           ),
                           Text(
                             e["title"] as String,
-                            style:
-                                MyTextStyle.defaultFontCustom(Colors.grey, 14),
+                            style: MyTextStyle.defaultFontCustom(
+                                Colors.grey,
+                                (lWidth / lheight) < wide && lWidth > 900
+                                    ? 24
+                                    : 16),
                           ),
                           const SizedBox(
                             width: 10,
@@ -43,45 +61,49 @@ class Account_alarm extends StatelessWidget {
                   .toList(),
             ),
           ),
-          SizedBox(
-            width: 270,
-            child: Row(
-              children: [
-                Text(
-                  "10:30 AM",
-                  style: MyTextStyle.defaultFontCustom(Colors.black, 14,
-                      weight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  "10/07/1991",
-                  style: MyTextStyle.defaultFontCustom(
-                    Colors.black,
-                    14,
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                SvgPicture.asset(
-                  "assets/user.svg",
-                  width: 30,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: Text(
-                    "admin",
+          Visibility(
+            visible: lWidth >= 900,
+            child: SizedBox(
+              width: (lWidth / lheight) < wide ? 400 : 270,
+              child: Row(
+                children: [
+                  Text(
+                    "10:30 AM",
                     style: MyTextStyle.defaultFontCustom(
-                      MainStyle.primaryColor,
-                      14,
+                        Colors.black, (lWidth / lheight) < wide ? 26 : 16,
+                        weight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    "10/07/1991",
+                    style: MyTextStyle.defaultFontCustom(
+                      Colors.black,
+                      (lWidth / lheight) < wide ? 26 : 16,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  SvgPicture.asset(
+                    "assets/user.svg",
+                    width: 30,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: Text(
+                      "admin",
+                      style: MyTextStyle.defaultFontCustom(
+                        MainStyle.primaryColor,
+                        (lWidth / lheight) < wide ? 24 : 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           )
         ],

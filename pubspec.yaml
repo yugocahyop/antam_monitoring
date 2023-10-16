@@ -38,6 +38,7 @@ dependencies:
   flutter_animator: ^3.2.2
   google_fonts: ^4.0.4
   flutter_svg: ^2.0.5
+  fl_chart: ^0.62.0
 
 dev_dependencies:
   flutter_test:

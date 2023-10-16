@@ -11,12 +11,17 @@ class MyDropDown extends StatelessWidget {
   List<String> items;
   Function(String? value) onChange;
 
+  final double wide = 16 / 9;
+
   @override
   Widget build(BuildContext context) {
+    final lWidth = MediaQuery.of(context).size.width;
+    final lheight = MediaQuery.of(context).size.height;
     return Container(
-      width: 150,
+      width: lWidth < 900 ? 80 : 150,
       height: 30,
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      padding: EdgeInsets.only(
+          left: lWidth < 900 ? 3 : 20, right: lWidth < 600 ? 3 : 20),
       decoration: BoxDecoration(
           color: MainStyle.primaryColor,
           borderRadius: BorderRadius.circular(5)),
@@ -32,7 +37,13 @@ class MyDropDown extends StatelessWidget {
                     value: e,
                     child: Text(
                       e,
-                      style: MyTextStyle.defaultFontCustom(Colors.white, 14),
+                      style: MyTextStyle.defaultFontCustom(
+                          Colors.white,
+                          (lWidth / lheight) < wide && lWidth > 900
+                              ? 23
+                              : lWidth < 900
+                                  ? 12
+                                  : 14),
                     )))
                 .toList()),
       ),

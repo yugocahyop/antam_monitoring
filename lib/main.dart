@@ -1,9 +1,23 @@
+import 'dart:ui';
+
 import 'package:antam_monitoring/home/home.dart';
+// import 'package:antam_monitoring/home_mobile/home_mobile.dart';
 import 'package:antam_monitoring/login/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+        PointerDeviceKind.trackpad
+      };
 }
 
 class MyApp extends StatelessWidget {
@@ -13,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       title: 'Antam Monitoring',
       theme: ThemeData(
         // This is the theme of your application.

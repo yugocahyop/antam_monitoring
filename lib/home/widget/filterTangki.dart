@@ -26,12 +26,12 @@ class _FilterTangkiState extends State<FilterTangki> {
     final lWidth = MediaQuery.of(context).size.width;
     final lheight = MediaQuery.of(context).size.height;
     return SizedBox(
-      width: 270,
+      width: lWidth < 900 ? 100 : 270,
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(8),
-            width: 270,
+            width: lWidth < 900 ? 100 : 270,
             decoration: BoxDecoration(
                 color: MainStyle.secondaryColor,
                 borderRadius: BorderRadius.circular(10),
@@ -54,22 +54,26 @@ class _FilterTangkiState extends State<FilterTangki> {
                       blurRadius: 20,
                       spreadRadius: 0),
                 ]),
-            child: Row(
+            child: Wrap(
               children: [
                 SizedBox(
                     width: 100,
                     child: Text(
                       "Tangki",
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 14),
+                      style: MyTextStyle.defaultFontCustom(Colors.black,
+                          (lWidth / lheight) < wide && lWidth > 900 ? 24 : 14),
                     )),
-                MyDropDown(
-                    items: items,
-                    value: widget.tangkiValue,
-                    onChange: (value) {
-                      setState(() {
-                        widget.tangkiValue = value ?? "";
-                      });
-                    }),
+                SizedBox(
+                  width: 100,
+                  child: MyDropDown(
+                      items: items,
+                      value: widget.tangkiValue,
+                      onChange: (value) {
+                        setState(() {
+                          widget.tangkiValue = value ?? "";
+                        });
+                      }),
+                ),
               ],
             ),
           )
