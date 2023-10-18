@@ -1,26 +1,23 @@
 part of home;
 
 class FilterTangki extends StatefulWidget {
-  FilterTangki({
-    super.key,
-  });
+  FilterTangki(
+      {super.key,
+      required this.tangkiValue,
+      required this.items,
+      required this.onChange});
 
-  String tangkiValue = "1";
+  String tangkiValue;
+
+  List<String> items;
+
+  Function(String value) onChange;
 
   @override
   State<FilterTangki> createState() => _FilterTangkiState();
 }
 
 class _FilterTangkiState extends State<FilterTangki> {
-  final items = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-  ];
-
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -55,6 +52,8 @@ class _FilterTangkiState extends State<FilterTangki> {
                       spreadRadius: 0),
                 ]),
             child: Wrap(
+              // alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 SizedBox(
                     width: 100,
@@ -64,14 +63,16 @@ class _FilterTangkiState extends State<FilterTangki> {
                           (lWidth / lheight) < wide && lWidth > 900 ? 24 : 14),
                     )),
                 SizedBox(
-                  width: 100,
+                  width: 120,
                   child: MyDropDown(
-                      items: items,
+                      items: widget.items,
                       value: widget.tangkiValue,
                       onChange: (value) {
                         setState(() {
                           widget.tangkiValue = value ?? "";
                         });
+
+                        widget.onChange(value ?? "");
                       }),
                 ),
               ],

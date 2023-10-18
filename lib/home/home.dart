@@ -1,5 +1,7 @@
 library home;
 
+import 'dart:math';
+
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/widget/barChart.dart';
@@ -7,9 +9,13 @@ import 'package:antam_monitoring/widget/linechart.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+
+import '../controller/controller.dart';
 
 part 'widget/menu.dart';
 part 'widget/content_home.dart';
@@ -58,6 +64,7 @@ class _HomeState extends State<Home> {
               controller: scMain,
               thumbVisibility: true,
               child: SingleChildScrollView(
+                  clipBehavior: Clip.none,
                   controller: scMain,
                   child: SizedBox(
                       width: lWidth,
@@ -68,7 +75,7 @@ class _HomeState extends State<Home> {
                       ))),
             )
           : FittedBox(
-              fit: lWidth < 900 ? BoxFit.fitWidth : BoxFit.fitHeight,
+              fit: lWidth < 1000 ? BoxFit.fitWidth : BoxFit.fitHeight,
               // scaleY: lheight / ,
               child: Container(
                 // clipBehavior: Clip.antiAlias,

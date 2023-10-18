@@ -74,6 +74,7 @@ class _FilterTglState extends State<FilterTgl> {
                       spreadRadius: 0),
                 ]),
             child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 SizedBox(
                     width: 100,
@@ -94,9 +95,10 @@ class _FilterTglState extends State<FilterTgl> {
                               widget.hariValue = value ?? "";
                             });
                           }),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
+                      MainStyle.sizedBoxW10,
                       MyDropDown(
                           items: jam,
                           value: widget.jamValue,

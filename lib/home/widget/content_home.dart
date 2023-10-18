@@ -10,7 +10,7 @@ class Content_home extends StatefulWidget {
 }
 
 class _Content_homeState extends State<Content_home> {
-  final alarm = [
+  var alarm = [
     {
       "title": "Status",
       "isActive": true,
@@ -25,20 +25,100 @@ class _Content_homeState extends State<Content_home> {
     }
   ];
 
-  final titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
+  var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
 
   // final selScrollController = ScrollController();
 
-  final selData = [
-    {"sel": 1, "celcius": 32, "volt": 100, "ampere": 30},
-    {"sel": 2, "celcius": 50, "volt": 120, "ampere": 31},
-    {"sel": 3, "celcius": 43, "volt": 95, "ampere": 33},
-    {"sel": 4, "celcius": 36, "volt": 110, "ampere": 35},
-    {"sel": 5, "celcius": 37, "volt": 98, "ampere": 36},
-    {"sel": 61, "celcius": 60, "volt": 105, "ampere": 37},
+  var selData = [
+    [
+      {
+        "sel": 1,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 2,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 3,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 4,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 5,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 6,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+    ],
+    [
+      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
+      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
+      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
+      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
+      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
+      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+    ],
+    [
+      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
+      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
+      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
+      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
+      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
+      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+    ],
+    [
+      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
+      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
+      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
+      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
+      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
+      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+    ],
+    [
+      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
+      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
+      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
+      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
+      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
+      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+    ],
+    [
+      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
+      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
+      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
+      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
+      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
+      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+    ],
+    [
+      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
+      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
+      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
+      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
+      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
+      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+    ],
   ];
 
-  final totalData = [
+  var totalData = [
     {"title": "Total Waktu", "value": 1, "unit": "Jam"},
     {"title": "Tegangan Total", "value": 23, "unit": "Volt"},
     {"title": "Arus Total", "value": 32, "unit": "Ampere"},
@@ -82,6 +162,108 @@ class _Content_homeState extends State<Content_home> {
 
   final double wide = 16 / 9;
 
+  final filterTglHingga = FilterTgl(
+    title: "Hingga",
+  );
+
+  final filterTglDari = FilterTgl(
+    title: "Dari",
+  );
+
+  getTotal(int tangki) {
+    final d = selData[tangki];
+
+    int totalArus = 0;
+    int totalTegangan = 0;
+
+    d.forEach((element) {
+      totalArus += element["ampere"] as int;
+      totalTegangan += element["volt"] as int;
+    });
+
+    totalData
+        .where((element) => element["title"] == "Tegangan Total")
+        .first["value"] = totalTegangan;
+    totalData
+        .where((element) => element["title"] == "Arus Total")
+        .first["value"] = totalArus;
+
+    // setState(() {});
+  }
+
+  // getMax() {
+  //   teganganData = [];
+
+  //   arusData = [];
+
+  //   final max = [];
+  // }
+
+  getData(int tangki) {
+    // if (tangki == 0) {
+    //   return;
+    // }
+    teganganData = [];
+
+    arusData = [];
+
+    for (var e in selData[tangki]) {
+      teganganData.add(
+          FlSpot((e["sel"] as int).toDouble(), (e["volt"] as int).toDouble()));
+
+      arusData.add(FlSpot(
+          (e["sel"] as int).toDouble(), (e["ampere"] as int).toDouble()));
+    }
+
+    getTotal(tangki);
+
+    setState(() {});
+  }
+
+  late FilterTangki filterTangki;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    filterTangki = FilterTangki(
+      tangkiValue: "Semua",
+      items: ["Semua", "1", "2", "3", "4", "5", "6"],
+      onChange: (value) => getData(int.tryParse(value) ?? 0),
+    );
+
+    // if (kDebugMode) {
+    //   print("sel length: ${selData.length}");
+    // }
+
+    final r = Random(70);
+
+    for (var i = 1; i < selData.length; i++) {
+      final v = selData[i];
+      for (var e in v) {
+        final c = e["celcius"] = r.nextInt(70);
+        final vv = e["volt"] = r.nextInt(70);
+        final a = e["ampere"] = r.nextInt(70);
+        //  e["celcius"] = (e["celcius"] as int) + 1;
+        final index = v.indexOf(e);
+        selData[0][index]["celcius"] =
+            max(selData[0][index]["celcius"] as int, c);
+        selData[0][index]["volt"] = max(selData[0][index]["volt"] as int, vv);
+        selData[0][index]["ampere"] =
+            max(selData[0][index]["ampere"] as int, a);
+      }
+
+      // if (kDebugMode) {
+      //   print("sel data 0 : ${selData[0][0].toString()}");
+      // }
+    }
+
+    getData(0);
+
+    // getTotal(0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -104,9 +286,10 @@ class _Content_homeState extends State<Content_home> {
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
                       child: Account_alarm(alarm: alarm)),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                  MainStyle.sizedBoxH20,
                   Transform.scale(
                     scale: (lWidth / lheight) < wide ? 1.2 : 1,
                     origin: Offset((lWidth / lheight) < wide ? -800 : 0,
@@ -116,26 +299,25 @@ class _Content_homeState extends State<Content_home> {
                       child: Row(
                         // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FilterTgl(
-                            title: "Dari",
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          FilterTgl(
-                            title: "Hingga",
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          FilterTangki()
+                          filterTglDari,
+                          // const SizedBox(
+                          //   width: 10,
+                          // ),
+                          MainStyle.sizedBoxW10,
+                          filterTglHingga,
+                          // const SizedBox(
+                          //   width: 10,
+                          // ),
+                          MainStyle.sizedBoxW10,
+                          filterTangki
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
+                  MainStyle.sizedBoxH20,
                   Expanded(
                     child: SizedBox(
                       width: (lWidth / lheight) < wide ? 2200 : 1270,
@@ -184,9 +366,10 @@ class _Content_homeState extends State<Content_home> {
                                         width: 30,
                                         color: MainStyle.primaryColor,
                                       ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
+                                      // const SizedBox(
+                                      //   width: 10,
+                                      // ),
+                                      MainStyle.sizedBoxW10,
                                       Text(
                                         "Grafik Nyata",
                                         style: MyTextStyle.defaultFontCustom(
@@ -194,9 +377,10 @@ class _Content_homeState extends State<Content_home> {
                                       )
                                     ],
                                   ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
+                                  // const SizedBox(
+                                  //   height: 20,
+                                  // ),
+                                  MainStyle.sizedBoxH20,
                                   Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
@@ -215,9 +399,10 @@ class _Content_homeState extends State<Content_home> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
+                                  // const SizedBox(
+                                  //   height: 10,
+                                  // ),
+                                  MainStyle.sizedBoxH10,
                                   Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
@@ -285,9 +470,10 @@ class _Content_homeState extends State<Content_home> {
                                             width: 30,
                                             color: MainStyle.primaryColor,
                                           ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
+                                          // const SizedBox(
+                                          //   width: 10,
+                                          // ),
+                                          MainStyle.sizedBoxW10,
                                           Text(
                                             "Data Nyata",
                                             style:
@@ -296,9 +482,10 @@ class _Content_homeState extends State<Content_home> {
                                           )
                                         ],
                                       ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
+                                      // const SizedBox(
+                                      //   height: 20,
+                                      // ),
+                                      MainStyle.sizedBoxH20,
                                       Container(
                                         decoration: BoxDecoration(
                                             borderRadius:
@@ -371,10 +558,18 @@ class _Content_homeState extends State<Content_home> {
                                                   controller: widget.scSel,
                                                   child: ListView.builder(
                                                       controller: widget.scSel,
-                                                      itemCount: selData.length,
+                                                      itemCount: selData[int.tryParse(
+                                                                  filterTangki
+                                                                      .tangkiValue) ??
+                                                              0]
+                                                          .length,
                                                       itemBuilder:
                                                           (context, i) {
-                                                        final val = selData[i];
+                                                        final val = selData[
+                                                            int.tryParse(
+                                                                    filterTangki
+                                                                        .tangkiValue) ??
+                                                                0][i];
                                                         List<Widget> listSel =
                                                             [];
                                                         val.forEach(

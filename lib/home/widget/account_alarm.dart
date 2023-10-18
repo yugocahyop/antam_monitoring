@@ -53,9 +53,10 @@ class Account_alarm extends StatelessWidget {
                                     ? 24
                                     : 16),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          )
+                          // const SizedBox(
+                          //   width: 10,
+                          // )
+                          MainStyle.sizedBoxW10,
                         ],
                       ))
                   .toList(),
@@ -73,9 +74,10 @@ class Account_alarm extends StatelessWidget {
                         Colors.black, (lWidth / lheight) < wide ? 26 : 16,
                         weight: FontWeight.bold),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
+                  // const SizedBox(
+                  //   width: 20,
+                  // ),
+                  MainStyle.sizedBoxW20,
                   Text(
                     "10/07/1991",
                     style: MyTextStyle.defaultFontCustom(
@@ -83,16 +85,18 @@ class Account_alarm extends StatelessWidget {
                       (lWidth / lheight) < wide ? 26 : 16,
                     ),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
+                  // const SizedBox(
+                  //   width: 20,
+                  // ),
+                  MainStyle.sizedBoxW20,
                   SvgPicture.asset(
                     "assets/user.svg",
                     width: 30,
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
+                  // const SizedBox(
+                  //   width: 5,
+                  // ),
+                  MainStyle.sizedBoxW5,
                   Expanded(
                     child: Text(
                       "admin",

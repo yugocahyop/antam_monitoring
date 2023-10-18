@@ -25,6 +25,9 @@ class _Content_loginState extends State<Content_login> {
     prefixIcon: Icons.lock,
     // inputType: TextInputType.emailAddress,
   );
+
+  final cc = Controller();
+  final sc = ScrollController();
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -58,9 +61,10 @@ class _Content_loginState extends State<Content_login> {
                   MainStyle.primaryColor, lheight < 500 ? 20 : 65,
                   weight: FontWeight.bold),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            MainStyle.sizedBoxH10,
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,20 +77,24 @@ class _Content_loginState extends State<Content_login> {
                   SizedBox(
                     width: lWidth * 0.2,
                     child: Scrollbar(
+                      controller: sc,
                       thumbVisibility: true,
                       child: SingleChildScrollView(
+                        controller: sc,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(width: lWidth * 0.2, child: email),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            // const SizedBox(
+                            //   height: 20,
+                            // ),
+                            MainStyle.sizedBoxH20,
                             SizedBox(width: lWidth * 0.2, child: password),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            MainStyle.sizedBoxH10,
                             Wrap(
                               alignment: WrapAlignment.spaceBetween,
                               runAlignment: WrapAlignment.start,
@@ -152,11 +160,12 @@ class _Content_loginState extends State<Content_login> {
                                 ),
                                 color: MainStyle.primaryColor,
                                 text: "Sign-in",
-                                onPressed: () {},
+                                onPressed: () => cc.pageRoute(context, Home()),
                                 textColor: Colors.white),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            MainStyle.sizedBoxH10,
                             Center(
                               child: TextButton(
                                   onPressed: () {},

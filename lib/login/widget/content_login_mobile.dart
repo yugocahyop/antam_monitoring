@@ -26,6 +26,8 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
     // inputType: TextInputType.emailAddress,
   );
 
+  final cc = Controller();
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -74,9 +76,10 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                   ),
                   email,
                   password,
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  MainStyle.sizedBoxH10,
                   SizedBox(
                     width: lWidth,
                     child: Wrap(
@@ -141,11 +144,12 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                       ),
                       color: MainStyle.primaryColor,
                       text: "Sign-in",
-                      onPressed: () {},
+                      onPressed: () => cc.pageRoute(context, Home()),
                       textColor: Colors.white),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  MainStyle.sizedBoxH10,
                   TextButton(
                       onPressed: () {},
                       child: Row(

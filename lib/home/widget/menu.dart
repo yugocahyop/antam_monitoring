@@ -17,6 +17,8 @@ final grad_colors = [
 
 final double wide = 16 / 9;
 
+// final cc = Controller();
+
 class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
@@ -49,9 +51,12 @@ class _MenuState extends State<Menu> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SvgPicture.asset(
-            "assets/logo_antam.svg",
-            width: (lWidth / lheight) < wide ? 300 : 150,
+          Hero(
+            tag: "logo",
+            child: SvgPicture.asset(
+              "assets/logo_antam.svg",
+              width: (lWidth / lheight) < wide ? 300 : 150,
+            ),
           ),
           Expanded(
               child: Column(
@@ -177,19 +182,23 @@ class _MenuState extends State<Menu> {
                   size: 18,
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
+              // const SizedBox(
+              //   width: 10,
+              // ),
+              MainStyle.sizedBoxW10,
               Container(
                 padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   color: MainStyle.primaryColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.logout_outlined,
-                  color: Colors.white,
-                  size: 18,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.logout_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
               )
             ],
