@@ -38,10 +38,14 @@ class Controller {
       if (inputs[i].con.text.isEmpty) {
         inputs[i].startShake();
 
+        inputs[i].focusNode.requestFocus();
+
         return false;
       } else if (inputs[i].inputType == TextInputType.number &&
           int.tryParse(inputs[i].con.text) == null) {
         inputs[i].startShake();
+
+        inputs[i].focusNode.requestFocus();
 
         showSnackBar(context, "${inputs[i].hintText} harus angka");
 

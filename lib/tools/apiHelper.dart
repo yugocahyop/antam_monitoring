@@ -4,8 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 // import 'package:pln_rtd_mobile_flutter/core/Data/dataSource/defaultDatasource.dart';
 
-class ApiHelper{
-
+class ApiHelper {
   String refreshToken = "";
   static String tokenMain = "";
   static String user_id = "";
@@ -13,10 +12,10 @@ class ApiHelper{
   static const String POST = "POST";
   static const String GET = "GET";
 
-  static const needleRegex = r'{#}';  
+  static const needleRegex = r'{#}';
   static const needle = '{#}';
 
-  static const url = 'http://192.168.3.157:8901';
+  static const url = 'http://192.168.2.9:7003';
 
   final RegExp exp = RegExp(needleRegex);
 
@@ -69,9 +68,8 @@ class ApiHelper{
     });
   }
 
-
   Future<String> callAPIRef(
-       String api, String method, String data, bool useToken) async {
+      String api, String method, String data, bool useToken) async {
     final client = http.Client();
 
     try {
@@ -97,8 +95,8 @@ class ApiHelper{
     }
   }
 
-  Future<Map<String,dynamic>> callAPI(
-     String api, String method, String data, bool useToken) async {
+  Future<Map<String, dynamic>> callAPI(
+      String api, String method, String data, bool useToken) async {
     final client = http.Client();
 
     print("data  $data");
@@ -114,7 +112,7 @@ class ApiHelper{
       //
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(await response.stream.bytesToString()); 
+        return jsonDecode(await response.stream.bytesToString());
       }
       //  else if (response.statusCode == 401) {
       //   print("refresh token");
@@ -136,14 +134,12 @@ class ApiHelper{
 
       String r = await response.stream.bytesToString();
 
-      return jsonDecode(r) ;
+      return jsonDecode(r);
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      return jsonDecode( "{\"error\": \"Tidak bisa menghubungi server\"}");
+      return jsonDecode("{\"error\": \"Tidak bisa menghubungi server\"}");
     }
   }
-
-  
 }

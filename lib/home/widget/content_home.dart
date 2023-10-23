@@ -222,6 +222,22 @@ class _Content_homeState extends State<Content_home> {
 
   late FilterTangki filterTangki;
 
+  setSetting(String data, double value) {
+    switch (data) {
+      case "tegangan":
+        teganganSetting = [FlSpot(0, value), FlSpot(6, value)];
+
+        break;
+      case "arus":
+        arusSetting = [FlSpot(0, value), FlSpot(6, value)];
+
+        break;
+      default:
+    }
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -260,6 +276,11 @@ class _Content_homeState extends State<Content_home> {
     }
 
     getData(0);
+
+    // Future.delayed(Duration(milliseconds: 2000), () {
+    //   setSetting("tegangan", 20);
+    //   setSetting("arus", 20);
+    // });
 
     // getTotal(0);
   }
@@ -395,7 +416,9 @@ class _Content_homeState extends State<Content_home> {
                                       children: [
                                         MyLineChart(points: teganganSetting),
                                         MyBarChart(
-                                            title: "", points: teganganData),
+                                            max: teganganSetting.first.y,
+                                            title: "",
+                                            points: teganganData),
                                       ],
                                     ),
                                   ),
@@ -416,7 +439,10 @@ class _Content_homeState extends State<Content_home> {
                                     child: Stack(
                                       children: [
                                         MyLineChart(points: arusSetting),
-                                        MyBarChart(title: "", points: arusData),
+                                        MyBarChart(
+                                            max: teganganSetting.first.y,
+                                            title: "",
+                                            points: arusData),
                                       ],
                                     ),
                                   ),
@@ -866,7 +892,7 @@ class _Content_homeState extends State<Content_home> {
                                           msgOpacity = 0;
                                         });
                                       },
-                                      textColor: Colors.black),
+                                      textColor: const Color(0xffDF7B00)),
                                 ),
                               )
                             ],

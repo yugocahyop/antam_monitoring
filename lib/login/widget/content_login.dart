@@ -1,7 +1,9 @@
 part of login;
 
 class Content_login extends StatefulWidget {
-  Content_login({super.key});
+  Content_login({super.key, required this.signUpDone});
+
+  Function() signUpDone;
 
   @override
   State<Content_login> createState() => _Content_loginState();
@@ -26,8 +28,11 @@ class _Content_loginState extends State<Content_login> {
     // inputType: TextInputType.emailAddress,
   );
 
-  final cc = Controller();
+  final cc = Login_controller();
   final sc = ScrollController();
+
+  displayMessage() {}
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -168,15 +173,17 @@ class _Content_loginState extends State<Content_login> {
                             MainStyle.sizedBoxH10,
                             Center(
                               child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () => cc.signUp_login(
+                                      context, () => widget.signUpDone()),
                                   child: Wrap(
                                     alignment: WrapAlignment.center,
                                     // runAlignment: WrapAlignment.center,
                                     children: [
                                       Text(
-                                        "Does'nt have an account? ",
+                                        "Don't have an account? ",
                                         style: MyTextStyle.defaultFontCustom(
-                                            Colors.black, 14),
+                                            Colors.black, 14,
+                                            weight: FontWeight.bold),
                                       ),
                                       Text(
                                         "Sign-up",

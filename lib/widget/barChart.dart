@@ -10,7 +10,11 @@ import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 
 class MyBarChart extends StatelessWidget {
-  MyBarChart({this.color = Colors.green, required this.points, this.title});
+  MyBarChart(
+      {this.color = Colors.green,
+      required this.points,
+      this.title,
+      required this.max});
 
   // double minX;
   // double minY;
@@ -23,6 +27,8 @@ class MyBarChart extends StatelessWidget {
   List<FlSpot> points;
   // List<FlSpot> value;
   String? title;
+
+  double max;
 
   Color color;
   List<Color> gradientColors = [
@@ -59,7 +65,7 @@ class MyBarChart extends StatelessWidget {
             drawVerticalLine: false,
             getDrawingHorizontalLine: (double value) {
               return FlLine(
-                color: const Color(0xffC4DBD9),
+                color: value == max ? Colors.red : const Color(0xffC4DBD9),
                 strokeWidth: 1,
                 dashArray: [8, 4],
               );

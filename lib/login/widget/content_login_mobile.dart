@@ -151,12 +151,12 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                   // ),
                   MainStyle.sizedBoxH10,
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () => cc.pageRoute(context, SignUp()),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Does'nt have an account? ",
+                            "Don't have an account? ",
                             style:
                                 MyTextStyle.defaultFontCustom(Colors.black, 15),
                           ),

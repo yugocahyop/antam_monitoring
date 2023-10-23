@@ -5,6 +5,9 @@ import 'dart:math';
 
 import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/home/home.dart';
+import 'package:antam_monitoring/login/controller/login_controller.dart';
+import 'package:antam_monitoring/login/widget/message.dart';
+import 'package:antam_monitoring/sign-up/sign-up.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
@@ -25,6 +28,40 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  late Content_login c_login;
+  final c_login_mobile = Content_login_mobile();
+
+  List<Widget> msgs = [];
+
+  // int msgIndex = 0;
+
+  createMsg(String text) {
+    msgs.add(
+      MyMessage(
+          warningMsg: text,
+          dismiss: () {
+            msgs.removeAt(msgs.length - 1);
+            setState(() {});
+          }),
+    );
+
+    // msgIndex++;
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    c_login = Content_login(
+      signUpDone: () => createMsg("Activaton link has been sent to your email"),
+    );
+
+    // createMsg("text");
+    // createMsg("text");
+  }
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -40,7 +77,7 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Visibility(visible: lWidth > 900, child: Side()),
-                        lWidth > 900 ? Content_login() : Content_login_mobile(),
+                        lWidth > 900 ? c_login : c_login_mobile,
                         Visibility(
                           visible: lWidth > 900,
                           child: Transform.rotate(
@@ -50,6 +87,9 @@ class _LoginState extends State<Login> {
                         )
                       ],
                     ),
+                  ),
+                  Stack(
+                    children: msgs,
                   )
                 ],
               )
@@ -59,8 +99,7 @@ class _LoginState extends State<Login> {
                 children: [
                   Flexible(
                       flex: 1,
-                      child:
-                          SingleChildScrollView(child: Content_login_mobile()))
+                      child: SingleChildScrollView(child: c_login_mobile))
                 ],
               ));
   }

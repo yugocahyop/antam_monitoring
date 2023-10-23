@@ -36,12 +36,42 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
   var selData = [
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {
+        "sel": 1,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 2,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 3,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 4,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 5,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
+      {
+        "sel": 6,
+        "celcius": double.minPositive.toInt(),
+        "volt": double.minPositive.toInt(),
+        "ampere": double.minPositive.toInt()
+      },
     ],
     [
       {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
@@ -182,27 +212,49 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     setState(() {});
   }
 
+  setSetting(String data, double value) {
+    switch (data) {
+      case "tegangan":
+        teganganSetting = [FlSpot(0, value), FlSpot(6, value)];
+
+        break;
+      case "arus":
+        arusSetting = [FlSpot(0, value), FlSpot(6, value)];
+
+        break;
+      default:
+    }
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     filterTangki = FilterTangki(
-      tangkiValue: "1",
-      items: ["1", "2", "3", "4", "5", "6"],
+      tangkiValue: "Semua",
+      items: ["Semua", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
     final r = Random(70);
 
-    for (var i = 0; i < selData.length; i++) {
+    for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
-      v.forEach((e) {
-        e["celcius"] = r.nextInt(70);
-        e["volt"] = r.nextInt(70);
-        e["ampere"] = r.nextInt(70);
+      for (var e in v) {
+        final c = e["celcius"] = r.nextInt(70);
+        final vv = e["volt"] = r.nextInt(70);
+        final a = e["ampere"] = r.nextInt(70);
         //  e["celcius"] = (e["celcius"] as int) + 1;
-      });
+        final index = v.indexOf(e);
+        selData[0][index]["celcius"] =
+            max(selData[0][index]["celcius"] as int, c);
+        selData[0][index]["volt"] = max(selData[0][index]["volt"] as int, vv);
+        selData[0][index]["ampere"] =
+            max(selData[0][index]["ampere"] as int, a);
+      }
     }
 
     getData(0);
@@ -343,7 +395,9 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                     children: [
                                       MyLineChart(points: teganganSetting),
                                       MyBarChart(
-                                          title: "", points: teganganData),
+                                          max: teganganSetting.first.y,
+                                          title: "",
+                                          points: teganganData),
                                     ],
                                   ),
                                 ),
@@ -360,7 +414,10 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                   child: Stack(
                                     children: [
                                       MyLineChart(points: arusSetting),
-                                      MyBarChart(title: "", points: arusData),
+                                      MyBarChart(
+                                          max: teganganSetting.first.y,
+                                          title: "",
+                                          points: arusData),
                                     ],
                                   ),
                                 ),
@@ -753,7 +810,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                           msgOpacity = 0;
                                         });
                                       },
-                                      textColor: Colors.black),
+                                      textColor: const Color(0xffDF7B00)),
                                 ),
                               )
                             ],
@@ -802,13 +859,14 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                             },
                             child: Container(
                               width: 120,
-                              // height: 100,
+                              color: Colors.transparent,
+                              height: lheight < 400 ? 60 : 100,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: 50,
+                                    width: 120,
                                     height: 25,
                                     child: Stack(
                                       children: [

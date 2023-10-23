@@ -168,40 +168,47 @@ class _MenuState extends State<Menu> {
                     ))
                 .toList(),
           )),
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: MainStyle.primaryColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.info_outline,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-              // const SizedBox(
-              //   width: 10,
-              // ),
-              MainStyle.sizedBoxW10,
-              Container(
-                padding: EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: MainStyle.primaryColor,
-                  shape: BoxShape.circle,
-                ),
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
+          Transform.scale(
+            scale: (lWidth / lheight) < wide ? 1.6 : 1,
+            origin: (Offset(
+              (lWidth / lheight) < wide ? -200 : 0,
+              (lWidth / lheight) < wide ? 20 : 0,
+            )),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: MainStyle.primaryColor,
+                    shape: BoxShape.circle,
+                  ),
                   child: Icon(
-                    Icons.logout_outlined,
+                    Icons.info_outline,
                     color: Colors.white,
                     size: 18,
                   ),
                 ),
-              )
-            ],
+                // const SizedBox(
+                //   width: 10,
+                // ),
+                MainStyle.sizedBoxW10,
+                Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: MainStyle.primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(
+                      Icons.logout_outlined,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),

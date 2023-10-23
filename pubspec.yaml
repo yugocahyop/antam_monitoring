@@ -43,6 +43,7 @@ dependencies:
   device_info_plus: ^9.1.0
   permission_handler: ^11.0.1
   shared_preferences: ^2.2.2
+  flare_flutter: ^3.0.2
 
 dev_dependencies:
   flutter_test:
