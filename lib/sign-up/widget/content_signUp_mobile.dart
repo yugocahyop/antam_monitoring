@@ -115,7 +115,7 @@ class _Content_signUp_mobileState extends State<Content_signUp_mobile> {
                     padding: const EdgeInsets.all(30.0),
                     child: Column(children: [
                       TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.pop(context, false),
                           child: Row(
                             children: [
                               Icon(
