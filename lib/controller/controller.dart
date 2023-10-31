@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../style/mainStyle.dart';
@@ -119,6 +120,18 @@ class Controller {
     return await Navigator.push(
         context,
         MaterialPageRoute(
+            settings: RouteSettings(name: name ?? ""),
+            maintainState: false,
+            fullscreenDialog: false,
+            builder: (BuildContext context) {
+              return w;
+            }));
+  }
+
+  cupertinoPageRoute(BuildContext context, Widget w, {String? name}) async {
+    return await Navigator.push(
+        context,
+        CupertinoPageRoute(
             settings: RouteSettings(name: name ?? ""),
             maintainState: false,
             fullscreenDialog: false,

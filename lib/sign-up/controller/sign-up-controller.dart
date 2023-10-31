@@ -9,7 +9,8 @@ import 'package:flutter/cupertino.dart';
 import '../../widget/myTextField.dart';
 
 class SignUpController extends Controller {
-  Future<void> signUp(List<Mytextfield> inputs, BuildContext context) async {
+  Future<void> signUp(List<Mytextfield> inputs, BuildContext context,
+      Function() toggleOverlay) async {
     if (!super.validate(inputs, context)) return;
 
     RegExp exp = RegExp(
@@ -19,8 +20,11 @@ class SignUpController extends Controller {
 
     if (inputs.first.inputType == TextInputType.emailAddress) {
       if (!exp.hasMatch(inputs.first.con.text)) {
-        inputs.first.focusNode.requestFocus();
         inputs.first.startShake();
+
+        Future.delayed(Duration(milliseconds: 200), () {
+          inputs.first.focusNode.requestFocus();
+        });
 
         super.showSnackBar(context, "Bentuk email tidak benar");
 
@@ -29,13 +33,20 @@ class SignUpController extends Controller {
     }
 
     if (!exp_phone.hasMatch(inputs.last.con.text)) {
-      inputs.last.focusNode.requestFocus();
       inputs.last.startShake();
+
+      Future.delayed(Duration(milliseconds: 200), () {
+        inputs.last.focusNode.requestFocus();
+      });
 
       super.showSnackBar(context, "Bentuk phone tidak benar");
 
       return;
     }
+
+    inputs.forEach((e) => e.isInvalid = false);
+
+    toggleOverlay();
 
     final api = ApiHelper();
 
@@ -50,13 +61,23 @@ class SignUpController extends Controller {
         }),
         false);
 
-    await Future.value(r).then((value) => signUpDone(value, context));
+    await Future.value(r)
+        .then((value) => signUpDone(value, context, () => toggleOverlay()));
   }
 
-  void signUpDone(Map<String, dynamic> r, BuildContext context) {
+  void signUpDone(Map<String, dynamic> r, BuildContext context,
+      Function() toggleOverlay) async {
     if (r["error"] == null) {
+      await Future.delayed(Duration(seconds: 1));
+
+      toggleOverlay();
+
       Navigator.pop(context, true);
     } else {
+      await Future.delayed(Duration(seconds: 1));
+
+      toggleOverlay();
+
       super.showSnackBar(context, r["error"] as String);
     }
   }

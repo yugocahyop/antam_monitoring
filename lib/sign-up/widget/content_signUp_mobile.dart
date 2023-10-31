@@ -55,9 +55,12 @@ class _Content_signUp_mobileState extends State<Content_signUp_mobile> {
     bool temp = !isOverlay;
 
     if (temp) {
+      setState(() {
+        isOverlay = temp;
+      });
       Future.delayed(const Duration(milliseconds: 200), () {
         setState(() {
-          isOverlay = temp;
+          // isOverlay = temp;
           overlayOpacity = 1;
         });
       });
@@ -69,7 +72,7 @@ class _Content_signUp_mobileState extends State<Content_signUp_mobile> {
   }
 
   signUp() async {
-    await cc.signUp([email, password, phone], context);
+    await cc.signUp([email, password, phone], context, () => toggleOverlay());
   }
 
   @override
@@ -81,93 +84,95 @@ class _Content_signUp_mobileState extends State<Content_signUp_mobile> {
         SizedBox(
           width: lWidth,
           // height: lheight,
-          child: Column(
-            children: [
-              Up(),
-              const SizedBox(
-                height: 50,
-              ),
-              SvgPicture.asset(
-                "assets/logo_antam.svg",
-                width: 250,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Transform.translate(
-                offset: Offset(0, 15),
-                child: Container(
-                  width: lWidth,
-                  // height: 500 ,
-                  decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black26,
-                            offset: Offset(0, -2),
-                            blurRadius: 10,
-                            spreadRadius: 0)
-                      ],
-                      color: MainStyle.secondaryColor,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(32),
-                          topRight: Radius.circular(32))),
-                  child: Padding(
-                    padding: const EdgeInsets.all(30.0),
-                    child: Column(children: [
-                      TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.chevron_left,
-                                color: MainStyle.primaryColor,
-                              ),
-                              Text(
-                                "Back",
-                                style: MyTextStyle.defaultFontCustom(
-                                    MainStyle.primaryColor, 14,
-                                    weight: FontWeight.bold),
-                              ),
-                            ],
-                          )),
-                      Text(
-                        "sign-up",
-                        style: MyTextStyle.defaultFontCustom(
-                            MainStyle.primaryColor, 36,
-                            weight: FontWeight.bold),
-                      ),
-                      email,
-                      password,
-                      phone,
-                      // const SizedBox(
-                      //   height: 10,
-                      // ),
-                      MainStyle.sizedBoxH10,
-
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      MyButton(
-                          icon: Icon(
-                            Icons.login,
-                            color: Colors.white,
-                          ),
-                          color: MainStyle.primaryColor,
-                          text: "Sign-up",
-                          onPressed: () => signUp(),
-                          textColor: Colors.white),
-                      // const SizedBox(
-                      //   height: 10,
-                      // ),
-                    ]),
-                  ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Up(),
+                const SizedBox(
+                  height: 50,
                 ),
-              )
-            ],
+                SvgPicture.asset(
+                  "assets/logo_antam.svg",
+                  width: 250,
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Transform.translate(
+                  offset: Offset(0, 15),
+                  child: Container(
+                    width: lWidth,
+                    // height: 500 ,
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(0, -2),
+                              blurRadius: 10,
+                              spreadRadius: 0)
+                        ],
+                        color: MainStyle.secondaryColor,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(32),
+                            topRight: Radius.circular(32))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Column(children: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.chevron_left,
+                                  color: MainStyle.primaryColor,
+                                ),
+                                Text(
+                                  "Back",
+                                  style: MyTextStyle.defaultFontCustom(
+                                      MainStyle.primaryColor, 14,
+                                      weight: FontWeight.bold),
+                                ),
+                              ],
+                            )),
+                        Text(
+                          "sign-up",
+                          style: MyTextStyle.defaultFontCustom(
+                              MainStyle.primaryColor, 36,
+                              weight: FontWeight.bold),
+                        ),
+                        email,
+                        password,
+                        phone,
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        MainStyle.sizedBoxH10,
+
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        MyButton(
+                            icon: Icon(
+                              Icons.login,
+                              color: Colors.white,
+                            ),
+                            color: MainStyle.primaryColor,
+                            text: "Sign-up",
+                            onPressed: () => signUp(),
+                            textColor: Colors.white),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                      ]),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         Visibility(
-            visible: false,
+            visible: isOverlay,
             child: AnimatedOpacity(
               duration: Duration(milliseconds: 200),
               opacity: overlayOpacity,

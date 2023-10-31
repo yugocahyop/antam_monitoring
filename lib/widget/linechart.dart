@@ -131,7 +131,7 @@ class MyLineChart extends StatelessWidget {
               ),
             )),
       ),
-      swapAnimationDuration: const Duration(milliseconds: 100),
+      swapAnimationDuration: const Duration(milliseconds: 500),
       // swapAnimationCurve: Curves.ease,
     );
   }

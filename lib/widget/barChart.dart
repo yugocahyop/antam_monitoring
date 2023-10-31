@@ -11,7 +11,7 @@ import 'dart:ui' as ui;
 
 class MyBarChart extends StatelessWidget {
   MyBarChart(
-      {this.color = Colors.green,
+      {this.color = const Color(0xffF6FE34),
       required this.points,
       this.title,
       required this.max});
@@ -56,7 +56,19 @@ class MyBarChart extends StatelessWidget {
               right: BorderSide(color: Colors.transparent),
               top: BorderSide(color: Colors.transparent),
             )),
-
+        barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+          getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
+              "Sel ${group.x}:\n",
+              MyTextStyle.defaultFontCustom(Colors.white, 16,
+                  weight: FontWeight.bold),
+              children: [
+                TextSpan(
+                    text:
+                        "${rod.toY.toStringAsFixed(2)} ${title!.toLowerCase().contains("tegangan") ? 'V' : 'A'}",
+                    style: MyTextStyle.defaultFontCustom(color, 14))
+              ]),
+        )),
         gridData: FlGridData(
             // horizontalInterval: 1,
             // verticalInterval: 1,
@@ -74,7 +86,7 @@ class MyBarChart extends StatelessWidget {
             .map((e) => BarChartGroupData(x: e.x.toInt(), barRods: [
                   BarChartRodData(
                     toY: e.y,
-                    color: Color(0xffF6FE34).withAlpha(200),
+                    color: color.withAlpha(200),
                     width: 8,
                   )
                 ]))
@@ -99,7 +111,7 @@ class MyBarChart extends StatelessWidget {
             topTitles: AxisTitles(
               axisNameSize: 30,
               axisNameWidget: Text(
-                title ?? "",
+                "",
                 textAlign: TextAlign.left,
               ),
               sideTitles: SideTitles(showTitles: false),
@@ -116,7 +128,7 @@ class MyBarChart extends StatelessWidget {
               ),
             )),
       ),
-      swapAnimationDuration: const Duration(milliseconds: 100),
+      swapAnimationDuration: const Duration(milliseconds: 300),
       // swapAnimationCurve: Curves.ease,
     );
   }

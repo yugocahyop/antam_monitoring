@@ -41,9 +41,12 @@ class _SignUpState extends State<SignUp> {
     bool temp = !isOverlay;
 
     if (temp) {
+      setState(() {
+        isOverlay = temp;
+      });
       Future.delayed(const Duration(milliseconds: 200), () {
         setState(() {
-          isOverlay = temp;
+          // isOverlay = temp;
           overlayOpacity = 1;
         });
       });
@@ -55,10 +58,8 @@ class _SignUpState extends State<SignUp> {
   }
 
   signUp() async {
-    toggleOverlay();
-    await cc
-        .signUp([c_signUp.email, c_signUp.password, c_signUp.phone], context);
-    toggleOverlay();
+    await cc.signUp([c_signUp.email, c_signUp.password, c_signUp.phone],
+        context, () => toggleOverlay());
   }
 
   @override
@@ -95,7 +96,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   Visibility(
-                      visible: false,
+                      visible: isOverlay,
                       child: AnimatedOpacity(
                         duration: Duration(milliseconds: 200),
                         opacity: overlayOpacity,
@@ -116,12 +117,7 @@ class _SignUpState extends State<SignUp> {
             : Column(
                 // width: lWidth,
                 // height: lheight,
-                children: [
-                  Flexible(
-                      flex: 1,
-                      child:
-                          SingleChildScrollView(child: Content_signUp_mobile()))
-                ],
+                children: [Flexible(flex: 1, child: Content_signUp_mobile())],
               ));
   }
 }

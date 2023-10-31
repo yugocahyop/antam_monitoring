@@ -15,7 +15,7 @@ class ApiHelper {
   static const needleRegex = r'{#}';
   static const needle = '{#}';
 
-  static const url = 'http://192.168.2.9:7003';
+  static const url = 'http://202.148.1.57:7003';
 
   final RegExp exp = RegExp(needleRegex);
 
@@ -99,7 +99,7 @@ class ApiHelper {
       String api, String method, String data, bool useToken) async {
     final client = http.Client();
 
-    print("data  $data");
+    // print("data  $data");
 
     try {
       final response = await client

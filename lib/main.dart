@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:antam_monitoring/home/home.dart';
 // import 'package:antam_monitoring/home_mobile/home_mobile.dart';
 import 'package:antam_monitoring/login/login.dart';
+import 'package:antam_monitoring/tools/certHttpOveride.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  HttpOverrides.global = DevHttpOverrides();
   runApp(const MyApp());
 }
 

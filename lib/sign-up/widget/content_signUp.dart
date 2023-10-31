@@ -11,7 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class Content_signUp extends StatefulWidget {
   Content_signUp({super.key, required this.postFunction});
 
-  Function postFunction;
+  Function() postFunction;
 
   final Mytextfield email = Mytextfield(
     width: 500,
@@ -48,7 +48,8 @@ class _Content_signUpState extends State<Content_signUp> {
   final sc = ScrollController();
 
   signUp() async {
-    await cc.signUp([widget.email, widget.password, widget.phone], context);
+    await cc.signUp([widget.email, widget.password, widget.phone], context,
+        () => widget.postFunction());
   }
 
   @override
@@ -153,7 +154,7 @@ class _Content_signUpState extends State<Content_signUp> {
                                     ),
                                     color: MainStyle.primaryColor,
                                     text: "Sign-up",
-                                    onPressed: () => signUp(),
+                                    onPressed: () => widget.postFunction(),
                                     textColor: Colors.white),
                               ],
                             ),

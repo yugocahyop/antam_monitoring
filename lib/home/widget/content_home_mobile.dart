@@ -36,90 +36,60 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
   var selData = [
     [
-      {
-        "sel": 1,
-        "celcius": double.minPositive.toInt(),
-        "volt": double.minPositive.toInt(),
-        "ampere": double.minPositive.toInt()
-      },
-      {
-        "sel": 2,
-        "celcius": double.minPositive.toInt(),
-        "volt": double.minPositive.toInt(),
-        "ampere": double.minPositive.toInt()
-      },
-      {
-        "sel": 3,
-        "celcius": double.minPositive.toInt(),
-        "volt": double.minPositive.toInt(),
-        "ampere": double.minPositive.toInt()
-      },
-      {
-        "sel": 4,
-        "celcius": double.minPositive.toInt(),
-        "volt": double.minPositive.toInt(),
-        "ampere": double.minPositive.toInt()
-      },
-      {
-        "sel": 5,
-        "celcius": double.minPositive.toInt(),
-        "volt": double.minPositive.toInt(),
-        "ampere": double.minPositive.toInt()
-      },
-      {
-        "sel": 6,
-        "celcius": double.minPositive.toInt(),
-        "volt": double.minPositive.toInt(),
-        "ampere": double.minPositive.toInt()
-      },
+      {"sel": 1, "celcius": 0, "volt": 0, "ampere": 0},
+      {"sel": 2, "celcius": 0, "volt": 0, "ampere": 0},
+      {"sel": 3, "celcius": 0, "volt": 0, "ampere": 0},
+      {"sel": 4, "celcius": 0, "volt": 0, "ampere": 0},
+      {"sel": 5, "celcius": 0, "volt": 0, "ampere": 0},
+      {"sel": 6, "celcius": 0, "volt": 0, "ampere": 0},
     ],
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
     ],
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
     ],
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
     ],
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
     ],
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
     ],
     [
-      {"sel": 1, "celcius": 32, "volt": 60, "ampere": 30},
-      {"sel": 2, "celcius": 50, "volt": 50, "ampere": 31},
-      {"sel": 3, "celcius": 43, "volt": 20, "ampere": 33},
-      {"sel": 4, "celcius": 36, "volt": 35, "ampere": 35},
-      {"sel": 5, "celcius": 37, "volt": 65, "ampere": 36},
-      {"sel": 6, "celcius": 60, "volt": 55, "ampere": 37},
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
     ],
   ];
 
@@ -131,27 +101,27 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     {"title": "Energi", "value": 50, "unit": "Watt_Jam"},
   ];
 
-  var teganganSetting = [FlSpot(0, 70), FlSpot(6, 70)];
+  var teganganSetting = [FlSpot(0, 1), FlSpot(6, 1)];
 
-  List<FlSpot> teganganData = [
-    // FlSpot(1, 20),
-    // FlSpot(2, 30),
-    // FlSpot(3, 15),
-    // FlSpot(4, 60),
-    // FlSpot(5, 15),
-    // FlSpot(6, 40)
+  var teganganData = [
+    FlSpot(1, 20),
+    FlSpot(2, 30),
+    FlSpot(3, 15),
+    FlSpot(4, 60),
+    FlSpot(5, 15),
+    FlSpot(6, 40)
   ];
 
-  List<FlSpot> arusData = [
-    // FlSpot(1, 20),
-    // FlSpot(2, 30),
-    // FlSpot(3, 15),
-    // FlSpot(4, 60),
-    // FlSpot(5, 15),
-    // FlSpot(6, 40)
+  var arusData = [
+    FlSpot(1, 20),
+    FlSpot(2, 30),
+    FlSpot(3, 15),
+    FlSpot(4, 60),
+    FlSpot(5, 15),
+    FlSpot(6, 40)
   ];
 
-  var arusSetting = [FlSpot(0, 70), FlSpot(6, 70)];
+  var arusSetting = [FlSpot(0, 1), FlSpot(6, 1)];
 
   final grad_colors = [
     MainStyle.primaryColor.withAlpha(((255 * 0.4) * 0.3).toInt()),
@@ -180,15 +150,25 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
   getTotal(int value, int tangki) {
     currPage = value;
     final d = selData[tangki]
-        .where((element) => element["sel"] as int == (value + 1))
+        .where((d) =>
+            ((d["sel"] is double)
+                ? (d["sel"] as double).toInt()
+                : (d["sel"] as int)) ==
+            (value + 1))
         .first;
 
     totalData
-        .where((element) => element["title"] == "Tegangan Total")
-        .first["value"] = d["volt"] as int;
+            .where((element) => element["title"] == "Tegangan Total")
+            .first["value"] =
+        d["volt"] is double
+            ? d["volt"] as double
+            : (d["volt"] as int).toDouble();
     totalData
-        .where((element) => element["title"] == "Arus Total")
-        .first["value"] = d["ampere"] as int;
+            .where((element) => element["title"] == "Arus Total")
+            .first["value"] =
+        d["ampere"] is double
+            ? d["ampere"] as double
+            : (d["ampere"] as int).toDouble();
     setState(() {});
   }
 
@@ -197,13 +177,19 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
     arusData = [];
 
-    selData[tangki].forEach((e) {
-      teganganData.add(
-          FlSpot((e["sel"] as int).toDouble(), (e["volt"] as int).toDouble()));
+    for (var e in selData[tangki]) {
+      teganganData.add(FlSpot(
+          (e["sel"] as int).toDouble(),
+          e["volt"] is double
+              ? e["volt"] as double
+              : (e["volt"] as int).toDouble()));
 
       arusData.add(FlSpot(
-          (e["sel"] as int).toDouble(), (e["ampere"] as int).toDouble()));
-    });
+          (e["sel"] as int).toDouble(),
+          e["ampere"] is double
+              ? e["ampere"] as double
+              : (e["ampere"] as int).toDouble()));
+    }
 
     // if (pc.page != null) {
     getTotal(currPage, tangki);
@@ -233,32 +219,58 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     // TODO: implement initState
     super.initState();
 
+    getData(0);
+
     filterTangki = FilterTangki(
       tangkiValue: "Semua",
       items: ["Semua", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
+    // if (kDebugMode) {
+    //   print("sel length: ${selData.length}");
+    // }
+
     final r = Random(70);
 
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
       for (var e in v) {
-        final c = e["celcius"] = r.nextInt(70);
-        final vv = e["volt"] = r.nextInt(70);
-        final a = e["ampere"] = r.nextInt(70);
+        final c = e["celcius"] = r.nextDouble() * 70;
+        final vv = e["volt"] = r.nextDouble() * 70;
+        final a = e["ampere"] = r.nextDouble() * 70;
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
-        selData[0][index]["celcius"] =
-            max(selData[0][index]["celcius"] as int, c);
-        selData[0][index]["volt"] = max(selData[0][index]["volt"] as int, vv);
-        selData[0][index]["ampere"] =
-            max(selData[0][index]["ampere"] as int, a);
+        selData[0][index]["celcius"] = max(
+            selData[0][index]["celcius"] is int
+                ? (selData[0][index]["celcius"] as int).toDouble()
+                : selData[0][index]["celcius"] as double,
+            c);
+        selData[0][index]["volt"] = max(
+            selData[0][index]["volt"] is int
+                ? (selData[0][index]["volt"] as int).toDouble()
+                : selData[0][index]["volt"] as double,
+            vv);
+        selData[0][index]["ampere"] = max(
+            selData[0][index]["ampere"] is int
+                ? (selData[0][index]["ampere"] as int).toDouble()
+                : selData[0][index]["ampere"] as double,
+            a);
       }
+
+      // if (kDebugMode) {
+      //   print("sel data 0 : ${selData[0][0].toString()}");
+      // }
     }
 
-    getData(0);
-    getTotal(0, 0);
+    Future.delayed(Duration(seconds: 1), () {
+      getData(0);
+
+      Future.delayed(Duration(milliseconds: 300), () {
+        setSetting("tegangan", 70);
+        setSetting("arus", 70);
+      });
+    });
   }
 
   @override
@@ -396,7 +408,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                       MyLineChart(points: teganganSetting),
                                       MyBarChart(
                                           max: teganganSetting.first.y,
-                                          title: "",
+                                          title: "tegangan",
                                           points: teganganData),
                                     ],
                                   ),
@@ -670,8 +682,9 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                                             BoxDecoration(),
                                                         width: 200,
                                                         child: Text(
-                                                          (e["value"] as int)
-                                                              .toString(),
+                                                          (e["value"] as double)
+                                                              .toStringAsFixed(
+                                                                  2),
                                                           style: MyTextStyle
                                                               .defaultFontCustom(
                                                                   MainStyle

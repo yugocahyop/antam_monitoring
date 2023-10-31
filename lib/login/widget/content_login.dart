@@ -1,9 +1,12 @@
 part of login;
 
 class Content_login extends StatefulWidget {
-  Content_login({super.key, required this.signUpDone});
+  Content_login(
+      {super.key, required this.signUpDone, required this.toggleOverlay});
 
   Function() signUpDone;
+
+  Function() toggleOverlay;
 
   @override
   State<Content_login> createState() => _Content_loginState();
@@ -31,7 +34,26 @@ class _Content_loginState extends State<Content_login> {
   final cc = Login_controller();
   final sc = ScrollController();
 
-  displayMessage() {}
+  getEmail() async {
+    final String? emailTemp =
+        await cc.loadSharedPref("com.antam.email", "String") as String?;
+
+    email.con.text = emailTemp ?? "";
+
+    if (email.con.text.isNotEmpty) {
+      setState(() {
+        isRemember = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getEmail();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +187,11 @@ class _Content_loginState extends State<Content_login> {
                                 ),
                                 color: MainStyle.primaryColor,
                                 text: "Sign-in",
-                                onPressed: () => cc.pageRoute(context, Home()),
+                                onPressed: () => cc.login(
+                                    [email, password],
+                                    context,
+                                    isRemember,
+                                    () => widget.toggleOverlay()),
                                 textColor: Colors.white),
                             // const SizedBox(
                             //   height: 10,
