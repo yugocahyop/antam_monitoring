@@ -1,7 +1,15 @@
 part of home;
 
 class Content_home extends StatefulWidget {
-  Content_home({super.key, required this.scSel});
+  Content_home(
+      {super.key,
+      required this.scSel,
+      required this.selData,
+      required this.mqtt});
+
+  List<dynamic> selData;
+
+  MyMqtt mqtt;
 
   ScrollController scSel;
 
@@ -29,14 +37,23 @@ class _Content_homeState extends State<Content_home> {
 
   // final selScrollController = ScrollController();
 
-  var selData = [
+  final maxDdata = [
+    {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+  ];
+
+  List<dynamic> selData = [
     [
-      {"sel": 1, "celcius": 0, "volt": 0, "ampere": 0},
-      {"sel": 2, "celcius": 0, "volt": 0, "ampere": 0},
-      {"sel": 3, "celcius": 0, "volt": 0, "ampere": 0},
-      {"sel": 4, "celcius": 0, "volt": 0, "ampere": 0},
-      {"sel": 5, "celcius": 0, "volt": 0, "ampere": 0},
-      {"sel": 6, "celcius": 0, "volt": 0, "ampere": 0},
+      {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
     ],
     [
       {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
@@ -177,6 +194,7 @@ class _Content_homeState extends State<Content_home> {
     // if (tangki == 0) {
     //   return;
     // }
+    currTangki = tangki;
     teganganData = [];
 
     arusData = [];
@@ -220,31 +238,13 @@ class _Content_homeState extends State<Content_home> {
     setState(() {});
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    getData(0);
-
-    filterTangki = FilterTangki(
-      tangkiValue: "Semua",
-      items: ["Semua", "1", "2", "3", "4", "5", "6"],
-      onChange: (value) => getData(int.tryParse(value) ?? 0),
-    );
-
-    // if (kDebugMode) {
-    //   print("sel length: ${selData.length}");
-    // }
-
-    final r = Random(70);
-
+  getMax() {
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
       for (var e in v) {
-        final c = e["celcius"] = r.nextDouble() * 70;
-        final vv = e["volt"] = r.nextDouble() * 70;
-        final a = e["ampere"] = r.nextDouble() * 70;
+        final c = e["celcius"] as double;
+        final vv = e["volt"] as double;
+        final a = e["ampere"] as double;
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
         selData[0][index]["celcius"] = max(
@@ -268,13 +268,119 @@ class _Content_homeState extends State<Content_home> {
       //   print("sel data 0 : ${selData[0][0].toString()}");
       // }
     }
+  }
+
+  MyMqtt? mqtt;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    // if (mqtt != null) {
+    //   mqtt!.disconnect();
+    // }
+  }
+
+  int currTangki = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    mqtt = widget.mqtt;
+
+    selData = widget.selData;
+
+    getData(0);
+
+    filterTangki = FilterTangki(
+      tangkiValue: "Semua",
+      items: ["Semua", "1", "2", "3", "4", "5", "6"],
+      onChange: (value) => getData(int.tryParse(value) ?? 0),
+    );
+
+    getMax();
+
+    // if (kDebugMode) {
+    //   print("sel length: ${selData.length}");
+    // }
+
+    // final r = Random(70);
+
+    // mqtt = MyMqtt(onUpdate: (data) {});
+
+    // for (var i = 1; i < selData.length; i++) {
+    //   final v = selData[i];
+    //   for (var e in v) {
+    //     final c = e["celcius"] = r.nextDouble() * 70;
+    //     final vv = e["volt"] = r.nextDouble() * 70;
+    //     final a = e["ampere"] = r.nextDouble() * 70;
+    //     //  e["celcius"] = (e["celcius"] as int) + 1;
+    //     final index = v.indexOf(e);
+    //     selData[0][index]["celcius"] = max(
+    //         selData[0][index]["celcius"] is int
+    //             ? (selData[0][index]["celcius"] as int).toDouble()
+    //             : selData[0][index]["celcius"] as double,
+    //         c);
+    //     selData[0][index]["volt"] = max(
+    //         selData[0][index]["volt"] is int
+    //             ? (selData[0][index]["volt"] as int).toDouble()
+    //             : selData[0][index]["volt"] as double,
+    //         vv);
+    //     selData[0][index]["ampere"] = max(
+    //         selData[0][index]["ampere"] is int
+    //             ? (selData[0][index]["ampere"] as int).toDouble()
+    //             : selData[0][index]["ampere"] as double,
+    //         a);
+    //   }
+
+    //   // if (kDebugMode) {
+    //   //   print("sel data 0 : ${selData[0][0].toString()}");
+    //   // }
+    // }
 
     Future.delayed(Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {});
       getData(0);
 
       Future.delayed(Duration(milliseconds: 300), () {
         setSetting("tegangan", 70);
         setSetting("arus", 70);
+
+        mqtt!.onUpdate = (data) {
+          selData.clear();
+          selData.add([
+            {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+            {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+            {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+            {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+            {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+            {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+          ]);
+          selData.addAll(data["tangkiData"]);
+
+          getMax();
+          getData(currTangki);
+
+          List<String> items = [];
+
+          items.add("Semua");
+
+          for (var i = 0; i < data["tangkiData"].length; i++) {
+            items.add((i + 1).toString());
+          }
+
+          filterTangki = FilterTangki(
+            tangkiValue: "Semua",
+            items: items,
+            onChange: (value) => getData(int.tryParse(value) ?? 0),
+          );
+          // getTotal(currTangki);
+          setState(() {});
+        };
       });
     });
 

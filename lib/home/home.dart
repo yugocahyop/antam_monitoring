@@ -1,9 +1,11 @@
 library home;
 
 import 'dart:math';
+import 'dart:ui_web';
 
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/barChart.dart';
 import 'package:antam_monitoring/widget/linechart.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
@@ -34,6 +36,80 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var alarm = [
+    {
+      "title": "Status",
+      "isActive": true,
+    },
+    {
+      "title": "Alarm Arus",
+      "isActive": true,
+    },
+    {
+      "title": "Alarm Tegangan",
+      "isActive": false,
+    }
+  ];
+
+  List<dynamic> selData = [
+    [
+      {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    ],
+    [
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+    ],
+    [
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+    ],
+    [
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+    ],
+    [
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+    ],
+    [
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+    ],
+    [
+      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
+      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
+      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
+      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
+      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
+      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+    ],
+  ];
+
   final menuItems = [
     {"title": "Home", "icon": Icons.home_outlined, "isActive": true},
     {
@@ -49,6 +125,55 @@ class _HomeState extends State<Home> {
   var scSel = ScrollController();
 
   final double wide = 16 / 9;
+
+  late MyMqtt mqtt;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final r = Random(70);
+
+    mqtt = MyMqtt(onUpdate: (data) {});
+
+    for (var i = 1; i < selData.length; i++) {
+      final v = selData[i];
+      for (var e in v) {
+        final c = e["celcius"] = r.nextDouble() * 70;
+        final vv = e["volt"] = r.nextDouble() * 70;
+        final a = e["ampere"] = r.nextDouble() * 70;
+        //  e["celcius"] = (e["celcius"] as int) + 1;
+        // final index = v.indexOf(e);
+        // selData[0][index]["celcius"] = max(
+        //     selData[0][index]["celcius"] is int
+        //         ? (selData[0][index]["celcius"] as int).toDouble()
+        //         : selData[0][index]["celcius"] as double,
+        //     c);
+        // selData[0][index]["volt"] = max(
+        //     selData[0][index]["volt"] is int
+        //         ? (selData[0][index]["volt"] as int).toDouble()
+        //         : selData[0][index]["volt"] as double,
+        //     vv);
+        // selData[0][index]["ampere"] = max(
+        //     selData[0][index]["ampere"] is int
+        //         ? (selData[0][index]["ampere"] as int).toDouble()
+        //         : selData[0][index]["ampere"] as double,
+        //     a);
+      }
+
+      // if (kDebugMode) {
+      //   print("sel data 0 : ${selData[0][0].toString()}");
+      // }
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    scSel.dispose();
+    mqtt.disconnect();
+  }
 
   // double currSelOffset = 0;
   @override
@@ -70,6 +195,8 @@ class _HomeState extends State<Home> {
                       width: lWidth,
                       height: lheight,
                       child: Content_home_mobile(
+                        mqtt: mqtt,
+                        selData: selData,
                         scSel: scSel,
                         menuItem: menuItems,
                       ))),
@@ -116,8 +243,24 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ),
-                            Content_home(
-                              scSel: scSel,
+                            Column(
+                              children: [
+                                Visibility(
+                                  visible: false,
+                                  child: Transform.scale(
+                                      scale:
+                                          (lWidth / lheight) < wide ? 1.2 : 1,
+                                      origin: Offset(
+                                          (lWidth / lheight) < wide ? -610 : 0,
+                                          0),
+                                      child: Account_alarm(alarm: alarm)),
+                                ),
+                                Content_home(
+                                  mqtt: mqtt,
+                                  scSel: scSel,
+                                  selData: selData,
+                                ),
+                              ],
                             )
                           ],
                         ),

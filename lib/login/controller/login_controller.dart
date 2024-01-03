@@ -54,6 +54,8 @@ class Login_controller extends Controller {
     if (r["error"] == null) {
       await Future.delayed(Duration(seconds: 1));
 
+      ApiHelper.tokenMain = r["activeToken"];
+
       toggleLoading();
 
       // await Future.delayed(Duration(milliseconds: 200));
