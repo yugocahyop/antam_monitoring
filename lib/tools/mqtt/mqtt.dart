@@ -15,7 +15,7 @@ class MyMqtt {
 
   final client = mqttsetup.setup('ws://202.148.1.57',
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
-  Function(Map<String, dynamic> json) onUpdate;
+  Function(Map<String, dynamic> json, String topic) onUpdate;
 
   MyMqtt({required this.onUpdate}) {
     connect();
@@ -32,6 +32,17 @@ class MyMqtt {
     client.subscribe(topic, MqttQos.atLeastOnce);
 
     topics.add(topic);
+  }
+
+  void publish(Map<String, dynamic> data, String topic) {
+    final builder2 = MqttClientPayloadBuilder();
+    builder2.addString(jsonEncode(data));
+    // print('EXAMPLE:: <<<< PUBLISH 2 >>>>');
+    client.publishMessage(topic, MqttQos.atLeastOnce, builder2.payload!);
+
+    // if (kDebugMode) {
+    print("topic: $topic, payload: ${jsonEncode(data)}");
+    // }
   }
 
   Future<int> connect() async {
@@ -134,6 +145,11 @@ class MyMqtt {
     }
     var topic = 'antam/device'; // Not a wildcard topic
     client.subscribe(topic, MqttQos.atLeastOnce);
+    // client.subscribe('antam/device/node', MqttQos.atLeastOnce);
+    client.subscribe('antam/status', MqttQos.atLeastOnce);
+    client.subscribe('antam/statistic', MqttQos.atLeastOnce);
+    client.subscribe('antam/statusnode', MqttQos.atLeastOnce);
+    client.subscribe('antam/statusNode', MqttQos.atLeastOnce);
 
     /// The client has a change notifier object(see the Observable class) which we then listen to to get
     /// notifications of published updates to each subscribed topic.
@@ -153,9 +169,9 @@ class MyMqtt {
         print(json);
       }
 
-      if (json["tangkiData"] != null) {
-        onUpdate(json);
-      }
+      // if (json["tangkiData"] != null) {
+      onUpdate(json, c[0].topic);
+      // }
     });
 
     /// If needed you can listen for published messages that have completed the publishing

@@ -115,8 +115,9 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                 Transform.translate(
                   offset: Offset(0, 15),
                   child: Container(
+                    alignment: Alignment.center,
                     width: lWidth,
-                    // height: 500 ,
+                    height: lheight * 0.5,
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -131,112 +132,116 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                             topRight: Radius.circular(32))),
                     child: Padding(
                       padding: const EdgeInsets.all(30.0),
-                      child: Column(children: [
-                        Text(
-                          "Login",
-                          style: MyTextStyle.defaultFontCustom(
-                              MainStyle.primaryColor, 36,
-                              weight: FontWeight.bold),
-                        ),
-                        email,
-                        password,
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        MainStyle.sizedBoxH10,
-                        SizedBox(
-                          width: lWidth,
-                          child: Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            runAlignment: WrapAlignment.start,
-                            crossAxisAlignment: WrapCrossAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: (lWidth * 0.4),
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      checkColor: Colors.white,
-                                      activeColor: MainStyle.primaryColor,
-                                      value: isRemember,
-                                      shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              color: MainStyle.primaryColor),
-                                          borderRadius:
-                                              BorderRadius.circular(3)),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isRemember = value ?? false;
-                                        });
-                                      },
-                                    ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isRemember = !isRemember;
-                                          });
-                                        },
-                                        child: Text(
-                                          "Remember me",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              Colors.black, 14,
-                                              weight: FontWeight.bold),
+                      child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Login",
+                              style: MyTextStyle.defaultFontCustom(
+                                  MainStyle.primaryColor, 36,
+                                  weight: FontWeight.bold),
+                            ),
+                            email,
+                            password,
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            MainStyle.sizedBoxH10,
+                            SizedBox(
+                              width: lWidth,
+                              child: Wrap(
+                                alignment: WrapAlignment.spaceBetween,
+                                runAlignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: (lWidth * 0.4),
+                                    child: Row(
+                                      children: [
+                                        Checkbox(
+                                          checkColor: Colors.white,
+                                          activeColor: MainStyle.primaryColor,
+                                          value: isRemember,
+                                          shape: RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                  color:
+                                                      MainStyle.primaryColor),
+                                              borderRadius:
+                                                  BorderRadius.circular(3)),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              isRemember = value ?? false;
+                                            });
+                                          },
                                         ),
-                                      ),
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isRemember = !isRemember;
+                                              });
+                                            },
+                                            child: Text(
+                                              "Remember me",
+                                              style:
+                                                  MyTextStyle.defaultFontCustom(
+                                                      Colors.black, 14,
+                                                      weight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  TextButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Forget Password ?",
+                                        style: MyTextStyle.defaultFontCustom(
+                                            MainStyle.primaryColor, 15,
+                                            weight: FontWeight.bold),
+                                      ))
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            MyButton(
+                                icon: Icon(
+                                  Icons.login,
+                                  color: Colors.white,
+                                ),
+                                color: MainStyle.primaryColor,
+                                text: "Sign-in",
+                                onPressed: () => cc.login([email, password],
+                                    context, isRemember, () => toggleOverlay()),
+                                textColor: Colors.white),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+                            MainStyle.sizedBoxH10,
+                            TextButton(
+                                onPressed: () => cc.signUp_login(
+                                    context,
+                                    () => createMsg(
+                                        "Activaton link has been sent to your email")),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Don't have an account? ",
+                                      style: MyTextStyle.defaultFontCustom(
+                                          Colors.black, 15),
+                                    ),
+                                    Text(
+                                      "Sign-up",
+                                      style: MyTextStyle.defaultFontCustom(
+                                          MainStyle.primaryColor, 15),
                                     )
                                   ],
-                                ),
-                              ),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Forget Password ?",
-                                    style: MyTextStyle.defaultFontCustom(
-                                        MainStyle.primaryColor, 15,
-                                        weight: FontWeight.bold),
-                                  ))
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        MyButton(
-                            icon: Icon(
-                              Icons.login,
-                              color: Colors.white,
-                            ),
-                            color: MainStyle.primaryColor,
-                            text: "Sign-in",
-                            onPressed: () => cc.login([email, password],
-                                context, isRemember, () => toggleOverlay()),
-                            textColor: Colors.white),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        MainStyle.sizedBoxH10,
-                        TextButton(
-                            onPressed: () => cc.signUp_login(
-                                context,
-                                () => createMsg(
-                                    "Activaton link has been sent to your email")),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Don't have an account? ",
-                                  style: MyTextStyle.defaultFontCustom(
-                                      Colors.black, 15),
-                                ),
-                                Text(
-                                  "Sign-up",
-                                  style: MyTextStyle.defaultFontCustom(
-                                      MainStyle.primaryColor, 15),
-                                )
-                              ],
-                            ))
-                      ]),
+                                ))
+                          ]),
                     ),
                   ),
                 )

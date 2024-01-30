@@ -27,7 +27,11 @@ class _MenuState extends State<Menu> {
     return Container(
       width: (lWidth / lheight) < wide ? 400 : 250,
       // height: 740,
-      height: (lWidth / lheight) < wide ? 1500 : 800,
+      height: (lWidth / lheight) < wide
+          ? 1500
+          : lWidth >= 1920
+              ? lheight
+              : 800,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
           color: MainStyle.secondaryColor,
@@ -67,7 +71,7 @@ class _MenuState extends State<Menu> {
                       type: MaterialType.transparency,
                       child: InkWell(
                         hoverColor: Colors.transparent,
-                        onTap: () {
+                        onTap: () async {
                           widget.menuItem
                               .where((element) =>
                                   (element["isActive"] as bool) == true)
@@ -75,9 +79,14 @@ class _MenuState extends State<Menu> {
                           setState(() {
                             e["isActive"] = true;
                           });
+
+                          await Future.delayed(Duration(milliseconds: 150));
+
+                          widget.menuItem[widget.menuItem.indexOf(e)]
+                              ["function"]();
                         },
                         child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 150),
                           margin: EdgeInsets.only(bottom: 20),
                           width: (lWidth / lheight) < wide ? 400 : 200,
                           padding: EdgeInsets.all(8),
@@ -203,7 +212,8 @@ class _MenuState extends State<Menu> {
                     shape: BoxShape.circle,
                   ),
                   child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', ((route) => false)),
                     child: Icon(
                       Icons.logout_outlined,
                       color: Colors.white,

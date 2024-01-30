@@ -1,10 +1,16 @@
 library home;
 
+import 'dart:async';
+import 'dart:convert';
+// import 'dart:js_interop';
 import 'dart:math';
-import 'dart:ui_web';
 
+// import 'dart:ui_web';
+
+import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/barChart.dart';
 import 'package:antam_monitoring/widget/linechart.dart';
@@ -15,6 +21,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../controller/controller.dart';
@@ -27,6 +35,8 @@ part 'widget/myDropDown.dart';
 part 'widget/filterTangki.dart';
 part 'widget/content_home_mobile.dart';
 part 'widget/up.dart';
+part 'widget/content_diagnostic/content_diagnostic.dart';
+part 'widget/content_call/content_call.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -53,73 +63,345 @@ class _HomeState extends State<Home> {
 
   List<dynamic> selData = [
     [
-      {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {
+        "tangki": 1,
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
   ];
 
-  final menuItems = [
-    {"title": "Home", "icon": Icons.home_outlined, "isActive": true},
-    {
-      "title": "Data Logger",
-      "icon": Icons.description_outlined,
-      "isActive": false
-    },
-    {"title": "Emergency Call", "icon": Icons.call_outlined, "isActive": false},
-    {"title": "Settings", "icon": Icons.settings_outlined, "isActive": false},
-  ];
+  changePage(int p) {
+    switch (p) {
+      case 0:
+        setState(() {
+          page = Content_home(
+            mqtt: mqtt,
+            scSel: scSel,
+            selData: selData,
+          );
+          pageMobile = Content_home_mobile(
+            mqtt: mqtt,
+            selData: selData,
+            scSel: scSel,
+            menuItem: menuItems,
+          );
+        });
+        break;
+      case 2:
+        setState(() {
+          page = Content_diagnostic(
+            mqtt: mqtt,
+            scSel: scSel,
+            selData: selData,
+          );
+          pageMobile = Content_home_mobile(
+            mqtt: mqtt,
+            selData: selData,
+            scSel: scSel,
+            menuItem: menuItems,
+          );
+        });
+        break;
+    }
+  }
+
+  late Widget page;
+  late Widget pageMobile;
+
+  late List<Map<String, dynamic>> menuItems;
 
   var scMain = ScrollController();
   var scSel = ScrollController();
@@ -128,43 +410,97 @@ class _HomeState extends State<Home> {
 
   late MyMqtt mqtt;
 
+  initToken() async {
+    if (ApiHelper.tokenMain.isEmpty) {
+      final c = Controller();
+      ApiHelper.tokenMain = await c.loadSharedPref("antam.token", "String");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    final r = Random(70);
+    // final r = Random(70);
+    initToken();
 
-    mqtt = MyMqtt(onUpdate: (data) {});
+    mqtt = MyMqtt(onUpdate: (data, topic) {});
 
-    for (var i = 1; i < selData.length; i++) {
-      final v = selData[i];
-      for (var e in v) {
-        final c = e["celcius"] = r.nextDouble() * 70;
-        final vv = e["volt"] = r.nextDouble() * 70;
-        final a = e["ampere"] = r.nextDouble() * 70;
-        //  e["celcius"] = (e["celcius"] as int) + 1;
-        // final index = v.indexOf(e);
-        // selData[0][index]["celcius"] = max(
-        //     selData[0][index]["celcius"] is int
-        //         ? (selData[0][index]["celcius"] as int).toDouble()
-        //         : selData[0][index]["celcius"] as double,
-        //     c);
-        // selData[0][index]["volt"] = max(
-        //     selData[0][index]["volt"] is int
-        //         ? (selData[0][index]["volt"] as int).toDouble()
-        //         : selData[0][index]["volt"] as double,
-        //     vv);
-        // selData[0][index]["ampere"] = max(
-        //     selData[0][index]["ampere"] is int
-        //         ? (selData[0][index]["ampere"] as int).toDouble()
-        //         : selData[0][index]["ampere"] as double,
-        //     a);
-      }
+    menuItems = [
+      {
+        "title": "Home",
+        "icon": Icons.home_outlined,
+        "isActive": true,
+        "function": () => changePage(0)
+      },
+      {
+        "title": "Data Logger",
+        "icon": Icons.description_outlined,
+        "isActive": false,
+        "function": () => changePage(1)
+      },
+      {
+        "title": "Diagnostic",
+        "icon": Icons.lan,
+        "isActive": false,
+        "function": () => changePage(2)
+      },
+      {
+        "title": "Emergency Call",
+        "icon": Icons.call_outlined,
+        "isActive": false,
+        "function": () => changePage(3)
+      },
+      {
+        "title": "Settings",
+        "icon": Icons.settings_outlined,
+        "isActive": false,
+        "function": () => changePage(4)
+      },
+    ];
 
-      // if (kDebugMode) {
-      //   print("sel data 0 : ${selData[0][0].toString()}");
-      // }
-    }
+    page = Content_home(
+      mqtt: mqtt,
+      scSel: scSel,
+      selData: selData,
+    );
+
+    pageMobile = Content_home_mobile(
+      mqtt: mqtt,
+      selData: selData,
+      scSel: scSel,
+      menuItem: menuItems,
+    );
+
+    // for (var i = 0; i < selData.length; i++) {
+    //   final v = selData[i];
+    //   for (var e in v) {
+    //     final c = e["celcius"] = 0;
+    //     final vv = e["volt"] = 0;
+    //     final a = e["ampere"] = 0;
+    //     //  e["celcius"] = (e["celcius"] as int) + 1;
+    //     // final index = v.indexOf(e);
+    //     // selData[0][index]["celcius"] = max(
+    //     //     selData[0][index]["celcius"] is int
+    //     //         ? (selData[0][index]["celcius"] as int).toDouble()
+    //     //         : selData[0][index]["celcius"] as double,
+    //     //     c);
+    //     // selData[0][index]["volt"] = max(
+    //     //     selData[0][index]["volt"] is int
+    //     //         ? (selData[0][index]["volt"] as int).toDouble()
+    //     //         : selData[0][index]["volt"] as double,
+    //     //     vv);
+    //     // selData[0][index]["ampere"] = max(
+    //     //     selData[0][index]["ampere"] is int
+    //     //         ? (selData[0][index]["ampere"] as int).toDouble()
+    //     //         : selData[0][index]["ampere"] as double,
+    //     //     a);
+    //   }
+
+    //   // if (kDebugMode) {
+    //   //   print("sel data 0 : ${selData[0][0].toString()}");
+    //   // }
+    // }
   }
 
   @override
@@ -192,14 +528,7 @@ class _HomeState extends State<Home> {
                   clipBehavior: Clip.none,
                   controller: scMain,
                   child: SizedBox(
-                      width: lWidth,
-                      height: lheight,
-                      child: Content_home_mobile(
-                        mqtt: mqtt,
-                        selData: selData,
-                        scSel: scSel,
-                        menuItem: menuItems,
-                      ))),
+                      width: lWidth, height: lheight, child: pageMobile)),
             )
           : FittedBox(
               fit: lWidth < 1000 ? BoxFit.fitWidth : BoxFit.fitHeight,
@@ -214,7 +543,9 @@ class _HomeState extends State<Home> {
                       ? 2200
                       : lWidth < 900
                           ? 450
-                          : 1520,
+                          : lWidth >= 1920
+                              ? lWidth
+                              : 1520,
                   child: Listener(
                     onPointerSignal: (pointerSignal) {
                       // if (pointerSignal is PointerScrollEvent) {
@@ -255,11 +586,7 @@ class _HomeState extends State<Home> {
                                           0),
                                       child: Account_alarm(alarm: alarm)),
                                 ),
-                                Content_home(
-                                  mqtt: mqtt,
-                                  scSel: scSel,
-                                  selData: selData,
-                                ),
+                                page
                               ],
                             )
                           ],

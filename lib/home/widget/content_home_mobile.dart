@@ -43,71 +43,351 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     viewportFraction: 0.85,
   );
 
-  final maxDdata = [
-    {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+  final List<dynamic> maxData = [
+    {
+      "sel": 1,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 2,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 3,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 4,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 5,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+  ];
+
+  List<dynamic> tangkiMaxData = [
+    {"sel": 1, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
+    {"sel": 2, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
+    {"sel": 3, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
+    {"sel": 4, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
+    {"sel": 5, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
   ];
 
   List<dynamic> selData = [
     [
-      {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-      {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
     [
-      {"sel": 1, "celcius": 32.0, "volt": 60.0, "ampere": 30.0},
-      {"sel": 2, "celcius": 50.0, "volt": 50.0, "ampere": 31.0},
-      {"sel": 3, "celcius": 43.0, "volt": 20.0, "ampere": 33.0},
-      {"sel": 4, "celcius": 36.0, "volt": 35.0, "ampere": 35.0},
-      {"sel": 5, "celcius": 37.0, "volt": 65.0, "ampere": 36.0},
-      {"sel": 6, "celcius": 60.0, "volt": 55.0, "ampere": 37.0},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
   ];
 
@@ -122,21 +402,19 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
   var teganganSetting = [FlSpot(0, 1), FlSpot(6, 1)];
 
   var teganganData = [
-    FlSpot(1, 20),
-    FlSpot(2, 30),
-    FlSpot(3, 15),
-    FlSpot(4, 60),
-    FlSpot(5, 15),
-    FlSpot(6, 40)
+    FlSpot(1, 0),
+    FlSpot(2, 0),
+    FlSpot(3, 0),
+    FlSpot(4, 0),
+    FlSpot(5, 0),
   ];
 
   var arusData = [
-    FlSpot(1, 20),
-    FlSpot(2, 30),
-    FlSpot(3, 15),
-    FlSpot(4, 60),
-    FlSpot(5, 15),
-    FlSpot(6, 40)
+    FlSpot(1, 0),
+    FlSpot(2, 0),
+    FlSpot(3, 0),
+    FlSpot(4, 0),
+    FlSpot(5, 0),
   ];
 
   var arusSetting = [FlSpot(0, 1), FlSpot(6, 1)];
@@ -149,9 +427,9 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
   String warningMsg = "Message";
 
-  double msgOpacity = 1;
+  double msgOpacity = 0;
 
-  bool isMsgVisible = true;
+  bool isMsgVisible = false;
 
   int currPage = 0;
 
@@ -166,28 +444,28 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
   );
 
   getTotal(int value, int tangki) {
-    currPage = value;
-    final d = (selData[tangki] as List<dynamic>)
-        .where((d) =>
-            ((d["sel"] is double)
-                ? (d["sel"] as double).toInt()
-                : (d["sel"] as int)) ==
-            (value + 1))
-        .first;
+    // currPage = value;
+    // final d = (selData[tangki] as List<dynamic>)
+    //     .where((d) =>
+    //         ((d["sel"] is double)
+    //             ? (d["sel"] as double).toInt()
+    //             : (d["sel"] as int)) ==
+    //         (value + 1))
+    //     .first;
 
-    totalData
-            .where((element) => element["title"] == "Tegangan Total")
-            .first["value"] =
-        d["volt"] is double
-            ? d["volt"] as double
-            : (d["volt"] as int).toDouble();
-    totalData
-            .where((element) => element["title"] == "Arus Total")
-            .first["value"] =
-        d["ampere"] is double
-            ? d["ampere"] as double
-            : (d["ampere"] as int).toDouble();
-    setState(() {});
+    // totalData
+    //         .where((element) => element["title"] == "Tegangan Total")
+    //         .first["value"] =
+    //     d["volt"] is double
+    //         ? d["volt"] as double
+    //         : (d["volt"] as int).toDouble();
+    // totalData
+    //         .where((element) => element["title"] == "Arus Total")
+    //         .first["value"] =
+    //     d["ampere"] is double
+    //         ? d["ampere"] as double
+    //         : (d["ampere"] as int).toDouble();
+    // setState(() {});
   }
 
   getData(int tangki) {
@@ -196,18 +474,18 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
     arusData = [];
 
-    for (var e in selData[tangki]) {
+    for (var e in (tangki == 0 ? maxData : selData[tangki])) {
       teganganData.add(FlSpot(
           (e["sel"] as int).toDouble(),
-          e["volt"] is double
-              ? e["volt"] as double
-              : (e["volt"] as int).toDouble()));
+          (e["tegangan"] ?? e["volt"]) is double
+              ? (e["tegangan"] ?? e["volt"]) as double
+              : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
 
       arusData.add(FlSpot(
           (e["sel"] as int).toDouble(),
-          e["ampere"] is double
-              ? e["ampere"] as double
-              : (e["ampere"] as int).toDouble()));
+          (e["arus"] ?? e["ampere"]) is double
+              ? (e["arus"] ?? e["ampere"]) as double
+              : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
     }
 
     // if (pc.page != null) {
@@ -233,30 +511,145 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     setState(() {});
   }
 
+  getMax2() {
+    selData[0].clear();
+    for (var i = 1; i < selData.length; i++) {
+      final v = selData[i];
+
+      // int count = 1;
+
+      for (Map<String, dynamic> e in v) {
+        final c = (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+
+        selData[0].add({
+          "tangki": i.toDouble(),
+          "sel": e["sel"] as double,
+          "suhu": c,
+          "tegangan": vv,
+          "arus": a,
+          "daya": w,
+          "energi": en,
+        });
+
+        //  e["celcius"] = (e["celcius"] as int) + 1;
+        final index = v.indexOf(e);
+
+        if (index < 5) {
+          maxData[index]["suhu"] = max(
+              maxData[index]["suhu"] is int
+                  ? (maxData[index]["suhu"] as int).toDouble()
+                  : maxData[index]["suhu"] as double,
+              c);
+          maxData[index]["tegangan"] = max(
+              maxData[index]["tegangan"] is int
+                  ? (maxData[index]["tegangan"] as int).toDouble()
+                  : maxData[index]["tegangan"] as double,
+              vv);
+          maxData[index]["arus"] = max(
+              maxData[index]["arus"] is int
+                  ? (maxData[index]["arus"] as int).toDouble()
+                  : maxData[index]["arus"] as double,
+              a);
+          maxData[index]["daya"] = max(
+              maxData[index]["daya"] is int
+                  ? (maxData[index]["daya"] as int).toDouble()
+                  : maxData[index]["daya"] as double,
+              w);
+          maxData[index]["energi"] = max(
+              maxData[index]["energi"] is int
+                  ? (maxData[index]["energi"] as int).toDouble()
+                  : maxData[index]["energi"] as double,
+              en);
+
+          tangkiMaxData[index]["suhu"] =
+              maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
+
+          tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
+              ? i
+              : tangkiMaxData[index]["tegangan"];
+
+          tangkiMaxData[index]["arus"] =
+              maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
+
+          tangkiMaxData[index]["daya"] =
+              maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
+
+          tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
+              ? i
+              : tangkiMaxData[index]["energi"];
+        }
+
+        // count++;
+      }
+
+      // if (kDebugMode) {
+      //   print("sel data 0 : ${selData[0][0].toString()}");
+      // }
+    }
+
+    setState(() {});
+  }
+
   getMax() {
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
       for (var e in v) {
-        final c = e["celcius"] as double;
-        final vv = e["volt"] as double;
-        final a = e["ampere"] as double;
+        final c = (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
-        selData[0][index]["celcius"] = max(
-            selData[0][index]["celcius"] is int
-                ? (selData[0][index]["celcius"] as int).toDouble()
-                : selData[0][index]["celcius"] as double,
-            c);
-        selData[0][index]["volt"] = max(
-            selData[0][index]["volt"] is int
-                ? (selData[0][index]["volt"] as int).toDouble()
-                : selData[0][index]["volt"] as double,
-            vv);
-        selData[0][index]["ampere"] = max(
-            selData[0][index]["ampere"] is int
-                ? (selData[0][index]["ampere"] as int).toDouble()
-                : selData[0][index]["ampere"] as double,
-            a);
+
+        if (index < 5) {
+          selData[0][index]["suhu"] = max(
+              selData[0][index]["suhu"] is int
+                  ? (selData[0][index]["suhu"] as int).toDouble()
+                  : selData[0][index]["suhu"] as double,
+              c);
+          selData[0][index]["tegangan"] = max(
+              selData[0][index]["tegangan"] is int
+                  ? (selData[0][index]["tegangan"] as int).toDouble()
+                  : selData[0][index]["tegangan"] as double,
+              vv);
+          selData[0][index]["arus"] = max(
+              selData[0][index]["arus"] is int
+                  ? (selData[0][index]["arus"] as int).toDouble()
+                  : selData[0][index]["arus"] as double,
+              a);
+          selData[0][index]["daya"] = max(
+              selData[0][index]["daya"] is int
+                  ? (selData[0][index]["daya"] as int).toDouble()
+                  : selData[0][index]["daya"] as double,
+              w);
+          selData[0][index]["energi"] = max(
+              selData[0][index]["energi"] is int
+                  ? (selData[0][index]["energi"] as int).toDouble()
+                  : selData[0][index]["energi"] as double,
+              en);
+
+          tangkiMaxData[index]["suhu"] =
+              selData[0][index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
+
+          tangkiMaxData[index]["tegangan"] = selData[0][index]["tegangan"] == vv
+              ? i
+              : tangkiMaxData[index]["tegangan"];
+
+          tangkiMaxData[index]["arus"] =
+              selData[0][index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
+
+          tangkiMaxData[index]["daya"] =
+              selData[0][index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
+
+          tangkiMaxData[index]["energi"] = selData[0][index]["energi"] == en
+              ? i
+              : tangkiMaxData[index]["energi"];
+        }
       }
 
       // if (kDebugMode) {
@@ -277,6 +670,334 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
   int currTangki = 0;
 
+  initSelData() async {
+    final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(Duration(seconds: 1));
+    }
+
+    final r = await api.callAPI("/monitoring/find/last", "POST", "", true);
+
+    if (kDebugMode) {
+      print("backend data: $r");
+    }
+
+    if (r["error"] == null) {
+      selData.clear();
+
+      selData.add([
+        {
+          "sel": 1,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
+        {
+          "sel": 2,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
+        {
+          "sel": 3,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
+        {
+          "sel": 4,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
+        {
+          "sel": 5,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
+      ]);
+
+      selData.addAll(r["data"][0]["tangkiData"] ?? []);
+    }
+
+    setState(() {});
+
+    getMax2();
+
+    Future.delayed(Duration(seconds: 1), () {
+      if (!mounted) return;
+      setState(() {});
+      getData(0);
+
+      Future.delayed(Duration(milliseconds: 300), () {
+        setSetting("tegangan", 70);
+        setSetting("arus", 70);
+
+        mqtt.onUpdate = (data, topic) {
+          if (topic == "antam/device") {
+            selData.clear();
+            // final firstData = List.of(maxDdata);
+            selData.add([
+              {
+                "sel": 1,
+                "suhu": 0.0,
+                "tegangan": 0.0,
+                "arus": 0.0,
+                "daya": 0.0,
+                "energi": 0.0
+              },
+              {
+                "sel": 2,
+                "suhu": 0.0,
+                "tegangan": 0.0,
+                "arus": 0.0,
+                "daya": 0.0,
+                "energi": 0.0
+              },
+              {
+                "sel": 3,
+                "suhu": 0.0,
+                "tegangan": 0.0,
+                "arus": 0.0,
+                "daya": 0.0,
+                "energi": 0.0
+              },
+              {
+                "sel": 4,
+                "suhu": 0.0,
+                "tegangan": 0.0,
+                "arus": 0.0,
+                "daya": 0.0,
+                "energi": 0.0
+              },
+              {
+                "sel": 5,
+                "suhu": 0.0,
+                "tegangan": 0.0,
+                "arus": 0.0,
+                "daya": 0.0,
+                "energi": 0.0
+              },
+            ]);
+            selData.addAll(data["tangkiData"]);
+
+            getMax2();
+
+            // List<String> items = [];
+
+            // items.add("Semua");
+
+            // for (var i = 0; i < data["tangkiData"].length; i++) {
+            //   items.add((i + 1).toString());
+            // }
+
+            // filterTangki = FilterTangki(
+            //   tangkiValue: currTangki.toString(),
+            //   items: items,
+            //   onChange: (value) => getData(int.tryParse(value) ?? 0),
+            // );
+
+            getData(currTangki);
+
+            // getTotal(currPage, currTangki);
+          } else if (topic == "antam/device/node") {
+            final int tangki = data["tangki"] as int;
+
+            if (tangki > (selData.length - 1)) {
+              for (var i = 0; i < (tangki - (selData.length - 1)); i++) {
+                selData.add([
+                  {
+                    "sel": 1,
+                    "suhu": 0.0,
+                    "tegangan": 0.0,
+                    "arus": 0.0,
+                    "daya": 0.0,
+                    "energi": 0.0
+                  },
+                  {
+                    "sel": 2,
+                    "suhu": 0.0,
+                    "tegangan": 0.0,
+                    "arus": 0.0,
+                    "daya": 0.0,
+                    "energi": 0.0
+                  },
+                  {
+                    "sel": 3,
+                    "suhu": 0.0,
+                    "tegangan": 0.0,
+                    "arus": 0.0,
+                    "daya": 0.0,
+                    "energi": 0.0
+                  },
+                  {
+                    "sel": 4,
+                    "suhu": 0.0,
+                    "tegangan": 0.0,
+                    "arus": 0.0,
+                    "daya": 0.0,
+                    "energi": 0.0
+                  },
+                  {
+                    "sel": 5,
+                    "suhu": 0.0,
+                    "tegangan": 0.0,
+                    "arus": 0.0,
+                    "daya": 0.0,
+                    "energi": 0.0
+                  },
+                ]);
+              }
+            }
+            final sData = jsonEncode(Map.from(data["selData"]));
+
+            if (kDebugMode) {
+              print((sData));
+            }
+
+            selData[tangki][data["sel"] as int] =
+                (jsonDecode(sData)) as Map<String, num>;
+
+            getMax2();
+
+            getData(currTangki);
+
+            // List<String> items = [];
+
+            // items.add("Semua");
+
+            // for (var i = 0; i < selData.length; i++) {
+            //   items.add((i + 1).toString());
+            // }
+
+            // filterTangki = FilterTangki(
+            //   tangkiValue: "Semua",
+            //   items: items,
+            //   onChange: (value) => getData(int.tryParse(value) ?? 0),
+            // );
+
+            // getTotal(currPage, currTangki);
+          } else if (topic == "antam/status") {
+            // print(data["alarmTegangang"]);
+
+            var temp = [
+              {
+                "title": "Status",
+                "isActive": (data["status"] == null
+                    ? alarm
+                        .where((element) => element["title"] == "Status")
+                        .first["isActive"]!
+                    : (data["status"] as bool)),
+              },
+              {
+                "title": "Alarm Arus",
+                "isActive": data["alarmArus"] == null
+                    ? alarm
+                        .where((element) => element["title"] == "Alarm Arus")
+                        .first["isActive"]!
+                    : data["alarmArus"] as bool,
+              },
+              {
+                "title": "Alarm Tegangan",
+                "isActive": data["alarmTegangan"] == null
+                    ? alarm
+                        .where(
+                            (element) => element["title"] == "Alarm Tegangan")
+                        .first["isActive"]!
+                    : data["alarmTegangan"] as bool,
+              }
+            ];
+
+            alarm.clear();
+            alarm.addAll(temp);
+          } else if (topic == "antam/statistic") {
+            var temp = [
+              {
+                "title": "Total Waktu",
+                "value": data["totalWaktu"] == null
+                    ? totalData
+                        .where((element) => element["title"] == "Total Waktu")
+                        .first["value"]!
+                    : (data["totalWaktu"] is double
+                        ? (data["totalWaktu"] as double)
+                        : (data["totalWaktu"] as int).toDouble()),
+                "unit": "Jam"
+              },
+              {
+                "title": "Tegangan Total",
+                "value": data["teganganTotal"] == null
+                    ? totalData
+                        .where(
+                            (element) => element["title"] == "Tegangan Total")
+                        .first["value"]!
+                    : (data["teganganTotal"] is double
+                        ? (data["teganganTotal"] as double)
+                        : (data["teganganTotal"] as int).toDouble()),
+                "unit": "Volt"
+              },
+              {
+                "title": "Arus Total",
+                "value": data["arusTotal"] == null
+                    ? totalData
+                        .where((element) => element["title"] == "Arus Total")
+                        .first["value"]!
+                    : (data["arusTotal"] is double
+                        ? (data["arusTotal"] as double)
+                        : (data["arusTotal"] as int).toDouble()),
+                "unit": "Ampere"
+              },
+              {
+                "title": "Power",
+                "value": data["power"] == null
+                    ? totalData
+                        .where((element) => element["title"] == "Power")
+                        .first["value"]!
+                    : (data["power"] is double
+                        ? (data["power"] as double)
+                        : (data["power"] as int).toDouble()),
+                "unit": "Watt"
+              },
+              {
+                "title": "Energi",
+                "value": data["energi"] == null
+                    ? totalData
+                        .where((element) => element["title"] == "Energi")
+                        .first["value"]!
+                    : (data["energi"] is double
+                        ? (data["energi"] as double)
+                        : (data["energi"] as int).toDouble()),
+                "unit": "Watt_Jam"
+              },
+            ];
+
+            totalData.clear();
+            totalData.addAll(temp);
+          }
+
+          if (mounted) {
+            setState(() {});
+          }
+
+          // Future.delayed(Duration(milliseconds: 500), () {
+
+          // });
+        };
+      });
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -286,7 +1007,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
     selData = widget.selData;
 
-    getData(0);
+    // getData(0);
 
     filterTangki = FilterTangki(
       tangkiValue: "Semua",
@@ -298,59 +1019,10 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     //   print("sel length: ${selData.length}");
     // }
 
-    mqtt = MyMqtt(onUpdate: (data) {});
-    getMax();
+    mqtt = MyMqtt(onUpdate: (data, topic) {});
 
-    Future.delayed(Duration(seconds: 1), () {
-      if (!mounted) return;
-      setState(() {});
-      getData(0);
-
-      Future.delayed(Duration(milliseconds: 300), () {
-        setSetting("tegangan", 70);
-        setSetting("arus", 70);
-
-        mqtt.onUpdate = (data) {
-          selData.clear();
-          // final firstData = List.of(maxDdata);
-          selData.add([
-            {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-            {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-            {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-            {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-            {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-            {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-          ]);
-          selData.addAll(data["tangkiData"]);
-
-          getMax();
-
-          getData(currTangki);
-
-          List<String> items = [];
-
-          items.add("Semua");
-
-          for (var i = 0; i < data["tangkiData"].length; i++) {
-            items.add((i + 1).toString());
-          }
-
-          filterTangki = FilterTangki(
-            tangkiValue: "Semua",
-            items: items,
-            onChange: (value) => getData(int.tryParse(value) ?? 0),
-          );
-
-          // getTotal(currPage, currTangki);
-
-          setState(() {});
-
-          // Future.delayed(Duration(milliseconds: 500), () {
-
-          // });
-        };
-      });
-    });
+    initSelData();
+    // getMax2();
   }
 
   @override
@@ -485,8 +1157,12 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                   height: 230,
                                   child: Stack(
                                     children: [
-                                      MyLineChart(points: teganganSetting),
+                                      MyLineChart(
+                                        points: teganganSetting,
+                                        maxY: 4,
+                                      ),
                                       MyBarChart(
+                                          maxY: 4,
                                           max: teganganSetting.first.y,
                                           title: "tegangan",
                                           points: teganganData),
@@ -505,8 +1181,12 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                   height: 230,
                                   child: Stack(
                                     children: [
-                                      MyLineChart(points: arusSetting),
+                                      MyLineChart(
+                                        points: arusSetting,
+                                        maxY: 200,
+                                      ),
                                       MyBarChart(
+                                          maxY: 200,
                                           max: teganganSetting.first.y,
                                           title: "",
                                           points: arusData),

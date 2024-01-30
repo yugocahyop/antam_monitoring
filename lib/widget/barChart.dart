@@ -14,7 +14,9 @@ class MyBarChart extends StatelessWidget {
       {this.color = const Color(0xffF6FE34),
       required this.points,
       this.title,
-      required this.max});
+      required this.max,
+      required this.maxY,
+      this.tangkiMaxData = const []});
 
   // double minX;
   // double minY;
@@ -30,6 +32,10 @@ class MyBarChart extends StatelessWidget {
 
   double max;
 
+  double maxY;
+
+  List<dynamic> tangkiMaxData;
+
   Color color;
   List<Color> gradientColors = [
     MainStyle.primaryColor,
@@ -44,7 +50,7 @@ class MyBarChart extends StatelessWidget {
     return BarChart(
       BarChartData(
         minY: 0,
-        maxY: 100,
+        maxY: maxY,
         // minX: points.sort(),
         // maxX: step,
 
@@ -72,12 +78,14 @@ class MyBarChart extends StatelessWidget {
         gridData: FlGridData(
             // horizontalInterval: 1,
             // verticalInterval: 1,
-            show: true,
+            show: false,
             drawHorizontalLine: true,
             drawVerticalLine: false,
             getDrawingHorizontalLine: (double value) {
               return FlLine(
-                color: value == max ? Colors.red : const Color(0xffC4DBD9),
+                color: value == max
+                    ? Colors.red.withAlpha(0)
+                    : const Color(0xffC4DBD9),
                 strokeWidth: 1,
                 dashArray: [8, 4],
               );
@@ -117,12 +125,39 @@ class MyBarChart extends StatelessWidget {
               sideTitles: SideTitles(showTitles: false),
             ),
             bottomTitles: AxisTitles(
+              drawBehindEverything: true,
               axisNameSize: 20,
               // axisNameWidget:  Text(title ?? "" , style: TextStyle(fontSize: 16, color: Colors.green),),
               sideTitles: SideTitles(
-                getTitlesWidget: (value, meta) => Text(
-                  "Sel ${value.toInt()}",
-                  style: MyTextStyle.defaultFontCustom(Colors.black, 14),
+                getTitlesWidget: (value, meta) => Stack(
+                  children: [
+                    Transform.translate(
+                      offset: Offset(10, 0),
+                      child: Text(
+                        "Sel ${value.toInt()}",
+                        style: MyTextStyle.defaultFontCustom(Colors.black, 14),
+                      ),
+                    ),
+                    Transform.translate(
+                      offset: Offset(0, 20),
+                      child: Visibility(
+                        visible: tangkiMaxData.isNotEmpty,
+                        child: Container(
+                          padding: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: MainStyle.primaryColor),
+                          child: Text(
+                            tangkiMaxData.isEmpty
+                                ? ""
+                                : "Tangki ${tangkiMaxData[value.toInt() - 1][title!.toLowerCase()]}",
+                            style:
+                                MyTextStyle.defaultFontCustom(Colors.white, 12),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 showTitles: true,
               ),

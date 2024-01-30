@@ -1,12 +1,55 @@
 part of home;
 
-class Account_alarm extends StatelessWidget {
+class Account_alarm extends StatefulWidget {
   Account_alarm({super.key, required this.alarm});
 
   List<Map> alarm;
 
-  final double wide = 16 / 9;
+  @override
+  State<Account_alarm> createState() => _Account_alarmState();
+}
 
+class _Account_alarmState extends State<Account_alarm> {
+  String date = "", time = "";
+
+  DateFormat df = DateFormat("dd/MM/yyyy");
+
+  String addZero(int) {
+    String res = int.toString();
+
+    if (int.toString().length == 1) {
+      res = "0$res";
+    }
+    return res;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    DateTime dateTime = DateTime.now();
+
+    date = df.format(dateTime);
+
+    time =
+        "${addZero(dateTime.hour % 12)}:${addZero(dateTime.minute)} ${dateTime.hour >= 12 ? "PM" : "AM"}";
+
+    setState(() {});
+
+    Timer.periodic(Duration(seconds: 30), (timer) {
+      DateTime dateTime = DateTime.now();
+
+      date = df.format(dateTime);
+
+      time =
+          "${addZero(dateTime.hour % 12)}:${addZero(dateTime.minute)} ${dateTime.hour > 12 ? "PM" : "AM"}";
+
+      if (mounted) setState(() {});
+    });
+  }
+
+  final double wide = 16 / 9;
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -31,7 +74,7 @@ class Account_alarm extends StatelessWidget {
                     : lWidth * 0.4
                 : 500,
             child: Row(
-              children: alarm
+              children: widget.alarm
                   .map((e) => Row(
                         // mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -69,7 +112,7 @@ class Account_alarm extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "10:30 AM",
+                    time,
                     style: MyTextStyle.defaultFontCustom(
                         Colors.black, (lWidth / lheight) < wide ? 26 : 16,
                         weight: FontWeight.bold),
@@ -79,7 +122,7 @@ class Account_alarm extends StatelessWidget {
                   // ),
                   MainStyle.sizedBoxW20,
                   Text(
-                    "10/07/1991",
+                    date,
                     style: MyTextStyle.defaultFontCustom(
                       Colors.black,
                       (lWidth / lheight) < wide ? 26 : 16,

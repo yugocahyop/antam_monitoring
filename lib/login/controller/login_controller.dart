@@ -56,11 +56,14 @@ class Login_controller extends Controller {
 
       ApiHelper.tokenMain = r["activeToken"];
 
+      saveSharedPref("antam.token", r["activeToken"]);
+
       toggleLoading();
 
       // await Future.delayed(Duration(milliseconds: 200));
 
-      super.pageRoute(context, Home());
+      // super.pageRoute(context, Home());
+      Navigator.pushNamed(context, "/home");
     } else {
       await Future.delayed(Duration(seconds: 1));
 

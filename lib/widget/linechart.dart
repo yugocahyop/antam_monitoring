@@ -8,13 +8,17 @@ import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 
 class MyLineChart extends StatelessWidget {
-  MyLineChart({this.color = Colors.green, required this.points, this.title});
+  MyLineChart(
+      {this.color = Colors.green,
+      required this.points,
+      this.title,
+      required this.maxY});
 
   // double minX;
   // double minY;
 
   //  double maxX;
-  // double maxY;
+  double maxY;
 
   // double step;
 
@@ -36,7 +40,7 @@ class MyLineChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         minY: 0,
-        maxY: 100,
+        maxY: maxY,
         // minX: points.sort(),
         // maxX: step,
 

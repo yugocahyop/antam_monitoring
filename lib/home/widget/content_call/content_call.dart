@@ -1,7 +1,7 @@
 part of home;
 
-class Content_home extends StatefulWidget {
-  Content_home(
+class Content_call extends StatefulWidget {
+  Content_call(
       {super.key,
       required this.scSel,
       required this.selData,
@@ -14,10 +14,10 @@ class Content_home extends StatefulWidget {
   ScrollController scSel;
 
   @override
-  State<Content_home> createState() => _Content_homeState();
+  State<Content_call> createState() => _Content_callState();
 }
 
-class _Content_homeState extends State<Content_home> {
+class _Content_callState extends State<Content_call> {
   var alarm = [
     {
       "title": "Status",
@@ -33,59 +33,17 @@ class _Content_homeState extends State<Content_home> {
     }
   ];
 
-  var titleData = [
-    "Tangki",
-    "#Sel",
-    "Suhu",
-    "Tegangan",
-    "Arus",
-    "Daya",
-    "Energi"
-  ];
+  var titleData = ["#Sel", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
-  final List<dynamic> maxData = [
-    {
-      "sel": 1,
-      "suhu": 0.0,
-      "tegangan": 0.0,
-      "arus": 0.0,
-      "daya": 0.0,
-      "energi": 0.0
-    },
-    {
-      "sel": 2,
-      "suhu": 0.0,
-      "tegangan": 0.0,
-      "arus": 0.0,
-      "daya": 0.0,
-      "energi": 0.0
-    },
-    {
-      "sel": 3,
-      "suhu": 0.0,
-      "tegangan": 0.0,
-      "arus": 0.0,
-      "daya": 0.0,
-      "energi": 0.0
-    },
-    {
-      "sel": 4,
-      "suhu": 0.0,
-      "tegangan": 0.0,
-      "arus": 0.0,
-      "daya": 0.0,
-      "energi": 0.0
-    },
-    {
-      "sel": 5,
-      "suhu": 0.0,
-      "tegangan": 0.0,
-      "arus": 0.0,
-      "daya": 0.0,
-      "energi": 0.0
-    },
+  final maxDdata = [
+    {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+    {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
   ];
 
   List<dynamic> tangkiMaxData = [
@@ -99,7 +57,6 @@ class _Content_homeState extends State<Content_home> {
   List<dynamic> selData = [
     [
       {
-        "tangki": 1,
         "sel": 1,
         "suhu": 0.0,
         "tegangan": 0.0,
@@ -108,7 +65,6 @@ class _Content_homeState extends State<Content_home> {
         "energi": 0.0
       },
       {
-        "tangki": 1,
         "sel": 2,
         "suhu": 0.0,
         "tegangan": 0.0,
@@ -117,7 +73,6 @@ class _Content_homeState extends State<Content_home> {
         "energi": 0.0
       },
       {
-        "tangki": 1,
         "sel": 3,
         "suhu": 0.0,
         "tegangan": 0.0,
@@ -126,7 +81,6 @@ class _Content_homeState extends State<Content_home> {
         "energi": 0.0
       },
       {
-        "tangki": 1,
         "sel": 4,
         "suhu": 0.0,
         "tegangan": 0.0,
@@ -135,7 +89,6 @@ class _Content_homeState extends State<Content_home> {
         "energi": 0.0
       },
       {
-        "tangki": 1,
         "sel": 5,
         "suhu": 0.0,
         "tegangan": 0.0,
@@ -414,6 +367,7 @@ class _Content_homeState extends State<Content_home> {
     FlSpot(3, 0),
     FlSpot(4, 0),
     FlSpot(5, 0),
+    FlSpot(6, 0)
   ];
 
   var arusData = [
@@ -422,6 +376,7 @@ class _Content_homeState extends State<Content_home> {
     FlSpot(3, 0),
     FlSpot(4, 0),
     FlSpot(5, 0),
+    FlSpot(6, 0)
   ];
 
   var arusSetting = [FlSpot(0, 1), FlSpot(6, 1)];
@@ -499,7 +454,7 @@ class _Content_homeState extends State<Content_home> {
 
     if (tangki >= selData.length) return;
 
-    for (var e in (tangki == 0 ? maxData : selData[tangki])) {
+    for (var e in selData[tangki]) {
       teganganData.add(FlSpot(
           (e["sel"] as int).toDouble(),
           (e["tegangan"] ?? e["volt"]) is double
@@ -533,7 +488,7 @@ class _Content_homeState extends State<Content_home> {
       default:
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   getMax() {
@@ -604,89 +559,6 @@ class _Content_homeState extends State<Content_home> {
     }
   }
 
-  getMax2() {
-    selData[0].clear();
-    for (var i = 1; i < selData.length; i++) {
-      final v = selData[i];
-
-      // int count = 1;
-
-      for (Map<String, dynamic> e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
-
-        selData[0].add({
-          "tangki": i.toDouble(),
-          "sel": e["sel"] as double,
-          "suhu": c,
-          "tegangan": vv,
-          "arus": a,
-          "daya": w,
-          "energi": en,
-        });
-
-        //  e["celcius"] = (e["celcius"] as int) + 1;
-        final index = v.indexOf(e);
-
-        if (index < 5) {
-          maxData[index]["suhu"] = max(
-              maxData[index]["suhu"] is int
-                  ? (maxData[index]["suhu"] as int).toDouble()
-                  : maxData[index]["suhu"] as double,
-              c);
-          maxData[index]["tegangan"] = max(
-              maxData[index]["tegangan"] is int
-                  ? (maxData[index]["tegangan"] as int).toDouble()
-                  : maxData[index]["tegangan"] as double,
-              vv);
-          maxData[index]["arus"] = max(
-              maxData[index]["arus"] is int
-                  ? (maxData[index]["arus"] as int).toDouble()
-                  : maxData[index]["arus"] as double,
-              a);
-          maxData[index]["daya"] = max(
-              maxData[index]["daya"] is int
-                  ? (maxData[index]["daya"] as int).toDouble()
-                  : maxData[index]["daya"] as double,
-              w);
-          maxData[index]["energi"] = max(
-              maxData[index]["energi"] is int
-                  ? (maxData[index]["energi"] as int).toDouble()
-                  : maxData[index]["energi"] as double,
-              en);
-
-          tangkiMaxData[index]["suhu"] =
-              maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
-
-          tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
-              ? i
-              : tangkiMaxData[index]["tegangan"];
-
-          tangkiMaxData[index]["arus"] =
-              maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
-
-          tangkiMaxData[index]["daya"] =
-              maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
-
-          tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
-              ? i
-              : tangkiMaxData[index]["energi"];
-        }
-
-        // count++;
-      }
-
-      // if (kDebugMode) {
-      //   print("sel data 0 : ${selData[0][0].toString()}");
-      // }
-    }
-
-    if (mounted) setState(() {});
-  }
-
   MyMqtt? mqtt;
 
   @override
@@ -703,10 +575,6 @@ class _Content_homeState extends State<Content_home> {
 
   initSelData() async {
     final api = ApiHelper();
-
-    while (ApiHelper.tokenMain.isEmpty) {
-      await Future.delayed(Duration(seconds: 1));
-    }
 
     final r = await api.callAPI("/monitoring/find/last", "POST", "", true);
 
@@ -770,7 +638,7 @@ class _Content_homeState extends State<Content_home> {
 
     setState(() {});
 
-    getMax2();
+    getMax();
 
     Future.delayed(Duration(seconds: 1), () {
       if (!mounted) return;
@@ -786,7 +654,7 @@ class _Content_homeState extends State<Content_home> {
       });
     });
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   initMqtt() {
@@ -794,9 +662,9 @@ class _Content_homeState extends State<Content_home> {
       if (kDebugMode) {
         print("mqtt topic $topic");
       }
+
       if (topic == "antam/device") {
         selData.clear();
-        // selData.add([]);
         selData.add([
           {
             "tangki": 1,
@@ -846,9 +714,7 @@ class _Content_homeState extends State<Content_home> {
         ]);
         selData.addAll(data["tangkiData"]);
 
-        getMax2();
-
-        getData(currTangki);
+        getMax();
 
         // List<String> items = [];
 
@@ -863,6 +729,8 @@ class _Content_homeState extends State<Content_home> {
         //   items: items,
         //   onChange: (value) => getData(int.tryParse(value) ?? 0),
         // );
+
+        getData(currTangki);
       } else if (topic == "antam/device/node") {
         final int tangki = data["tangki"] as int;
 
@@ -887,7 +755,7 @@ class _Content_homeState extends State<Content_home> {
         selData[tangki][data["sel"] as int] =
             (jsonDecode(sData)) as Map<String, num>;
 
-        getMax2();
+        getMax();
 
         List<String> items = [];
 
@@ -1011,10 +879,6 @@ class _Content_homeState extends State<Content_home> {
 
   initTotalDataStatistic() async {
     ApiHelper api = ApiHelper();
-
-    while (ApiHelper.tokenMain.isEmpty) {
-      await Future.delayed(Duration(seconds: 1));
-    }
 
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
@@ -1251,9 +1115,14 @@ class _Content_homeState extends State<Content_home> {
                                   child: Column(children: [
                                     Row(
                                       children: [
-                                        SvgPicture.asset(
-                                          "assets/monitoring.svg",
-                                          width: 30,
+                                        // SvgPicture.asset(
+                                        //   "assets/monitoring.svg",
+                                        //   width: 30,
+                                        //   color: MainStyle.primaryColor,
+                                        // ),
+                                        Icon(
+                                          Icons.lan,
+                                          size: 30,
                                           color: MainStyle.primaryColor,
                                         ),
                                         // const SizedBox(
@@ -1261,74 +1130,21 @@ class _Content_homeState extends State<Content_home> {
                                         // ),
                                         MainStyle.sizedBoxW10,
                                         Text(
-                                          "Grafik Nyata",
+                                          "Diagnostic",
                                           style: MyTextStyle.defaultFontCustom(
                                               MainStyle.primaryColor, 20),
                                         )
                                       ],
                                     ),
-                                    // const SizedBox(
-                                    //   height: 20,
-                                    // ),
-                                    MainStyle.sizedBoxH20,
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Tegangan (V)",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              Colors.black, 14),
-                                        )),
-                                    SizedBox(
-                                      width: 1200,
-                                      height: 230,
-                                      child: Stack(
-                                        children: [
-                                          MyLineChart(
-                                            points: teganganSetting,
-                                            maxY: 4,
-                                          ),
-                                          MyBarChart(
-                                              tangkiMaxData: currTangki == 0
-                                                  ? tangkiMaxData
-                                                  : [],
-                                              maxY: 4,
-                                              max: teganganSetting.last.y,
-                                              title: "tegangan",
-                                              points: teganganData),
-                                        ],
-                                      ),
+                                    const SizedBox(
+                                      height: 20,
                                     ),
-                                    // const SizedBox(
-                                    //   height: 10,
-                                    // ),
-                                    MainStyle.sizedBoxH10,
-                                    Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Arus (A)",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              Colors.black, 14),
-                                        )),
-                                    SizedBox(
-                                      width: 1200,
-                                      height: 230,
-                                      child: Stack(
-                                        children: [
-                                          MyLineChart(
-                                            points: arusSetting,
-                                            maxY: 200,
-                                          ),
-                                          MyBarChart(
-                                              tangkiMaxData: currTangki == 0
-                                                  ? tangkiMaxData
-                                                  : [],
-                                              maxY: 200,
-                                              max: teganganSetting.first.y,
-                                              title: "Arus",
-                                              points: arusData),
-                                        ],
-                                      ),
-                                    ),
+                                    // Column(children: getDiagnostiWidget(70))
+                                    // PanelNode(
+                                    //     tangki: 1,
+                                    //     sel: 1,
+                                    //     status: "active",
+                                    //     lastUpdated: "12 dec")
                                   ]),
                                 ),
                               ),
@@ -1443,27 +1259,16 @@ class _Content_homeState extends State<Content_home> {
                                                                 .circular(4))),
                                                 child: Row(
                                                   children: titleData
-                                                      .map((e) => Visibility(
-                                                            visible: e !=
-                                                                    "Tangki" ||
-                                                                (e == "Tangki" &&
-                                                                    currTangki ==
-                                                                        0),
-                                                            child: SizedBox(
-                                                              width:
-                                                                  currTangki ==
-                                                                          0
-                                                                      ? 82
-                                                                      : 90,
-                                                              child: Center(
-                                                                child: Text(
-                                                                  e,
-                                                                  style: MyTextStyle
-                                                                      .defaultFontCustom(
-                                                                          Colors
-                                                                              .white,
-                                                                          14),
-                                                                ),
+                                                      .map((e) => SizedBox(
+                                                            width: 90,
+                                                            child: Center(
+                                                              child: Text(
+                                                                e,
+                                                                style: MyTextStyle
+                                                                    .defaultFontCustom(
+                                                                        Colors
+                                                                            .white,
+                                                                        14),
                                                               ),
                                                             ),
                                                           ))
@@ -1475,8 +1280,8 @@ class _Content_homeState extends State<Content_home> {
                                                   width: 600,
                                                   height: 200,
                                                   decoration: BoxDecoration(
-                                                      color:
-                                                          MainStyle.thirdColor,
+                                                      color: const Color(
+                                                          0xffC1E1DF),
                                                       borderRadius:
                                                           BorderRadius.only(
                                                               bottomLeft: Radius
@@ -1507,97 +1312,86 @@ class _Content_homeState extends State<Content_home> {
                                                               [];
                                                           List<Widget>
                                                               listTangki = [];
-                                                          val.forEach((key, value) => key ==
-                                                                  "sel"
-                                                              ? listSel.insert(
-                                                                  currTangki ==
-                                                                          0
-                                                                      ? 1
-                                                                      : 0,
-                                                                  SizedBox(
-                                                                    width:
-                                                                        currTangki ==
-                                                                                0
-                                                                            ? 82
-                                                                            : 90,
-                                                                    height: 35,
+                                                          val.forEach((key,
+                                                                  value) =>
+                                                              key == "sel"
+                                                                  ? listSel
+                                                                      .insert(
+                                                                          0,
+                                                                          SizedBox(
+                                                                            width:
+                                                                                90,
+                                                                            height:
+                                                                                35,
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(
+                                                                                (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
+                                                                                style: MyTextStyle.defaultFontCustom(Colors.black, 15),
+                                                                              ),
+                                                                            ),
+                                                                          ))
+                                                                  : listSel.add(
+                                                                      Visibility(
+                                                                      visible:
+                                                                          key !=
+                                                                              "tangki",
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            90,
+                                                                        height:
+                                                                            35,
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
+                                                                                (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
+                                                                            style:
+                                                                                MyTextStyle.defaultFontCustom(Colors.black, 15),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )));
+
+                                                          tangkiMaxData[i]
+                                                              .forEach((key,
+                                                                      value) =>
+                                                                  listTangki.add(
+                                                                      SizedBox(
+                                                                    width: 90,
+                                                                    // height: 35,
                                                                     child:
                                                                         Center(
                                                                       child:
-                                                                          Text(
-                                                                        (value as double).toStringAsFixed((key == "sel")
-                                                                                ? 0
-                                                                                : 2) +
-                                                                            (key == "suhu" || key == "celcius"
-                                                                                ? "\u00B0"
-                                                                                : ""),
-                                                                        style: MyTextStyle.defaultFontCustom(
-                                                                            Colors.black,
-                                                                            15),
+                                                                          Visibility(
+                                                                        visible:
+                                                                            key !=
+                                                                                "sel",
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              80,
+                                                                          padding:
+                                                                              EdgeInsets.all(2),
+                                                                          decoration: BoxDecoration(
+                                                                              color: MainStyle.secondaryColor,
+                                                                              borderRadius: BorderRadius.circular(5)),
+                                                                          child:
+                                                                              Text(
+                                                                            "tangki " +
+                                                                                (value as int).toString(),
+                                                                            style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
+                                                                                12,
+                                                                                weight: FontWeight.w600),
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                          ),
+                                                                        ),
                                                                       ),
                                                                     ),
-                                                                  ))
-                                                              : listSel
-                                                                  .add(SizedBox(
-                                                                  width:
-                                                                      currTangki ==
-                                                                              0
-                                                                          ? 82
-                                                                          : 90,
-                                                                  height: 35,
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      (value as double).toStringAsFixed(key == "tangki"
-                                                                              ? 0
-                                                                              : 2) +
-                                                                          (key == "suhu" || key == "celcius"
-                                                                              ? "\u00B0"
-                                                                              : ""),
-                                                                      style: MyTextStyle.defaultFontCustom(
-                                                                          Colors
-                                                                              .black,
-                                                                          15),
-                                                                    ),
-                                                                  ),
-                                                                )));
-
-                                                          // tangkiMaxData[i]
-                                                          //     .forEach((key,
-                                                          //             value) =>
-                                                          //         listTangki.add(
-                                                          //             SizedBox(
-                                                          //           width: 90,
-                                                          //           // height: 35,
-                                                          //           child:
-                                                          //               Center(
-                                                          //             child:
-                                                          //                 Visibility(
-                                                          //               visible:
-                                                          //                   key !=
-                                                          //                       "sel",
-                                                          //               child:
-                                                          //                   Container(
-                                                          //                 width:
-                                                          //                     80,
-                                                          //                 padding:
-                                                          //                     EdgeInsets.all(2),
-                                                          //                 decoration: BoxDecoration(
-                                                          //                     color: MainStyle.secondaryColor,
-                                                          //                     borderRadius: BorderRadius.circular(5)),
-                                                          //                 child:
-                                                          //                     Text(
-                                                          //                   "tangki " +
-                                                          //                       (value as int).toString(),
-                                                          //                   style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
-                                                          //                       12,
-                                                          //                       weight: FontWeight.w600),
-                                                          //                   textAlign:
-                                                          //                       TextAlign.center,
-                                                          //                 ),
-                                                          //               ),
-                                                          //             ),
-                                                          //           ),
-                                                          //         )));
+                                                                  )));
 
                                                           // listSel.add();
                                                           return Column(
@@ -1613,16 +1407,16 @@ class _Content_homeState extends State<Content_home> {
                                                                       color: const Color(
                                                                           0xff9ACBC7),
                                                                     ),
-                                                                    // Visibility(
-                                                                    //   visible:
-                                                                    //       currTangki ==
-                                                                    //           0,
-                                                                    //   child:
-                                                                    //       Row(
-                                                                    //     children:
-                                                                    //         listTangki,
-                                                                    //   ),
-                                                                    // ),
+                                                                    Visibility(
+                                                                      visible:
+                                                                          currTangki ==
+                                                                              0,
+                                                                      child:
+                                                                          Row(
+                                                                        children:
+                                                                            listTangki,
+                                                                      ),
+                                                                    ),
                                                                   ],
                                                                 ),
                                                               )
