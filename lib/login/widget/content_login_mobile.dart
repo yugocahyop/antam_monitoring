@@ -113,12 +113,12 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                   height: 50,
                 ),
                 Transform.translate(
-                  offset: Offset(0, 15),
+                  offset: const Offset(0, 0),
                   child: Container(
                     alignment: Alignment.center,
                     width: lWidth,
-                    height: lheight * 0.5,
-                    decoration: BoxDecoration(
+                    height: 500,
+                    decoration: const BoxDecoration(
                         boxShadow: [
                           BoxShadow(
                               color: Colors.black26,
@@ -163,7 +163,7 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                                           activeColor: MainStyle.primaryColor,
                                           value: isRemember,
                                           shape: RoundedRectangleBorder(
-                                              side: BorderSide(
+                                              side: const BorderSide(
                                                   color:
                                                       MainStyle.primaryColor),
                                               borderRadius:
@@ -208,7 +208,7 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                               height: 30,
                             ),
                             MyButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.login,
                                   color: Colors.white,
                                 ),
@@ -255,7 +255,7 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
         Visibility(
             visible: isOverlay,
             child: AnimatedOpacity(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               opacity: overlayOpacity,
               onEnd: () {
                 if (overlayOpacity == 0) {

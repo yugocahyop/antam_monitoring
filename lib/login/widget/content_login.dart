@@ -71,7 +71,7 @@ class _Content_loginState extends State<Content_login> {
             width: 7,
           ),
           boxShadow: [
-            BoxShadow(
+            const BoxShadow(
               blurRadius: 30,
               offset: Offset(0, 20),
               color: Colors.black26,
@@ -138,7 +138,7 @@ class _Content_loginState extends State<Content_login> {
                                         activeColor: MainStyle.primaryColor,
                                         value: isRemember,
                                         shape: RoundedRectangleBorder(
-                                            side: BorderSide(
+                                            side: const BorderSide(
                                                 color: MainStyle.primaryColor),
                                             borderRadius:
                                                 BorderRadius.circular(3)),
@@ -181,7 +181,7 @@ class _Content_loginState extends State<Content_login> {
                               height: 30,
                             ),
                             MyButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.login,
                                   color: Colors.white,
                                 ),

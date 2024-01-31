@@ -11,7 +11,7 @@ import '../../widget/myTextField.dart';
 
 class Login_controller extends Controller {
   signUp_login(BuildContext context, Function done) async {
-    final r = await super.heroPageRoute(context, SignUp());
+    final r = await super.heroPageRoute(context, const SignUp());
 
     // Future.value(r).then((value) => signUpDone(r, done));
 
@@ -52,7 +52,7 @@ class Login_controller extends Controller {
   Future<void> login_done(List<Mytextfield> inputs, Map<String, dynamic> r,
       BuildContext context, Function() toggleLoading) async {
     if (r["error"] == null) {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       ApiHelper.tokenMain = r["activeToken"];
 
@@ -65,7 +65,7 @@ class Login_controller extends Controller {
       // super.pageRoute(context, Home());
       Navigator.pushNamed(context, "/home");
     } else {
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       toggleLoading();
 
@@ -74,12 +74,12 @@ class Login_controller extends Controller {
       if (error.contains("pass")) {
         inputs.last.startShake();
 
-        Future.delayed(Duration(milliseconds: 200), () {
+        Future.delayed(const Duration(milliseconds: 200), () {
           inputs.last.focusNode.requestFocus();
         });
       } else {
         inputs.first.startShake();
-        Future.delayed(Duration(milliseconds: 200), () {
+        Future.delayed(const Duration(milliseconds: 200), () {
           inputs.first.focusNode.requestFocus();
         });
       }

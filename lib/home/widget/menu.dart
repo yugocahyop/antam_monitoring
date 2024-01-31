@@ -15,9 +15,10 @@ final grad_colors = [
   MainStyle.primaryColor.withAlpha(((255 * 0.1) * 0.3).toInt()),
 ];
 
-final double wide = 16 / 9;
+const double wide = 16 / 9;
 
 // final cc = Controller();
+List<bool> isHovers = [false, false, false, false, false];
 
 class _MenuState extends State<Menu> {
   @override
@@ -32,20 +33,20 @@ class _MenuState extends State<Menu> {
           : lWidth >= 1920
               ? lheight
               : 800,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
           color: MainStyle.secondaryColor,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topRight: Radius.circular(30), bottomRight: Radius.circular(30)),
           boxShadow: [
             BoxShadow(
                 color: MainStyle.primaryColor.withAlpha((255 * 0.05).toInt()),
-                offset: Offset(4, 4),
+                offset: const Offset(4, 4),
                 blurRadius: 10,
                 spreadRadius: 0),
             BoxShadow(
                 color: MainStyle.primaryColor.withAlpha((255 * 0.1).toInt()),
-                offset: Offset(
+                offset: const Offset(
                   6,
                   6,
                 ),
@@ -71,6 +72,11 @@ class _MenuState extends State<Menu> {
                       type: MaterialType.transparency,
                       child: InkWell(
                         hoverColor: Colors.transparent,
+                        onHover: ((value) {
+                          setState(() {
+                            isHovers[widget.menuItem.indexOf(e)] = value;
+                          });
+                        }),
                         onTap: () async {
                           widget.menuItem
                               .where((element) =>
@@ -80,47 +86,49 @@ class _MenuState extends State<Menu> {
                             e["isActive"] = true;
                           });
 
-                          await Future.delayed(Duration(milliseconds: 150));
+                          await Future.delayed(
+                              const Duration(milliseconds: 150));
 
                           widget.menuItem[widget.menuItem.indexOf(e)]
                               ["function"]();
                         },
                         child: AnimatedContainer(
+                          clipBehavior: Clip.none,
                           duration: const Duration(milliseconds: 150),
-                          margin: EdgeInsets.only(bottom: 20),
-                          width: (lWidth / lheight) < wide ? 400 : 200,
-                          padding: EdgeInsets.all(8),
+                          margin: const EdgeInsets.only(bottom: 20),
+                          width: (lWidth / lheight) < wide ? 406 : 206,
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: !(e["isActive"] as bool)
-                                ? [BoxShadow(color: Colors.transparent)]
+                                ? [const BoxShadow(color: Colors.transparent)]
                                 : [
                                     BoxShadow(
-                                        offset: Offset(0, 8),
+                                        offset: const Offset(0, 8),
                                         blurRadius: 60,
                                         spreadRadius: 0,
                                         color: MainStyle.primaryColor.withAlpha(
                                             ((255 * 0.13) * 0.3).toInt())),
                                     BoxShadow(
-                                        offset: Offset(0, 5.5),
+                                        offset: const Offset(0, 5.5),
                                         blurRadius: 41,
                                         spreadRadius: 0,
                                         color: MainStyle.primaryColor.withAlpha(
                                             ((255 * 0.9) * 0.3).toInt())),
                                     BoxShadow(
-                                        offset: Offset(0, 2.5),
+                                        offset: const Offset(0, 2.5),
                                         blurRadius: 30,
                                         spreadRadius: 0,
                                         color: MainStyle.primaryColor.withAlpha(
                                             ((255 * 0.07) * 0.3).toInt())),
                                     BoxShadow(
-                                        offset: Offset(0, 1),
+                                        offset: const Offset(0, 1),
                                         blurRadius: 22,
                                         spreadRadius: 0,
                                         color: MainStyle.primaryColor.withAlpha(
                                             ((255 * 0.06) * 0.3).toInt())),
                                     BoxShadow(
-                                        offset: Offset(0, 0.5),
+                                        offset: const Offset(0, 0.5),
                                         blurRadius: 12,
                                         spreadRadius: 0,
                                         color: MainStyle.primaryColor.withAlpha(
@@ -130,7 +138,7 @@ class _MenuState extends State<Menu> {
                             //     ? MainStyle.primaryColor
                             //     : null,
                             gradient: (e["isActive"] as bool)
-                                ? LinearGradient(
+                                ? const LinearGradient(
                                     colors: [
                                         MainStyle.primaryColor,
                                         MainStyle.primaryColor
@@ -139,7 +147,7 @@ class _MenuState extends State<Menu> {
                                     end: Alignment.centerRight)
                                 : LinearGradient(
                                     colors: grad_colors,
-                                    stops: [0, 0.6, 1],
+                                    stops: const [0, 0.6, 1],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight),
                           ),
@@ -167,12 +175,25 @@ class _MenuState extends State<Menu> {
                                       (lWidth / lheight) < wide ? 28 : 15),
                                 ),
                               ),
-                              Icon(
-                                Icons.chevron_right,
-                                size: 25,
-                                color: (e["isActive"] as bool)
-                                    ? Colors.white
-                                    : MainStyle.primaryColor,
+                              Container(
+                                clipBehavior: Clip.none,
+                                width: 32,
+                                decoration: const BoxDecoration(),
+                                child: AnimatedAlign(
+                                  // curve: Curves.elasticInOut,
+                                  duration: Duration(milliseconds: 200),
+                                  alignment:
+                                      !isHovers[widget.menuItem.indexOf(e)]
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    size: 25,
+                                    color: (e["isActive"] as bool)
+                                        ? Colors.white
+                                        : MainStyle.primaryColor,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -190,12 +211,12 @@ class _MenuState extends State<Menu> {
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
                     color: MainStyle.primaryColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.info_outline,
                     color: Colors.white,
                     size: 18,
@@ -206,15 +227,15 @@ class _MenuState extends State<Menu> {
                 // ),
                 MainStyle.sizedBoxW10,
                 Container(
-                  padding: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
                     color: MainStyle.primaryColor,
                     shape: BoxShape.circle,
                   ),
                   child: GestureDetector(
                     onTap: () => Navigator.pushNamedAndRemoveUntil(
                         context, '/login', ((route) => false)),
-                    child: Icon(
+                    child: const Icon(
                       Icons.logout_outlined,
                       color: Colors.white,
                       size: 18,

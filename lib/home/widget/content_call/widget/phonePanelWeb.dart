@@ -1,4 +1,4 @@
-// import'dart:html';
+import 'dart:html';
 // import  'dart:io';
 
 import 'package:antam_monitoring/style/mainStyle.dart';
@@ -35,8 +35,8 @@ class _PhonePanelState extends State<PhonePanel> {
           });
         },
         onTap: (() {
-          launchUrl(Uri.parse("https://wa.me/${widget.phone}"),
-              mode: LaunchMode.externalApplication);
+          // ignore: deprecated_member_use
+          window.open("https://wa.me/${widget.phone}", 'Link');
         }),
         child: Container(
           padding: const EdgeInsets.all(10),

@@ -143,9 +143,9 @@ class MyMqtt {
     if (kDebugMode) {
       print('EXAMPLE::Subscribing to the test/lol topic');
     }
-    var topic = 'antam/device'; // Not a wildcard topic
-    client.subscribe(topic, MqttQos.atLeastOnce);
-    // client.subscribe('antam/device/node', MqttQos.atLeastOnce);
+    // var topic = 'antam/device'; // Not a wildcard topic
+    // client.subscribe(topic, MqttQos.atLeastOnce);
+    client.subscribe('antam/device/node', MqttQos.atLeastOnce);
     client.subscribe('antam/status', MqttQos.atLeastOnce);
     client.subscribe('antam/statistic', MqttQos.atLeastOnce);
     client.subscribe('antam/statusnode', MqttQos.atLeastOnce);

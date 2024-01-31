@@ -60,15 +60,15 @@ class _MyMessage_mobileState extends State<MyMessage_mobile> {
           child: FittedBox(
             fit: BoxFit.fitHeight,
             child: Container(
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.only(top: 30),
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.only(top: 30),
               width: lWidth > 600 ? lWidth * 0.7 : 500,
               height: 400,
               decoration: BoxDecoration(
                   color: const Color(0xffFEF7F1),
                   borderRadius: BorderRadius.circular(50),
                   boxShadow: [
-                    BoxShadow(
+                    const BoxShadow(
                         blurRadius: 30,
                         color: Colors.black26,
                         offset: Offset(0, 20))
@@ -80,8 +80,8 @@ class _MyMessage_mobileState extends State<MyMessage_mobile> {
                     child: Container(
                       width: 20,
                       height: 270,
-                      decoration: BoxDecoration(
-                        color: const Color(0xffDF7B00),
+                      decoration: const BoxDecoration(
+                        color: Color(0xffDF7B00),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(50),
                             bottomRight: Radius.circular(50)),
@@ -97,9 +97,9 @@ class _MyMessage_mobileState extends State<MyMessage_mobile> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.info_rounded,
-                              color: const Color(0xffDF7B00),
+                              color: Color(0xffDF7B00),
                               size: 50,
                             ),
                             const SizedBox(

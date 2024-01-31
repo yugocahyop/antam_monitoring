@@ -37,7 +37,7 @@ class _Account_alarmState extends State<Account_alarm> {
 
     setState(() {});
 
-    Timer.periodic(Duration(seconds: 30), (timer) {
+    Timer.periodic(const Duration(seconds: 30), (timer) {
       DateTime dateTime = DateTime.now();
 
       date = df.format(dateTime);

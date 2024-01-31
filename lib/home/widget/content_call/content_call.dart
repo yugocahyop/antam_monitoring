@@ -359,27 +359,27 @@ class _Content_callState extends State<Content_call> {
     {"title": "Energi", "value": 0.0, "unit": "Watt_Jam"},
   ];
 
-  var teganganSetting = [FlSpot(0, 1), FlSpot(6, 1)];
+  var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
 
   var teganganData = [
-    FlSpot(1, 0),
-    FlSpot(2, 0),
-    FlSpot(3, 0),
-    FlSpot(4, 0),
-    FlSpot(5, 0),
-    FlSpot(6, 0)
+    const FlSpot(1, 0),
+    const FlSpot(2, 0),
+    const FlSpot(3, 0),
+    const FlSpot(4, 0),
+    const FlSpot(5, 0),
+    const FlSpot(6, 0)
   ];
 
   var arusData = [
-    FlSpot(1, 0),
-    FlSpot(2, 0),
-    FlSpot(3, 0),
-    FlSpot(4, 0),
-    FlSpot(5, 0),
-    FlSpot(6, 0)
+    const FlSpot(1, 0),
+    const FlSpot(2, 0),
+    const FlSpot(3, 0),
+    const FlSpot(4, 0),
+    const FlSpot(5, 0),
+    const FlSpot(6, 0)
   ];
 
-  var arusSetting = [FlSpot(0, 1), FlSpot(6, 1)];
+  var arusSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
 
   final grad_colors = [
     MainStyle.primaryColor.withAlpha(((255 * 0.4) * 0.3).toInt()),
@@ -561,10 +561,83 @@ class _Content_callState extends State<Content_call> {
 
   MyMqtt? mqtt;
 
+  Map<String, bool> dataNyataSortOrder = {};
+  List<String> dataNyataSortOrderList = [];
+
+  resetSelDataSort() {
+    (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
+        .sort((dynamic a, dynamic b) {
+      // final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
+      // final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
+      final aVal = a["sel"] as double;
+      final bVal = b["sel"] as double;
+
+      // print(
+      //     "sel");
+      int r = aVal.compareTo(bVal);
+
+      // if (r == 0) {
+      //   r = aVal2.compareTo(bVal2);
+      // }
+
+      return r;
+    });
+  }
+
+  sortSelData() {
+    if (dataNyataSortOrderList.isEmpty || dataNyataSortOrder.isEmpty) return;
+    resetSelDataSort();
+    (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
+        .sort((dynamic a, dynamic b) {
+      final aVal =
+          a[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
+              0 as double;
+      final bVal =
+          b[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
+              0 as double;
+
+      // print("aVal: $aVal");
+
+      int r = dataNyataSortOrder[dataNyataSortOrderList[0]]!
+          ? bVal.compareTo(aVal)
+          : aVal.compareTo(bVal);
+
+      int i = 1;
+
+      while (r == 0 &&
+          dataNyataSortOrderList.length > 1 &&
+          i < dataNyataSortOrderList.length) {
+        if (i < dataNyataSortOrderList.length) {
+          final aVal =
+              a[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
+                  0 as double;
+          final bVal =
+              b[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
+                  0 as double;
+
+          // print("aVal: $aVal");
+
+          r = dataNyataSortOrder[dataNyataSortOrderList[i]]!
+              ? bVal.compareTo(aVal)
+              : aVal.compareTo(bVal);
+        }
+
+        i++;
+      }
+
+      return r;
+    });
+    setState(() {});
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    mqtt!.onUpdate = (t, d) {};
+
+    tangkiMaxData.clear();
+    maxDdata.clear();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();
@@ -640,12 +713,12 @@ class _Content_callState extends State<Content_call> {
 
     getMax();
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
       setState(() {});
       getData(0);
 
-      Future.delayed(Duration(milliseconds: 300), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         if (!mounted) return;
         setSetting("tegangan", 3);
         setSetting("arus", 100);
@@ -734,46 +807,24 @@ class _Content_callState extends State<Content_call> {
       } else if (topic == "antam/device/node") {
         final int tangki = data["tangki"] as int;
 
-        if (tangki > (selData.length - 1)) {
-          for (var i = 0; i < (tangki - (selData.length - 1)); i++) {
-            selData.add([
-              {"sel": 1, "celcius": 0, "volt": 0, "ampere": 0},
-              {"sel": 2, "celcius": 0, "volt": 0, "ampere": 0},
-              {"sel": 3, "celcius": 0, "volt": 0, "ampere": 0},
-              {"sel": 4, "celcius": 0, "volt": 0, "ampere": 0},
-              {"sel": 5, "celcius": 0, "volt": 0, "ampere": 0},
-              {"sel": 6, "celcius": 0, "volt": 0, "ampere": 0}
-            ]);
-          }
-        }
-        final sData = jsonEncode(Map.from(data["selData"]));
+        final sData = Map.from(data["selData"]);
+
+        resetSelDataSort();
 
         if (kDebugMode) {
           print((sData));
         }
 
-        selData[tangki][data["sel"] as int] =
-            (jsonDecode(sData)) as Map<String, num>;
+        for (var i = 2; i < titleData.length; i++) {
+          final title = titleData[i].toLowerCase();
+
+          selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+        }
 
         getMax();
 
-        List<String> items = [];
-
-        items.add("Semua");
-
-        for (var i = 0; i < selData.length; i++) {
-          items.add((i + 1).toString());
-        }
-
-        filterTangki = FilterTangki(
-          tangkiValue: currTangki.toString(),
-          items: items,
-          onChange: (value) => getData(int.tryParse(value) ?? 0),
-        );
-
         getData(currTangki);
-
-        // getTotal(currPage, currTangki);
+        sortSelData();
       } else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
@@ -868,6 +919,8 @@ class _Content_callState extends State<Content_call> {
         totalData.clear();
         totalData.addAll(temp);
       }
+
+      data.clear();
 
       // getTotal(currTangki);
 
@@ -966,8 +1019,8 @@ class _Content_callState extends State<Content_call> {
     // getData(0);
 
     filterTangki = FilterTangki(
-      tangkiValue: "Semua",
-      items: ["Semua", "1", "2", "3", "4", "5", "6"],
+      tangkiValue: "Max",
+      items: ["Max", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
@@ -975,6 +1028,33 @@ class _Content_callState extends State<Content_call> {
 
     initSelData();
     initTotalDataStatistic();
+  }
+
+  List<Map<String, dynamic>> callData = [
+    {
+      "name": "Yugo cahyopratopo",
+      "phone": "+6282120432996",
+      "role": "Developer"
+    },
+    {"name": "Tengku Ahmad", "phone": "+6285265262812", "role": "Developer"}
+  ];
+
+  List<Widget> createPhonePanels(double width) {
+    List<Widget> panels = [];
+
+    for (var i = 0; i < callData.length; i++) {
+      final val = callData[i];
+      panels.add(PhonePanel(
+          name: val["name"],
+          role: val["role"],
+          phone: val["phone"],
+          width: width));
+      panels.add(SizedBox(
+        height: 5,
+      ));
+    }
+
+    return panels;
   }
 
   @override
@@ -996,7 +1076,7 @@ class _Content_callState extends State<Content_call> {
       child: Stack(
         children: [
           Container(
-              padding: EdgeInsets.fromLTRB(45, 30, 30, 10),
+              padding: const EdgeInsets.fromLTRB(45, 30, 30, 10),
               width: (lWidth / lheight) < wide
                   ? 2200
                   : lWidth >= 1920
@@ -1084,7 +1164,7 @@ class _Content_callState extends State<Content_call> {
                                         ? (lheight >= 1080 ? -45 : -15)
                                         : 0),
                                 child: Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   width: 500,
                                   height: 620,
                                   decoration: BoxDecoration(
@@ -1092,20 +1172,20 @@ class _Content_callState extends State<Content_call> {
                                       borderRadius: BorderRadius.circular(30),
                                       boxShadow: [
                                         BoxShadow(
-                                            offset: Offset(4, 4),
+                                            offset: const Offset(4, 4),
                                             color: MainStyle.primaryColor
                                                 .withAlpha(
                                                     (255 * 0.05).toInt()),
                                             blurRadius: 10,
                                             spreadRadius: 0),
                                         BoxShadow(
-                                            offset: Offset(-4, -4),
+                                            offset: const Offset(-4, -4),
                                             color: Colors.white
                                                 .withAlpha((255 * 0.5).toInt()),
                                             blurRadius: 13,
                                             spreadRadius: 0),
                                         BoxShadow(
-                                            offset: Offset(6, 6),
+                                            offset: const Offset(6, 6),
                                             color: MainStyle.primaryColor
                                                 .withAlpha(
                                                     (255 * 0.10).toInt()),
@@ -1120,8 +1200,8 @@ class _Content_callState extends State<Content_call> {
                                         //   width: 30,
                                         //   color: MainStyle.primaryColor,
                                         // ),
-                                        Icon(
-                                          Icons.lan,
+                                        const Icon(
+                                          Icons.call_outlined,
                                           size: 30,
                                           color: MainStyle.primaryColor,
                                         ),
@@ -1130,7 +1210,7 @@ class _Content_callState extends State<Content_call> {
                                         // ),
                                         MainStyle.sizedBoxW10,
                                         Text(
-                                          "Diagnostic",
+                                          "Emergency Call",
                                           style: MyTextStyle.defaultFontCustom(
                                               MainStyle.primaryColor, 20),
                                         )
@@ -1139,7 +1219,8 @@ class _Content_callState extends State<Content_call> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    // Column(children: getDiagnostiWidget(70))
+
+                                    Column(children: createPhonePanels(500))
                                     // PanelNode(
                                     //     tangki: 1,
                                     //     sel: 1,
@@ -1166,7 +1247,7 @@ class _Content_callState extends State<Content_call> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       width: 650,
                                       height: 320,
                                       decoration: BoxDecoration(
@@ -1175,20 +1256,20 @@ class _Content_callState extends State<Content_call> {
                                               BorderRadius.circular(30),
                                           boxShadow: [
                                             BoxShadow(
-                                                offset: Offset(4, 4),
+                                                offset: const Offset(4, 4),
                                                 color: MainStyle.primaryColor
                                                     .withAlpha(
                                                         (255 * 0.05).toInt()),
                                                 blurRadius: 10,
                                                 spreadRadius: 0),
                                             BoxShadow(
-                                                offset: Offset(-4, -4),
+                                                offset: const Offset(-4, -4),
                                                 color: Colors.white.withAlpha(
                                                     (255 * 0.5).toInt()),
                                                 blurRadius: 13,
                                                 spreadRadius: 0),
                                             BoxShadow(
-                                                offset: Offset(6, 6),
+                                                offset: const Offset(6, 6),
                                                 color: MainStyle.primaryColor
                                                     .withAlpha(
                                                         (255 * 0.10).toInt()),
@@ -1230,7 +1311,7 @@ class _Content_callState extends State<Content_call> {
                                                         .primaryColor
                                                         .withAlpha((255 * 0.15)
                                                             .toInt()),
-                                                    offset: Offset(0, 3),
+                                                    offset: const Offset(0, 3),
                                                     blurRadius: 5,
                                                     spreadRadius: 0),
                                                 BoxShadow(
@@ -1238,16 +1319,17 @@ class _Content_callState extends State<Content_call> {
                                                         .primaryColor
                                                         .withAlpha((255 * 0.15)
                                                             .toInt()),
-                                                    offset: Offset(0, 3),
+                                                    offset: const Offset(0, 3),
                                                     blurRadius: 30,
                                                     spreadRadius: 0)
                                               ]),
                                           child: Column(
                                             children: [
                                               Container(
-                                                padding: EdgeInsets.all(8),
+                                                padding:
+                                                    const EdgeInsets.all(8),
                                                 width: 600,
-                                                decoration: BoxDecoration(
+                                                decoration: const BoxDecoration(
                                                     color:
                                                         MainStyle.primaryColor,
                                                     borderRadius:
@@ -1259,16 +1341,102 @@ class _Content_callState extends State<Content_call> {
                                                                 .circular(4))),
                                                 child: Row(
                                                   children: titleData
-                                                      .map((e) => SizedBox(
-                                                            width: 90,
-                                                            child: Center(
-                                                              child: Text(
-                                                                e,
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        Colors
-                                                                            .white,
-                                                                        14),
+                                                      .map((e) => InkWell(
+                                                            onTap: () {
+                                                              if (dataNyataSortOrder
+                                                                  .containsKey(
+                                                                      e)) {
+                                                                if (dataNyataSortOrder[
+                                                                    e]!) {
+                                                                  dataNyataSortOrder[
+                                                                          e] =
+                                                                      !dataNyataSortOrder[
+                                                                          e]!;
+                                                                } else {
+                                                                  dataNyataSortOrder
+                                                                      .remove(
+                                                                          e);
+                                                                  dataNyataSortOrderList
+                                                                      .remove(
+                                                                          e);
+
+                                                                  if (dataNyataSortOrder
+                                                                      .isEmpty) {
+                                                                    resetSelDataSort();
+
+                                                                    setState(
+                                                                        () {});
+
+                                                                    return;
+                                                                  } else {
+                                                                    sortSelData();
+                                                                  }
+                                                                }
+                                                              } else {
+                                                                dataNyataSortOrderList
+                                                                    .add(e);
+                                                                dataNyataSortOrder
+                                                                    .putIfAbsent(
+                                                                        e,
+                                                                        () =>
+                                                                            true);
+                                                              }
+
+                                                              sortSelData();
+                                                            },
+                                                            child: SizedBox(
+                                                              width: 90,
+                                                              child: Center(
+                                                                child: Row(
+                                                                  // crossAxisAlignment:
+                                                                  //     CrossAxisAlignment
+                                                                  //         .center,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(
+                                                                      e,
+                                                                      style: MyTextStyle.defaultFontCustom(
+                                                                          Colors
+                                                                              .white,
+                                                                          14),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 3,
+                                                                    ),
+                                                                    Stack(
+                                                                      children: [
+                                                                        Center(
+                                                                          child:
+                                                                              Visibility(
+                                                                            visible: dataNyataSortOrder.containsKey(e)
+                                                                                ? !dataNyataSortOrder[e]!
+                                                                                : false,
+                                                                            child:
+                                                                                Transform.translate(
+                                                                              offset: const Offset(0, -2),
+                                                                              child: const Icon(Icons.arrow_drop_up, size: 13, color: Colors.white),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Center(
+                                                                          child:
+                                                                              Visibility(
+                                                                            visible: dataNyataSortOrder.containsKey(e)
+                                                                                ? dataNyataSortOrder[e]!
+                                                                                : false,
+                                                                            child:
+                                                                                Transform.translate(
+                                                                              offset: const Offset(0, 2),
+                                                                              child: const Icon(Icons.arrow_drop_down, size: 13, color: Colors.white),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    )
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
                                                           ))
@@ -1276,12 +1444,12 @@ class _Content_callState extends State<Content_call> {
                                                 ),
                                               ),
                                               Container(
-                                                  padding: EdgeInsets.all(8),
+                                                  padding:
+                                                      const EdgeInsets.all(8),
                                                   width: 600,
                                                   height: 200,
-                                                  decoration: BoxDecoration(
-                                                      color: const Color(
-                                                          0xffC1E1DF),
+                                                  decoration: const BoxDecoration(
+                                                      color: Color(0xffC1E1DF),
                                                       borderRadius:
                                                           BorderRadius.only(
                                                               bottomLeft: Radius
@@ -1373,8 +1541,9 @@ class _Content_callState extends State<Content_call> {
                                                                             Container(
                                                                           width:
                                                                               80,
-                                                                          padding:
-                                                                              EdgeInsets.all(2),
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              2),
                                                                           decoration: BoxDecoration(
                                                                               color: MainStyle.secondaryColor,
                                                                               borderRadius: BorderRadius.circular(5)),
@@ -1403,8 +1572,8 @@ class _Content_callState extends State<Content_call> {
                                                                 width: 600,
                                                                 child: Stack(
                                                                   children: [
-                                                                    Divider(
-                                                                      color: const Color(
+                                                                    const Divider(
+                                                                      color: Color(
                                                                           0xff9ACBC7),
                                                                     ),
                                                                     Visibility(
@@ -1434,7 +1603,7 @@ class _Content_callState extends State<Content_call> {
                                     ),
                                     Container(
                                       clipBehavior: Clip.none,
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       width: 650,
                                       height: 250,
                                       decoration: BoxDecoration(
@@ -1443,20 +1612,20 @@ class _Content_callState extends State<Content_call> {
                                               BorderRadius.circular(30),
                                           boxShadow: [
                                             BoxShadow(
-                                                offset: Offset(4, 4),
+                                                offset: const Offset(4, 4),
                                                 color: MainStyle.primaryColor
                                                     .withAlpha(
                                                         (255 * 0.05).toInt()),
                                                 blurRadius: 10,
                                                 spreadRadius: 0),
                                             BoxShadow(
-                                                offset: Offset(-4, -4),
+                                                offset: const Offset(-4, -4),
                                                 color: Colors.white.withAlpha(
                                                     (255 * 0.5).toInt()),
                                                 blurRadius: 13,
                                                 spreadRadius: 0),
                                             BoxShadow(
-                                                offset: Offset(6, 6),
+                                                offset: const Offset(6, 6),
                                                 color: MainStyle.primaryColor
                                                     .withAlpha(
                                                         (255 * 0.10).toInt()),
@@ -1467,7 +1636,8 @@ class _Content_callState extends State<Content_call> {
                                         children: totalData
                                             .map((e) => Container(
                                                   clipBehavior: Clip.none,
-                                                  decoration: BoxDecoration(),
+                                                  decoration:
+                                                      const BoxDecoration(),
                                                   child: Row(
                                                     children: [
                                                       SizedBox(
@@ -1484,13 +1654,14 @@ class _Content_callState extends State<Content_call> {
                                                         ),
                                                       ),
                                                       Container(
-                                                        margin: EdgeInsets.only(
-                                                            bottom: 10),
+                                                        margin: const EdgeInsets
+                                                            .only(bottom: 10),
                                                         clipBehavior: Clip.none,
                                                         // width: 300,
                                                         height: 35,
                                                         padding:
-                                                            EdgeInsets.all(3),
+                                                            const EdgeInsets
+                                                                .all(3),
                                                         decoration:
                                                             BoxDecoration(
                                                           gradient: LinearGradient(
@@ -1542,7 +1713,7 @@ class _Content_callState extends State<Content_call> {
                                                               clipBehavior:
                                                                   Clip.none,
                                                               decoration:
-                                                                  BoxDecoration(),
+                                                                  const BoxDecoration(),
                                                               width: 300,
                                                               child: Text(
                                                                 (e["value"]
@@ -1611,14 +1782,14 @@ class _Content_callState extends State<Content_call> {
                     }
                   },
                   child: Container(
-                    padding: EdgeInsets.only(top: 30),
+                    padding: const EdgeInsets.only(top: 30),
                     width: 700,
                     height: 500,
                     decoration: BoxDecoration(
                         color: const Color(0xffFEF7F1),
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
-                          BoxShadow(
+                          const BoxShadow(
                               blurRadius: 30,
                               color: Colors.black26,
                               offset: Offset(0, 20))
@@ -1630,8 +1801,8 @@ class _Content_callState extends State<Content_call> {
                           child: Container(
                             width: 20,
                             height: 400,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffDF7B00),
+                            decoration: const BoxDecoration(
+                              color: Color(0xffDF7B00),
                               borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(50),
                                   bottomRight: Radius.circular(50)),
@@ -1647,9 +1818,9 @@ class _Content_callState extends State<Content_call> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.info_rounded,
-                                    color: const Color(0xffDF7B00),
+                                    color: Color(0xffDF7B00),
                                     size: 50,
                                   ),
                                   const SizedBox(

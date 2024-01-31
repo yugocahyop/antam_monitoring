@@ -7,6 +7,8 @@ import 'dart:math';
 
 // import 'dart:ui_web';
 
+import 'package:antam_monitoring/home/widget/content_call/widget/phonePanel.dart'
+    if (dart.library.html) 'package:antam_monitoring/home/widget/content_call/widget/phonePanelWeb.dart';
 import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
@@ -394,6 +396,23 @@ class _HomeState extends State<Home> {
             menuItem: menuItems,
           );
         });
+
+        break;
+      case 3:
+        setState(() {
+          page = Content_call(
+            mqtt: mqtt,
+            scSel: scSel,
+            selData: selData,
+          );
+          pageMobile = Content_home_mobile(
+            mqtt: mqtt,
+            selData: selData,
+            scSel: scSel,
+            menuItem: menuItems,
+          );
+        });
+
         break;
     }
   }

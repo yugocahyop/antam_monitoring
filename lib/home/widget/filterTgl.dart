@@ -49,25 +49,25 @@ class _FilterTglState extends State<FilterTgl> {
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             width: lWidth < 900 ? 190 : 450,
             decoration: BoxDecoration(
                 color: MainStyle.secondaryColor,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                      offset: Offset(4, 4),
+                      offset: const Offset(4, 4),
                       color: MainStyle.primaryColor
                           .withAlpha((255 * 0.05).toInt()),
                       blurRadius: 10,
                       spreadRadius: 0),
                   BoxShadow(
-                      offset: Offset(-4, -4),
+                      offset: const Offset(-4, -4),
                       color: Colors.white.withAlpha((255 * 0.5).toInt()),
                       blurRadius: 13,
                       spreadRadius: 0),
                   BoxShadow(
-                      offset: Offset(6, 6),
+                      offset: const Offset(6, 6),
                       color: MainStyle.primaryColor
                           .withAlpha((255 * 0.10).toInt()),
                       blurRadius: 20,

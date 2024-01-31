@@ -742,260 +742,204 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
       getData(0);
 
       Future.delayed(Duration(milliseconds: 300), () {
-        setSetting("tegangan", 70);
-        setSetting("arus", 70);
-
-        mqtt.onUpdate = (data, topic) {
-          if (topic == "antam/device") {
-            selData.clear();
-            // final firstData = List.of(maxDdata);
-            selData.add([
-              {
-                "sel": 1,
-                "suhu": 0.0,
-                "tegangan": 0.0,
-                "arus": 0.0,
-                "daya": 0.0,
-                "energi": 0.0
-              },
-              {
-                "sel": 2,
-                "suhu": 0.0,
-                "tegangan": 0.0,
-                "arus": 0.0,
-                "daya": 0.0,
-                "energi": 0.0
-              },
-              {
-                "sel": 3,
-                "suhu": 0.0,
-                "tegangan": 0.0,
-                "arus": 0.0,
-                "daya": 0.0,
-                "energi": 0.0
-              },
-              {
-                "sel": 4,
-                "suhu": 0.0,
-                "tegangan": 0.0,
-                "arus": 0.0,
-                "daya": 0.0,
-                "energi": 0.0
-              },
-              {
-                "sel": 5,
-                "suhu": 0.0,
-                "tegangan": 0.0,
-                "arus": 0.0,
-                "daya": 0.0,
-                "energi": 0.0
-              },
-            ]);
-            selData.addAll(data["tangkiData"]);
-
-            getMax2();
-
-            // List<String> items = [];
-
-            // items.add("Semua");
-
-            // for (var i = 0; i < data["tangkiData"].length; i++) {
-            //   items.add((i + 1).toString());
-            // }
-
-            // filterTangki = FilterTangki(
-            //   tangkiValue: currTangki.toString(),
-            //   items: items,
-            //   onChange: (value) => getData(int.tryParse(value) ?? 0),
-            // );
-
-            getData(currTangki);
-
-            // getTotal(currPage, currTangki);
-          } else if (topic == "antam/device/node") {
-            final int tangki = data["tangki"] as int;
-
-            if (tangki > (selData.length - 1)) {
-              for (var i = 0; i < (tangki - (selData.length - 1)); i++) {
-                selData.add([
-                  {
-                    "sel": 1,
-                    "suhu": 0.0,
-                    "tegangan": 0.0,
-                    "arus": 0.0,
-                    "daya": 0.0,
-                    "energi": 0.0
-                  },
-                  {
-                    "sel": 2,
-                    "suhu": 0.0,
-                    "tegangan": 0.0,
-                    "arus": 0.0,
-                    "daya": 0.0,
-                    "energi": 0.0
-                  },
-                  {
-                    "sel": 3,
-                    "suhu": 0.0,
-                    "tegangan": 0.0,
-                    "arus": 0.0,
-                    "daya": 0.0,
-                    "energi": 0.0
-                  },
-                  {
-                    "sel": 4,
-                    "suhu": 0.0,
-                    "tegangan": 0.0,
-                    "arus": 0.0,
-                    "daya": 0.0,
-                    "energi": 0.0
-                  },
-                  {
-                    "sel": 5,
-                    "suhu": 0.0,
-                    "tegangan": 0.0,
-                    "arus": 0.0,
-                    "daya": 0.0,
-                    "energi": 0.0
-                  },
-                ]);
-              }
-            }
-            final sData = jsonEncode(Map.from(data["selData"]));
-
-            if (kDebugMode) {
-              print((sData));
-            }
-
-            selData[tangki][data["sel"] as int] =
-                (jsonDecode(sData)) as Map<String, num>;
-
-            getMax2();
-
-            getData(currTangki);
-
-            // List<String> items = [];
-
-            // items.add("Semua");
-
-            // for (var i = 0; i < selData.length; i++) {
-            //   items.add((i + 1).toString());
-            // }
-
-            // filterTangki = FilterTangki(
-            //   tangkiValue: "Semua",
-            //   items: items,
-            //   onChange: (value) => getData(int.tryParse(value) ?? 0),
-            // );
-
-            // getTotal(currPage, currTangki);
-          } else if (topic == "antam/status") {
-            // print(data["alarmTegangang"]);
-
-            var temp = [
-              {
-                "title": "Status",
-                "isActive": (data["status"] == null
-                    ? alarm
-                        .where((element) => element["title"] == "Status")
-                        .first["isActive"]!
-                    : (data["status"] as bool)),
-              },
-              {
-                "title": "Alarm Arus",
-                "isActive": data["alarmArus"] == null
-                    ? alarm
-                        .where((element) => element["title"] == "Alarm Arus")
-                        .first["isActive"]!
-                    : data["alarmArus"] as bool,
-              },
-              {
-                "title": "Alarm Tegangan",
-                "isActive": data["alarmTegangan"] == null
-                    ? alarm
-                        .where(
-                            (element) => element["title"] == "Alarm Tegangan")
-                        .first["isActive"]!
-                    : data["alarmTegangan"] as bool,
-              }
-            ];
-
-            alarm.clear();
-            alarm.addAll(temp);
-          } else if (topic == "antam/statistic") {
-            var temp = [
-              {
-                "title": "Total Waktu",
-                "value": data["totalWaktu"] == null
-                    ? totalData
-                        .where((element) => element["title"] == "Total Waktu")
-                        .first["value"]!
-                    : (data["totalWaktu"] is double
-                        ? (data["totalWaktu"] as double)
-                        : (data["totalWaktu"] as int).toDouble()),
-                "unit": "Jam"
-              },
-              {
-                "title": "Tegangan Total",
-                "value": data["teganganTotal"] == null
-                    ? totalData
-                        .where(
-                            (element) => element["title"] == "Tegangan Total")
-                        .first["value"]!
-                    : (data["teganganTotal"] is double
-                        ? (data["teganganTotal"] as double)
-                        : (data["teganganTotal"] as int).toDouble()),
-                "unit": "Volt"
-              },
-              {
-                "title": "Arus Total",
-                "value": data["arusTotal"] == null
-                    ? totalData
-                        .where((element) => element["title"] == "Arus Total")
-                        .first["value"]!
-                    : (data["arusTotal"] is double
-                        ? (data["arusTotal"] as double)
-                        : (data["arusTotal"] as int).toDouble()),
-                "unit": "Ampere"
-              },
-              {
-                "title": "Power",
-                "value": data["power"] == null
-                    ? totalData
-                        .where((element) => element["title"] == "Power")
-                        .first["value"]!
-                    : (data["power"] is double
-                        ? (data["power"] as double)
-                        : (data["power"] as int).toDouble()),
-                "unit": "Watt"
-              },
-              {
-                "title": "Energi",
-                "value": data["energi"] == null
-                    ? totalData
-                        .where((element) => element["title"] == "Energi")
-                        .first["value"]!
-                    : (data["energi"] is double
-                        ? (data["energi"] as double)
-                        : (data["energi"] as int).toDouble()),
-                "unit": "Watt_Jam"
-              },
-            ];
-
-            totalData.clear();
-            totalData.addAll(temp);
-          }
-
-          if (mounted) {
-            setState(() {});
-          }
-
-          // Future.delayed(Duration(milliseconds: 500), () {
-
-          // });
-        };
+        setSetting("tegangan", 3);
+        setSetting("arus", 100);
+        initMqtt();
       });
     });
+  }
+
+  initMqtt() {
+    mqtt.onUpdate = (data, topic) {
+      if (topic == "antam/device") {
+        selData.clear();
+        // final firstData = List.of(maxDdata);
+        selData.add([
+          {
+            "sel": 1,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          },
+          {
+            "sel": 2,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          },
+          {
+            "sel": 3,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          },
+          {
+            "sel": 4,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          },
+          {
+            "sel": 5,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          },
+        ]);
+        selData.addAll(data["tangkiData"]);
+
+        getMax2();
+
+        // List<String> items = [];
+
+        // items.add("Semua");
+
+        // for (var i = 0; i < data["tangkiData"].length; i++) {
+        //   items.add((i + 1).toString());
+        // }
+
+        // filterTangki = FilterTangki(
+        //   tangkiValue: currTangki.toString(),
+        //   items: items,
+        //   onChange: (value) => getData(int.tryParse(value) ?? 0),
+        // );
+
+        getData(currTangki);
+
+        // getTotal(currPage, currTangki);
+      } else if (topic == "antam/device/node") {
+        final int tangki = data["tangki"] as int;
+
+        final sData = Map.from(data["selData"]);
+
+        if (kDebugMode) {
+          print((sData));
+        }
+
+        for (var i = 2; i < titleData.length; i++) {
+          final title = titleData[i].toLowerCase();
+
+          selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+        }
+
+        getMax();
+
+        getData(currTangki);
+      } else if (topic == "antam/status") {
+        // print(data["alarmTegangang"]);
+
+        var temp = [
+          {
+            "title": "Status",
+            "isActive": (data["status"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Status")
+                    .first["isActive"]!
+                : (data["status"] as bool)),
+          },
+          {
+            "title": "Alarm Arus",
+            "isActive": data["alarmArus"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Alarm Arus")
+                    .first["isActive"]!
+                : data["alarmArus"] as bool,
+          },
+          {
+            "title": "Alarm Tegangan",
+            "isActive": data["alarmTegangan"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Alarm Tegangan")
+                    .first["isActive"]!
+                : data["alarmTegangan"] as bool,
+          }
+        ];
+
+        alarm.clear();
+        alarm.addAll(temp);
+      } else if (topic == "antam/statistic") {
+        var temp = [
+          {
+            "title": "Total Waktu",
+            "value": data["totalWaktu"] == null
+                ? totalData
+                    .where((element) => element["title"] == "Total Waktu")
+                    .first["value"]!
+                : (data["totalWaktu"] is double
+                    ? (data["totalWaktu"] as double)
+                    : (data["totalWaktu"] as int).toDouble()),
+            "unit": "Jam"
+          },
+          {
+            "title": "Tegangan Total",
+            "value": data["teganganTotal"] == null
+                ? totalData
+                    .where((element) => element["title"] == "Tegangan Total")
+                    .first["value"]!
+                : (data["teganganTotal"] is double
+                    ? (data["teganganTotal"] as double)
+                    : (data["teganganTotal"] as int).toDouble()),
+            "unit": "Volt"
+          },
+          {
+            "title": "Arus Total",
+            "value": data["arusTotal"] == null
+                ? totalData
+                    .where((element) => element["title"] == "Arus Total")
+                    .first["value"]!
+                : (data["arusTotal"] is double
+                    ? (data["arusTotal"] as double)
+                    : (data["arusTotal"] as int).toDouble()),
+            "unit": "Ampere"
+          },
+          {
+            "title": "Power",
+            "value": data["power"] == null
+                ? totalData
+                    .where((element) => element["title"] == "Power")
+                    .first["value"]!
+                : (data["power"] is double
+                    ? (data["power"] as double)
+                    : (data["power"] as int).toDouble()),
+            "unit": "Watt"
+          },
+          {
+            "title": "Energi",
+            "value": data["energi"] == null
+                ? totalData
+                    .where((element) => element["title"] == "Energi")
+                    .first["value"]!
+                : (data["energi"] is double
+                    ? (data["energi"] as double)
+                    : (data["energi"] as int).toDouble()),
+            "unit": "Watt_Jam"
+          },
+        ];
+
+        totalData.clear();
+        totalData.addAll(temp);
+      }
+
+      data.clear();
+
+      if (mounted) {
+        setState(() {});
+      }
+
+      // Future.delayed(Duration(milliseconds: 500), () {
+
+      // });
+    };
   }
 
   @override

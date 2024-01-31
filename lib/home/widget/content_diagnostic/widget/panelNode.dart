@@ -10,6 +10,7 @@ class PanelNode extends StatefulWidget {
       required this.sel,
       required this.status,
       required this.lastUpdated,
+      required this.tapFunction,
       this.width = 100,
       this.isSensor = false});
 
@@ -21,83 +22,101 @@ class PanelNode extends StatefulWidget {
   String status;
   String lastUpdated;
 
+  Function() tapFunction;
+
   @override
   State<PanelNode> createState() => _PanelNodeState();
 }
 
 class _PanelNodeState extends State<PanelNode> {
   final Duration d = const Duration(milliseconds: 200);
+  bool isHover = false;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.width,
-      height: widget.width,
-      child: Column(
-        children: [
-          AnimatedContainer(
-            width: widget.width,
-            duration: d,
-            padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                color: widget.status.toLowerCase() == "active"
-                    ? MainStyle.primaryColor
-                    : widget.status.toLowerCase() == "alarm"
-                        ? Colors.red
-                        : MainStyle.thirdColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.isSensor ? "Sensor node" : "Tangki ${widget.tangki}",
-                  style: MyTextStyle.defaultFontCustom(
-                      widget.status.toLowerCase() == "inactive"
-                          ? MainStyle.primaryColor
-                          : Colors.white,
-                      14),
+    return InkWell(
+      onHover: (value) {
+        setState(() {
+          isHover = value;
+        });
+      },
+      onTap: () => widget.tapFunction(),
+      child: AnimatedScale(
+        duration: Duration(milliseconds: 200),
+        scale: isHover ? 1.15 : 1,
+        child: SizedBox(
+          width: widget.width,
+          height: widget.width,
+          child: Column(
+            children: [
+              AnimatedContainer(
+                width: widget.width,
+                duration: d,
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(10)),
+                    color: widget.status.toLowerCase() == "active"
+                        ? MainStyle.primaryColor
+                        : widget.status.toLowerCase() == "alarm"
+                            ? Colors.red
+                            : MainStyle.thirdColor),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.isSensor
+                          ? "Sensor node"
+                          : "Tangki ${widget.tangki}",
+                      style: MyTextStyle.defaultFontCustom(
+                          widget.status.toLowerCase() == "inactive"
+                              ? MainStyle.primaryColor
+                              : Colors.white,
+                          14),
+                    ),
+                    Visibility(
+                      visible: !widget.isSensor,
+                      child: Text(
+                        widget.isSensor ? "" : "#Sel ${widget.sel}",
+                        style: MyTextStyle.defaultFontCustom(
+                            widget.status.toLowerCase() == "inactive"
+                                ? MainStyle.primaryColor
+                                : Colors.white,
+                            14),
+                      ),
+                    ),
+                  ],
                 ),
-                Visibility(
-                  visible: !widget.isSensor,
-                  child: Text(
-                    widget.isSensor ? "" : "#Sel ${widget.sel}",
-                    style: MyTextStyle.defaultFontCustom(
-                        widget.status.toLowerCase() == "inactive"
-                            ? MainStyle.primaryColor
-                            : Colors.white,
-                        14),
-                  ),
+              ),
+              Expanded(
+                  child: Container(
+                width: widget.width,
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                    color: MainStyle.thirdColor,
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(10))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.status,
+                      style: MyTextStyle.defaultFontCustom(Colors.black, 12),
+                    ),
+                    SizedBox(
+                      width: widget.width,
+                      child: Text(
+                        widget.lastUpdated,
+                        textAlign: TextAlign.end,
+                        style: MyTextStyle.defaultFontCustom(Colors.black, 8),
+                      ),
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ))
+            ],
           ),
-          Expanded(
-              child: Container(
-            width: widget.width,
-            padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-                color: MainStyle.thirdColor,
-                borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(10))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.status,
-                  style: MyTextStyle.defaultFontCustom(Colors.black, 12),
-                ),
-                SizedBox(
-                  width: widget.width,
-                  child: Text(
-                    widget.lastUpdated,
-                    textAlign: TextAlign.end,
-                    style: MyTextStyle.defaultFontCustom(Colors.black, 8),
-                  ),
-                )
-              ],
-            ),
-          ))
-        ],
+        ),
       ),
     );
   }
