@@ -23,6 +23,8 @@ class _Account_alarmState extends State<Account_alarm> {
     return res;
   }
 
+  late Timer timer;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -37,7 +39,7 @@ class _Account_alarmState extends State<Account_alarm> {
 
     setState(() {});
 
-    Timer.periodic(const Duration(seconds: 30), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       DateTime dateTime = DateTime.now();
 
       date = df.format(dateTime);
@@ -47,6 +49,13 @@ class _Account_alarmState extends State<Account_alarm> {
 
       if (mounted) setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    timer.cancel();
   }
 
   final double wide = 16 / 9;

@@ -63,7 +63,9 @@ class MyMqtt {
     client.publishMessage(topic, MqttQos.atLeastOnce, builder2.payload!);
 
     // if (kDebugMode) {
-    print("topic: $topic, payload: ${jsonEncode(data)}");
+    if (kDebugMode) {
+      print("topic: $topic, payload: ${jsonEncode(data)}");
+    }
     // }
   }
 

@@ -1019,8 +1019,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                         MainStyle.sizedBoxW10,
                                         Text(
                                           "Diagnostic",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              MainStyle.primaryColor, 20),
+                                          style: MainStyle
+                                              .textStyleDefault20Primary,
                                         )
                                       ],
                                     ),
@@ -1097,10 +1097,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                             MainStyle.sizedBoxW10,
                                             Text(
                                               "Data Nyata",
-                                              style:
-                                                  MyTextStyle.defaultFontCustom(
-                                                      MainStyle.primaryColor,
-                                                      20),
+                                              style: MainStyle
+                                                  .textStyleDefault20Primary,
                                             )
                                           ],
                                         ),
@@ -1207,10 +1205,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                   children: [
                                                                     Text(
                                                                       e,
-                                                                      style: MyTextStyle.defaultFontCustom(
-                                                                          Colors
-                                                                              .white,
-                                                                          15),
+                                                                      style: MainStyle
+                                                                          .textStyleDefault15White,
                                                                     ),
                                                                     const SizedBox(
                                                                       width: 3,
@@ -1305,7 +1301,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                                 Center(
                                                                               child: Text(
                                                                                 (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                                style: MyTextStyle.defaultFontCustom(Colors.black, 16),
+                                                                                style: MainStyle.textStyleDefault16Black,
                                                                               ),
                                                                             ),
                                                                           ))
@@ -1327,7 +1323,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                             (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
                                                                                 (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                             style:
-                                                                                MyTextStyle.defaultFontCustom(Colors.black, 16),
+                                                                                MainStyle.textStyleDefault16Black,
                                                                           ),
                                                                         ),
                                                                       ),
@@ -1362,7 +1358,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
                                                                                 "tangki " + (value as int).toString(),
-                                                                                style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12, weight: FontWeight.w600),
+                                                                                style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),
                                                                             ),
@@ -1452,13 +1448,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                         width: 200,
                                                         child: Text(
                                                           e["title"] as String,
-                                                          style: MyTextStyle
-                                                              .defaultFontCustom(
-                                                                  Colors.black,
-                                                                  15,
-                                                                  weight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                          style: MainStyle
+                                                              .textStyleDefault15BlackBold,
                                                         ),
                                                       ),
                                                       Container(
@@ -1528,11 +1519,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                         as double)
                                                                     .toStringAsFixed(
                                                                         2),
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        MainStyle
-                                                                            .primaryColor,
-                                                                        25),
+                                                                style: MainStyle
+                                                                    .textStyleDefault25Primary,
                                                               ),
                                                             ),
                                                             SizedBox(
@@ -1543,13 +1531,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .right,
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        Colors
-                                                                            .black,
-                                                                        15,
-                                                                        weight:
-                                                                            FontWeight.bold),
+                                                                style: MainStyle
+                                                                    .textStyleDefault15BlackBold,
                                                               ),
                                                             )
                                                           ],
@@ -1636,9 +1619,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                   ),
                                   Text(
                                     "Warning Message",
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 20,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault20BlackBold,
                                   )
                                 ],
                               ),
@@ -1649,9 +1631,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                   child: Text(
                                     warningMsg,
                                     textAlign: TextAlign.center,
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 40,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault40BlackBold,
                                   ),
                                 ),
                               ),

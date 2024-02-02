@@ -615,7 +615,7 @@ class _Content_homeState extends State<Content_home> {
       } else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
-        var temp = [
+        final temp = [
           {
             "title": "Status",
             "isActive": (data["status"] == null
@@ -644,8 +644,10 @@ class _Content_homeState extends State<Content_home> {
 
         alarm.clear();
         alarm.addAll(temp);
+
+        temp.clear();
       } else if (topic == "antam/statistic") {
-        var temp = [
+        final temp = [
           {
             "title": "Total Waktu",
             "value": data["totalWaktu"] == null
@@ -705,6 +707,8 @@ class _Content_homeState extends State<Content_home> {
 
         totalData.clear();
         totalData.addAll(temp);
+
+        temp.clear();
       }
 
       data.clear();
@@ -1039,8 +1043,8 @@ class _Content_homeState extends State<Content_home> {
                                         MainStyle.sizedBoxW10,
                                         Text(
                                           "Grafik Nyata",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              MainStyle.primaryColor, 20),
+                                          style: MainStyle
+                                              .textStyleDefault20Primary,
                                         )
                                       ],
                                     ),
@@ -1052,8 +1056,8 @@ class _Content_homeState extends State<Content_home> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           "Tegangan (V)",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              Colors.black, 14),
+                                          style:
+                                              MainStyle.textStyleDefault14Black,
                                         )),
                                     SizedBox(
                                       width: 1200,
@@ -1083,8 +1087,8 @@ class _Content_homeState extends State<Content_home> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           "Arus (A)",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              Colors.black, 14),
+                                          style:
+                                              MainStyle.textStyleDefault14Black,
                                         )),
                                     SizedBox(
                                       width: 1200,
@@ -1170,10 +1174,8 @@ class _Content_homeState extends State<Content_home> {
                                             MainStyle.sizedBoxW10,
                                             Text(
                                               "Data Nyata",
-                                              style:
-                                                  MyTextStyle.defaultFontCustom(
-                                                      MainStyle.primaryColor,
-                                                      20),
+                                              style: MainStyle
+                                                  .textStyleDefault20Primary,
                                             )
                                           ],
                                         ),
@@ -1288,12 +1290,8 @@ class _Content_homeState extends State<Content_home> {
                                                                     children: [
                                                                       Text(
                                                                         e,
-                                                                        style: MyTextStyle
-                                                                            .defaultFontCustom(
-                                                                          Colors
-                                                                              .white,
-                                                                          15,
-                                                                        ),
+                                                                        style: MainStyle
+                                                                            .textStyleDefault15White,
                                                                       ),
                                                                       const SizedBox(
                                                                         width:
@@ -1369,8 +1367,8 @@ class _Content_homeState extends State<Content_home> {
 
                                                           List<Widget> listSel =
                                                               [];
-                                                          List<Widget>
-                                                              listTangki = [];
+                                                          // List<Widget>
+                                                          //     listTangki = [];
                                                           val.forEach((key, value) => key ==
                                                                   "sel"
                                                               ? listSel.insert(
@@ -1395,9 +1393,8 @@ class _Content_homeState extends State<Content_home> {
                                                                             (key == "suhu" || key == "celcius"
                                                                                 ? "\u00B0"
                                                                                 : ""),
-                                                                        style: MyTextStyle.defaultFontCustom(
-                                                                            Colors.black,
-                                                                            16),
+                                                                        style: MainStyle
+                                                                            .textStyleDefault16Black,
                                                                       ),
                                                                     ),
                                                                   ))
@@ -1417,10 +1414,8 @@ class _Content_homeState extends State<Content_home> {
                                                                           (key == "suhu" || key == "celcius"
                                                                               ? "\u00B0"
                                                                               : ""),
-                                                                      style: MyTextStyle.defaultFontCustom(
-                                                                          Colors
-                                                                              .black,
-                                                                          16),
+                                                                      style: MainStyle
+                                                                          .textStyleDefault16Black,
                                                                     ),
                                                                   ),
                                                                 )));
@@ -1546,13 +1541,8 @@ class _Content_homeState extends State<Content_home> {
                                                         width: 200,
                                                         child: Text(
                                                           e["title"] as String,
-                                                          style: MyTextStyle
-                                                              .defaultFontCustom(
-                                                                  Colors.black,
-                                                                  15,
-                                                                  weight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                          style: MainStyle
+                                                              .textStyleDefault15BlackBold,
                                                         ),
                                                       ),
                                                       Container(
@@ -1622,11 +1612,8 @@ class _Content_homeState extends State<Content_home> {
                                                                         as double)
                                                                     .toStringAsFixed(
                                                                         2),
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        MainStyle
-                                                                            .primaryColor,
-                                                                        25),
+                                                                style: MainStyle
+                                                                    .textStyleDefault25Primary,
                                                               ),
                                                             ),
                                                             SizedBox(
@@ -1637,13 +1624,8 @@ class _Content_homeState extends State<Content_home> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .right,
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        Colors
-                                                                            .black,
-                                                                        15,
-                                                                        weight:
-                                                                            FontWeight.bold),
+                                                                style: MainStyle
+                                                                    .textStyleDefault15BlackBold,
                                                               ),
                                                             )
                                                           ],
@@ -1730,9 +1712,8 @@ class _Content_homeState extends State<Content_home> {
                                   ),
                                   Text(
                                     "Warning Message",
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 20,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault20BlackBold,
                                   )
                                 ],
                               ),
@@ -1743,9 +1724,8 @@ class _Content_homeState extends State<Content_home> {
                                   child: Text(
                                     warningMsg,
                                     textAlign: TextAlign.center,
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 40,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault40BlackBold,
                                   ),
                                 ),
                               ),

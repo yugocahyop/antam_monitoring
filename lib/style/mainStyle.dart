@@ -1,3 +1,4 @@
+import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:flutter/material.dart';
 
 class MainStyle {
@@ -22,4 +23,34 @@ class MainStyle {
   static const sizedBoxW5 = SizedBox(
     width: 5,
   );
+
+  static TextStyle textStyleDefault20Primary =
+      MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 20);
+
+  static TextStyle textStyleDefault14Black =
+      MyTextStyle.defaultFontCustom(Colors.black, 14);
+
+  static TextStyle textStyleDefault15White = MyTextStyle.defaultFontCustom(
+    Colors.white,
+    15,
+  );
+
+  static TextStyle textStyleDefault16Black =
+      MyTextStyle.defaultFontCustom(Colors.black, 16);
+
+  static TextStyle textStyleDefault15BlackBold =
+      MyTextStyle.defaultFontCustom(Colors.black, 15, weight: FontWeight.bold);
+
+  static TextStyle textStyleDefault25Primary =
+      MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 25);
+
+  static TextStyle textStyleDefault20BlackBold =
+      MyTextStyle.defaultFontCustom(Colors.black, 20, weight: FontWeight.bold);
+
+  static TextStyle textStyleDefault40BlackBold =
+      MyTextStyle.defaultFontCustom(Colors.black, 40, weight: FontWeight.bold);
+
+  static TextStyle textStyleDefault12PrimaryW600 =
+      MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12,
+          weight: FontWeight.w600);
 }

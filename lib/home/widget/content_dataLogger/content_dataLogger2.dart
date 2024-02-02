@@ -400,6 +400,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
     mqtt!.onUpdate = (json, topic) {};
 
+    dataLog.clear();
+
     maxData.clear();
     tangkiMaxData.clear();
 
@@ -1189,10 +1191,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                             MainStyle.sizedBoxW10,
                                             Text(
                                               "Data Nyata $dataDate",
-                                              style:
-                                                  MyTextStyle.defaultFontCustom(
-                                                      MainStyle.primaryColor,
-                                                      20),
+                                              style: MainStyle
+                                                  .textStyleDefault20Primary,
                                             )
                                           ],
                                         ),
@@ -1307,12 +1307,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                     children: [
                                                                       Text(
                                                                         e,
-                                                                        style: MyTextStyle
-                                                                            .defaultFontCustom(
-                                                                          Colors
-                                                                              .white,
-                                                                          15,
-                                                                        ),
+                                                                        style: MainStyle
+                                                                            .textStyleDefault15White,
                                                                       ),
                                                                       const SizedBox(
                                                                         width:
@@ -1388,8 +1384,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
                                                           List<Widget> listSel =
                                                               [];
-                                                          List<Widget>
-                                                              listTangki = [];
+                                                          // List<Widget>
+                                                          //     listTangki = [];
                                                           val.forEach((key, value) => key ==
                                                                   "sel"
                                                               ? listSel.insert(
@@ -1414,9 +1410,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                             (key == "suhu" || key == "celcius"
                                                                                 ? "\u00B0"
                                                                                 : ""),
-                                                                        style: MyTextStyle.defaultFontCustom(
-                                                                            Colors.black,
-                                                                            16),
+                                                                        style: MainStyle
+                                                                            .textStyleDefault16Black,
                                                                       ),
                                                                     ),
                                                                   ))
@@ -1436,10 +1431,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                           (key == "suhu" || key == "celcius"
                                                                               ? "\u00B0"
                                                                               : ""),
-                                                                      style: MyTextStyle.defaultFontCustom(
-                                                                          Colors
-                                                                              .black,
-                                                                          16),
+                                                                      style: MainStyle
+                                                                          .textStyleDefault16Black,
                                                                     ),
                                                                   ),
                                                                 )));
@@ -1565,13 +1558,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                         width: 200,
                                                         child: Text(
                                                           e["title"] as String,
-                                                          style: MyTextStyle
-                                                              .defaultFontCustom(
-                                                                  Colors.black,
-                                                                  15,
-                                                                  weight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                          style: MainStyle
+                                                              .textStyleDefault15BlackBold,
                                                         ),
                                                       ),
                                                       Container(
@@ -1641,11 +1629,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                         as double)
                                                                     .toStringAsFixed(
                                                                         2),
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        MainStyle
-                                                                            .primaryColor,
-                                                                        25),
+                                                                style: MainStyle
+                                                                    .textStyleDefault25Primary,
                                                               ),
                                                             ),
                                                             SizedBox(
@@ -1656,13 +1641,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .right,
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        Colors
-                                                                            .black,
-                                                                        15,
-                                                                        weight:
-                                                                            FontWeight.bold),
+                                                                style: MainStyle
+                                                                    .textStyleDefault15BlackBold,
                                                               ),
                                                             )
                                                           ],
@@ -1749,9 +1729,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                   ),
                                   Text(
                                     "Warning Message",
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 20,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault20BlackBold,
                                   )
                                 ],
                               ),
@@ -1762,9 +1741,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                   child: Text(
                                     warningMsg,
                                     textAlign: TextAlign.center,
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 40,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault40BlackBold,
                                   ),
                                 ),
                               ),
