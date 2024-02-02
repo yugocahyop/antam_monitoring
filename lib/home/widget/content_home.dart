@@ -98,303 +98,7 @@ class _Content_homeState extends State<Content_home> {
 
   List<dynamic> selData = [
     [
-      {
-        "tangki": 1,
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ],
-    [
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ],
-    [
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ],
-    [
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ],
-    [
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ],
-    [
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ],
-    [
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
+      {},
     ],
   ];
 
@@ -1584,9 +1288,12 @@ class _Content_homeState extends State<Content_home> {
                                                                     children: [
                                                                       Text(
                                                                         e,
-                                                                        style: MyTextStyle.defaultFontCustom(
-                                                                            Colors.white,
-                                                                            14),
+                                                                        style: MyTextStyle
+                                                                            .defaultFontCustom(
+                                                                          Colors
+                                                                              .white,
+                                                                          15,
+                                                                        ),
                                                                       ),
                                                                       const SizedBox(
                                                                         width:
@@ -1690,7 +1397,7 @@ class _Content_homeState extends State<Content_home> {
                                                                                 : ""),
                                                                         style: MyTextStyle.defaultFontCustom(
                                                                             Colors.black,
-                                                                            15),
+                                                                            16),
                                                                       ),
                                                                     ),
                                                                   ))
@@ -1713,7 +1420,7 @@ class _Content_homeState extends State<Content_home> {
                                                                       style: MyTextStyle.defaultFontCustom(
                                                                           Colors
                                                                               .black,
-                                                                          15),
+                                                                          16),
                                                                     ),
                                                                   ),
                                                                 )));

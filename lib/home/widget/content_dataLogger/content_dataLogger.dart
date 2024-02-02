@@ -1,7 +1,7 @@
 part of home;
 
-class Content_diagnostic extends StatefulWidget {
-  Content_diagnostic(
+class Content_dataLogger extends StatefulWidget {
+  Content_dataLogger(
       {super.key,
       required this.scSel,
       required this.selData,
@@ -14,10 +14,10 @@ class Content_diagnostic extends StatefulWidget {
   ScrollController scSel;
 
   @override
-  State<Content_diagnostic> createState() => _Content_diagnosticState();
+  State<Content_dataLogger> createState() => _Content_dataLoggerState();
 }
 
-class _Content_diagnosticState extends State<Content_diagnostic> {
+class _Content_dataLoggerState extends State<Content_dataLogger> {
   var alarm = [
     {
       "title": "Status",
@@ -56,122 +56,300 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
   List<dynamic> selData = [
     [
-      {},
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
     ],
   ];
-
-  List<dynamic> diagnosticData = [
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "active", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "active", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-  ];
-
-  togglePanelMqtt(int tangki, int sel, bool isActive) {
-    mqtt!.publish({
-      "tangki": tangki,
-      "node": sel,
-      "activate": isActive ? false : true
-      // "status": isActive ? false : true
-    }, "antam/command");
-  }
-
-  List<Widget> getDiagnostiWidget(double width) {
-    List<Widget> rows = [];
-
-    for (var i = 0; i < diagnosticData.length; i++) {
-      final sel = diagnosticData[i];
-      List<Widget> pn = [];
-
-      DateFormat df = DateFormat("dd MMMM yyyy");
-
-      for (var ii = 0; ii < sel.length; ii++) {
-        DateTime date =
-            DateTime.fromMillisecondsSinceEpoch(sel[ii]["lastUpdated"] as int);
-        String status = sel[ii]["status"] as String;
-        pn.add(PanelNode(
-            tapFunction: () => togglePanelMqtt(
-                i + 1, ii + 1, status == "active" ? true : false),
-            isSensor: i == 6,
-            width: width,
-            tangki: i + 1,
-            sel: ii + 1,
-            status: status,
-            lastUpdated: df.format(date)));
-      }
-
-      rows.add(SizedBox(
-        height: width,
-        child: Stack(
-          children: [
-            Center(
-              child: Visibility(
-                visible: (i != 6),
-                child: const SizedBox(
-                  width: 400,
-                  child: Divider(
-                    thickness: 2,
-                    color: MainStyle.thirdColor,
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: pn,
-            ),
-          ],
-        ),
-      ));
-
-      rows.add(const SizedBox(
-        height: 7,
-      ));
-    }
-
-    return rows;
-  }
 
   var totalData = [
     {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
@@ -456,10 +634,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
     mqtt!.onUpdate = (t, d) {};
-    maxDdata.clear();
+
     tangkiMaxData.clear();
+    maxDdata.clear();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();
@@ -467,6 +645,51 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   }
 
   int currTangki = 0;
+
+  List<Map<String, dynamic>> dataLog = [
+    {
+      "isHover": false,
+      "timeStamp_server": 1706561733680,
+      "tangkiData": [[]]
+    }
+  ];
+
+  initDataLog() async {
+    final api = ApiHelper();
+
+    // while (ApiHelper.tokenMain == null) {
+    //   await Future.delayed(const Duration(seconds: 1));
+    // }
+
+    final r = await api.callAPI(
+        "/monitoring/find?limit=10", "POST", jsonEncode({"from": 0}), true);
+
+    if (r["error"] == null) {
+      List<dynamic> data = r['data'] as List<dynamic>;
+
+      if (kDebugMode) {
+        print("backend data2:  $data");
+      }
+
+      dataLog.clear();
+      for (var i = 0; i < data.length; i++) {
+        final val = data[i];
+
+        dataLog.add({
+          "isClicked": false,
+          "isHover": false,
+          "timeStamp_server": val["timeStamp_server"],
+          "tangkiData": val["tangkiData"] as List<dynamic>
+        });
+      }
+
+      if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+    }
+  }
 
   initSelData() async {
     final api = ApiHelper();
@@ -558,20 +781,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         print("mqtt topic $topic");
       }
 
-      if (topic == "antam/statusNode" || topic == "antam/statusnode") {
-        int tangki = data["tangki"] as int;
-        int sel = data["node"] as int;
-        String status = data["status"] as String;
-        int timeStamp =
-            DateTime.now().millisecondsSinceEpoch - (data["timestamp"] as int);
-
-        DateFormat df = DateFormat("dd MMMM yyyy");
-
-        DateTime date = DateTime(timeStamp);
-
-        diagnosticData[tangki - 1][sel - 1]["status"] = status;
-        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = df.format(date);
-      } else if (topic == "antam/device") {
+      if (topic == "antam/device") {
         selData.clear();
         selData.add([
           {
@@ -855,7 +1065,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     filterTangki = FilterTangki(
       tangkiValue: "Max",
-      items: const ["Max", "1", "2", "3", "4", "5", "6"],
+      items: ["Max", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
@@ -863,6 +1073,34 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     initSelData();
     initTotalDataStatistic();
+    initDataLog();
+  }
+
+  List<Map<String, dynamic>> callData = [
+    {
+      "name": "Yugo cahyopratopo",
+      "phone": "+6282120432996",
+      "role": "Developer"
+    },
+    {"name": "Tengku Ahmad", "phone": "+6285265262812", "role": "Developer"}
+  ];
+
+  List<Widget> createPhonePanels(double width) {
+    List<Widget> panels = [];
+
+    for (var i = 0; i < callData.length; i++) {
+      final val = callData[i];
+      panels.add(PhonePanel(
+          name: val["name"],
+          role: val["role"],
+          phone: val["phone"],
+          width: width));
+      panels.add(SizedBox(
+        height: 5,
+      ));
+    }
+
+    return panels;
   }
 
   @override
@@ -966,76 +1204,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                               origin: Offset(
                                   (lWidth / lheight) < wide ? -150 : 0, 0),
                               child: Transform.translate(
-                                offset: Offset(
-                                    0,
-                                    lWidth >= 1920
-                                        ? (lheight >= 1080 ? -45 : -15)
-                                        : 0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  width: 500,
-                                  height: 620,
-                                  decoration: BoxDecoration(
-                                      color: MainStyle.secondaryColor,
-                                      borderRadius: BorderRadius.circular(30),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: const Offset(4, 4),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.05).toInt()),
-                                            blurRadius: 10,
-                                            spreadRadius: 0),
-                                        BoxShadow(
-                                            offset: const Offset(-4, -4),
-                                            color: Colors.white
-                                                .withAlpha((255 * 0.5).toInt()),
-                                            blurRadius: 13,
-                                            spreadRadius: 0),
-                                        BoxShadow(
-                                            offset: const Offset(6, 6),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.10).toInt()),
-                                            blurRadius: 20,
-                                            spreadRadius: 0),
-                                      ]),
-                                  child: Column(children: [
-                                    Row(
-                                      children: [
-                                        // SvgPicture.asset(
-                                        //   "assets/monitoring.svg",
-                                        //   width: 30,
-                                        //   color: MainStyle.primaryColor,
-                                        // ),
-                                        const Icon(
-                                          Icons.lan,
-                                          size: 30,
-                                          color: MainStyle.primaryColor,
-                                        ),
-                                        // const SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        MainStyle.sizedBoxW10,
-                                        Text(
-                                          "Diagnostic",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              MainStyle.primaryColor, 20),
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Column(children: getDiagnostiWidget(70))
-                                    // PanelNode(
-                                    //     tangki: 1,
-                                    //     sel: 1,
-                                    //     status: "active",
-                                    //     lastUpdated: "12 dec")
-                                  ]),
-                                ),
-                              ),
+                                  offset: Offset(
+                                      0,
+                                      lWidth >= 1920
+                                          ? (lheight >= 1080 ? -45 : -15)
+                                          : 0),
+                                  child: PanelTable(
+                                    onTap: (index) {},
+                                    dataLog: dataLog,
+                                  )),
                             ),
                             const SizedBox(
                               width: 30,
@@ -1175,11 +1352,9 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                         () {});
 
                                                                     return;
+                                                                  } else {
+                                                                    sortSelData();
                                                                   }
-                                                                  // else {
-                                                                  //   sortSelData();
-                                                                  //   getMax();
-                                                                  // }
                                                                 }
                                                               } else {
                                                                 dataNyataSortOrderList
@@ -1192,7 +1367,6 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                               }
 
                                                               sortSelData();
-                                                              // getMax();
                                                             },
                                                             child: SizedBox(
                                                               width: 90,
@@ -1210,7 +1384,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                       style: MyTextStyle.defaultFontCustom(
                                                                           Colors
                                                                               .white,
-                                                                          15),
+                                                                          14),
                                                                     ),
                                                                     const SizedBox(
                                                                       width: 3,
@@ -1305,7 +1479,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                                 Center(
                                                                               child: Text(
                                                                                 (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                                style: MyTextStyle.defaultFontCustom(Colors.black, 16),
+                                                                                style: MyTextStyle.defaultFontCustom(Colors.black, 15),
                                                                               ),
                                                                             ),
                                                                           ))
@@ -1327,48 +1501,50 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                             (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
                                                                                 (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                             style:
-                                                                                MyTextStyle.defaultFontCustom(Colors.black, 16),
+                                                                                MyTextStyle.defaultFontCustom(Colors.black, 15),
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     )));
 
-                                                          tangkiMaxData[tangkiMaxData.indexOf(
-                                                                  tangkiMaxData.firstWhere((element) =>
-                                                                      element[
-                                                                          "sel"] ==
-                                                                      selData[0]
-                                                                              [i]
-                                                                          [
-                                                                          "sel"]))]
-                                                              .forEach(
-                                                                  (key, value) =>
-                                                                      listTangki
-                                                                          .add(
-                                                                              SizedBox(
-                                                                        width:
-                                                                            90,
-                                                                        // height: 35,
+                                                          tangkiMaxData[i]
+                                                              .forEach((key,
+                                                                      value) =>
+                                                                  listTangki.add(
+                                                                      SizedBox(
+                                                                    width: 90,
+                                                                    // height: 35,
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Visibility(
+                                                                        visible:
+                                                                            key !=
+                                                                                "sel",
                                                                         child:
-                                                                            Center(
+                                                                            Container(
+                                                                          width:
+                                                                              80,
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              2),
+                                                                          decoration: BoxDecoration(
+                                                                              color: MainStyle.secondaryColor,
+                                                                              borderRadius: BorderRadius.circular(5)),
                                                                           child:
-                                                                              Visibility(
-                                                                            visible:
-                                                                                key != "sel",
-                                                                            child:
-                                                                                Container(
-                                                                              width: 80,
-                                                                              padding: const EdgeInsets.all(2),
-                                                                              decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
-                                                                              child: Text(
-                                                                                "tangki " + (value as int).toString(),
-                                                                                style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12, weight: FontWeight.w600),
-                                                                                textAlign: TextAlign.center,
-                                                                              ),
-                                                                            ),
+                                                                              Text(
+                                                                            "tangki " +
+                                                                                (value as int).toString(),
+                                                                            style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
+                                                                                12,
+                                                                                weight: FontWeight.w600),
+                                                                            textAlign:
+                                                                                TextAlign.center,
                                                                           ),
                                                                         ),
-                                                                      )));
+                                                                      ),
+                                                                    ),
+                                                                  )));
 
                                                           // listSel.add();
                                                           return Column(

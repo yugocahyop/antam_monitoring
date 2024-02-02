@@ -94,7 +94,7 @@ class MyBarChart extends StatelessWidget {
             .map((e) => BarChartGroupData(x: e.x.toInt(), barRods: [
                   BarChartRodData(
                     toY: e.y,
-                    color: color.withAlpha(200),
+                    color: color,
                     width: 8,
                   )
                 ]))

@@ -1,7 +1,7 @@
 part of home;
 
-class Content_diagnostic extends StatefulWidget {
-  Content_diagnostic(
+class Content_dataLogger2 extends StatefulWidget {
+  Content_dataLogger2(
       {super.key,
       required this.scSel,
       required this.selData,
@@ -14,10 +14,10 @@ class Content_diagnostic extends StatefulWidget {
   ScrollController scSel;
 
   @override
-  State<Content_diagnostic> createState() => _Content_diagnosticState();
+  State<Content_dataLogger2> createState() => _Content_dataLogger2State();
 }
 
-class _Content_diagnosticState extends State<Content_diagnostic> {
+class _Content_dataLogger2State extends State<Content_dataLogger2> {
   var alarm = [
     {
       "title": "Status",
@@ -33,17 +33,59 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     }
   ];
 
-  var titleData = ["#Sel", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = [
+    "Tangki",
+    "#Sel",
+    "Suhu",
+    "Tegangan",
+    "Arus",
+    "Daya",
+    "Energi"
+  ];
 
   // final selScrollController = ScrollController();
 
-  final maxDdata = [
-    {"sel": 1, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 2, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 3, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 4, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 5, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
-    {"sel": 6, "celcius": 0.0, "volt": 0.0, "ampere": 0.0},
+  final List<dynamic> maxData = [
+    {
+      "sel": 1,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 2,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 3,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 4,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
+    {
+      "sel": 5,
+      "suhu": 0.0,
+      "tegangan": 0.0,
+      "arus": 0.0,
+      "daya": 0.0,
+      "energi": 0.0
+    },
   ];
 
   List<dynamic> tangkiMaxData = [
@@ -59,119 +101,6 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       {},
     ],
   ];
-
-  List<dynamic> diagnosticData = [
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "active", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "active", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-    [
-      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-    ],
-  ];
-
-  togglePanelMqtt(int tangki, int sel, bool isActive) {
-    mqtt!.publish({
-      "tangki": tangki,
-      "node": sel,
-      "activate": isActive ? false : true
-      // "status": isActive ? false : true
-    }, "antam/command");
-  }
-
-  List<Widget> getDiagnostiWidget(double width) {
-    List<Widget> rows = [];
-
-    for (var i = 0; i < diagnosticData.length; i++) {
-      final sel = diagnosticData[i];
-      List<Widget> pn = [];
-
-      DateFormat df = DateFormat("dd MMMM yyyy");
-
-      for (var ii = 0; ii < sel.length; ii++) {
-        DateTime date =
-            DateTime.fromMillisecondsSinceEpoch(sel[ii]["lastUpdated"] as int);
-        String status = sel[ii]["status"] as String;
-        pn.add(PanelNode(
-            tapFunction: () => togglePanelMqtt(
-                i + 1, ii + 1, status == "active" ? true : false),
-            isSensor: i == 6,
-            width: width,
-            tangki: i + 1,
-            sel: ii + 1,
-            status: status,
-            lastUpdated: df.format(date)));
-      }
-
-      rows.add(SizedBox(
-        height: width,
-        child: Stack(
-          children: [
-            Center(
-              child: Visibility(
-                visible: (i != 6),
-                child: const SizedBox(
-                  width: 400,
-                  child: Divider(
-                    thickness: 2,
-                    color: MainStyle.thirdColor,
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: pn,
-            ),
-          ],
-        ),
-      ));
-
-      rows.add(const SizedBox(
-        height: 7,
-      ));
-    }
-
-    return rows;
-  }
 
   var totalData = [
     {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
@@ -189,7 +118,6 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     const FlSpot(3, 0),
     const FlSpot(4, 0),
     const FlSpot(5, 0),
-    const FlSpot(6, 0)
   ];
 
   var arusData = [
@@ -198,7 +126,6 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     const FlSpot(3, 0),
     const FlSpot(4, 0),
     const FlSpot(5, 0),
-    const FlSpot(6, 0)
   ];
 
   var arusSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -276,7 +203,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     if (tangki >= selData.length) return;
 
-    for (var e in selData[tangki]) {
+    for (var e in (tangki == 0 ? maxData : selData[tangki])) {
       teganganData.add(FlSpot(
           (e["sel"] as int).toDouble(),
           (e["tegangan"] ?? e["volt"]) is double
@@ -310,7 +237,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       default:
     }
 
-    if (mounted) setState(() {});
+    setState(() {});
   }
 
   getMax() {
@@ -381,84 +308,99 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     }
   }
 
-  MyMqtt? mqtt;
+  getMax2() {
+    selData[0].clear();
+    for (var i = 1; i < selData.length; i++) {
+      final v = selData[i];
 
-  Map<String, bool> dataNyataSortOrder = {};
-  List<String> dataNyataSortOrderList = [];
+      // int count = 1;
 
-  resetSelDataSort() {
-    (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
-        .sort((dynamic a, dynamic b) {
-      // final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
-      // final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
-      final aVal = a["sel"] as double;
-      final bVal = b["sel"] as double;
+      for (Map<String, dynamic> e in v) {
+        final c = (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
 
-      // print(
-      //     "sel");
-      int r = aVal.compareTo(bVal);
+        selData[0].add({
+          "tangki": i.toDouble(),
+          "sel": e["sel"] as double,
+          "suhu": c,
+          "tegangan": vv,
+          "arus": a,
+          "daya": w,
+          "energi": en,
+        });
 
-      // if (r == 0) {
-      //   r = aVal2.compareTo(bVal2);
-      // }
+        //  e["celcius"] = (e["celcius"] as int) + 1;
+        final index = v.indexOf(e);
 
-      return r;
-    });
-  }
+        if (index < 5) {
+          maxData[index]["suhu"] = max(
+              maxData[index]["suhu"] is int
+                  ? (maxData[index]["suhu"] as int).toDouble()
+                  : maxData[index]["suhu"] as double,
+              c);
+          maxData[index]["tegangan"] = max(
+              maxData[index]["tegangan"] is int
+                  ? (maxData[index]["tegangan"] as int).toDouble()
+                  : maxData[index]["tegangan"] as double,
+              vv);
+          maxData[index]["arus"] = max(
+              maxData[index]["arus"] is int
+                  ? (maxData[index]["arus"] as int).toDouble()
+                  : maxData[index]["arus"] as double,
+              a);
+          maxData[index]["daya"] = max(
+              maxData[index]["daya"] is int
+                  ? (maxData[index]["daya"] as int).toDouble()
+                  : maxData[index]["daya"] as double,
+              w);
+          maxData[index]["energi"] = max(
+              maxData[index]["energi"] is int
+                  ? (maxData[index]["energi"] as int).toDouble()
+                  : maxData[index]["energi"] as double,
+              en);
 
-  sortSelData() {
-    if (dataNyataSortOrderList.isEmpty || dataNyataSortOrder.isEmpty) return;
-    resetSelDataSort();
-    (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
-        .sort((dynamic a, dynamic b) {
-      final aVal =
-          a[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
-      final bVal =
-          b[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
+          tangkiMaxData[index]["suhu"] =
+              maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
 
-      // print("aVal: $aVal");
+          tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
+              ? i
+              : tangkiMaxData[index]["tegangan"];
 
-      int r = dataNyataSortOrder[dataNyataSortOrderList[0]]!
-          ? bVal.compareTo(aVal)
-          : aVal.compareTo(bVal);
+          tangkiMaxData[index]["arus"] =
+              maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
 
-      int i = 1;
+          tangkiMaxData[index]["daya"] =
+              maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
 
-      while (r == 0 &&
-          dataNyataSortOrderList.length > 1 &&
-          i < dataNyataSortOrderList.length) {
-        if (i < dataNyataSortOrderList.length) {
-          final aVal =
-              a[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
-          final bVal =
-              b[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
-
-          // print("aVal: $aVal");
-
-          r = dataNyataSortOrder[dataNyataSortOrderList[i]]!
-              ? bVal.compareTo(aVal)
-              : aVal.compareTo(bVal);
+          tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
+              ? i
+              : tangkiMaxData[index]["energi"];
         }
 
-        i++;
+        // count++;
       }
 
-      return r;
-    });
-    setState(() {});
+      // if (kDebugMode) {
+      //   print("sel data 0 : ${selData[0][0].toString()}");
+      // }
+    }
+
+    if (mounted) setState(() {});
   }
+
+  MyMqtt? mqtt;
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
 
-    mqtt!.onUpdate = (t, d) {};
-    maxDdata.clear();
+    mqtt!.onUpdate = (json, topic) {};
+
+    maxData.clear();
     tangkiMaxData.clear();
 
     // if (mqtt != null) {
@@ -470,6 +412,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
   initSelData() async {
     final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
 
     final r = await api.callAPI("/monitoring/find/last", "POST", "", true);
 
@@ -533,7 +479,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     setState(() {});
 
-    getMax();
+    getMax2();
 
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
@@ -549,7 +495,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       });
     });
 
-    if (mounted) setState(() {});
+    setState(() {});
   }
 
   initMqtt() {
@@ -557,22 +503,9 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       if (kDebugMode) {
         print("mqtt topic $topic");
       }
-
-      if (topic == "antam/statusNode" || topic == "antam/statusnode") {
-        int tangki = data["tangki"] as int;
-        int sel = data["node"] as int;
-        String status = data["status"] as String;
-        int timeStamp =
-            DateTime.now().millisecondsSinceEpoch - (data["timestamp"] as int);
-
-        DateFormat df = DateFormat("dd MMMM yyyy");
-
-        DateTime date = DateTime(timeStamp);
-
-        diagnosticData[tangki - 1][sel - 1]["status"] = status;
-        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = df.format(date);
-      } else if (topic == "antam/device") {
+      if (topic == "antam/device") {
         selData.clear();
+        // selData.add([]);
         selData.add([
           {
             "tangki": 1,
@@ -622,7 +555,11 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         ]);
         selData.addAll(data["tangkiData"]);
 
-        getMax();
+        getMax2();
+
+        getData(currTangki);
+
+        sortSelData();
 
         // List<String> items = [];
 
@@ -637,30 +574,47 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         //   items: items,
         //   onChange: (value) => getData(int.tryParse(value) ?? 0),
         // );
+      }
+      //  else if (topic == "antam/device/node") {
+      //   final int tangki = data["tangki"] as int;
 
-        getData(currTangki);
-      } else if (topic == "antam/device/node") {
-        final int tangki = data["tangki"] as int;
+      //   // if(tangki == currTangki || )
 
-        final sData = Map.from(data["selData"]);
+      //   final sData = Map.from(data["selData"]);
+      //   resetSelDataSort();
 
-        resetSelDataSort();
+      //   if (kDebugMode) {
+      //     print((sData));
+      //   }
 
-        if (kDebugMode) {
-          print((sData));
-        }
+      //   for (var i = 2; i < titleData.length; i++) {
+      //     final title = titleData[i].toLowerCase();
 
-        for (var i = 2; i < titleData.length; i++) {
-          final title = titleData[i].toLowerCase();
+      //     selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+      //   }
 
-          selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
-        }
+      //   getMax2();
 
-        getMax();
+      //   getData(currTangki);
+      //   sortSelData();
 
-        getData(currTangki);
-        sortSelData();
-      } else if (topic == "antam/status") {
+      //   // List<String> items = [];
+
+      //   // items.add("Semua");
+
+      //   // for (var i = 0; i < selData.length; i++) {
+      //   //   items.add((i + 1).toString());
+      //   // }
+
+      //   // filterTangki = FilterTangki(
+      //   //   tangkiValue: currTangki.toString(),
+      //   //   items: items,
+      //   //   onChange: (value) => getData(int.tryParse(value) ?? 0),
+      //   // );
+
+      //   // getTotal(currPage, currTangki);
+      // }
+      else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
         var temp = [
@@ -765,8 +719,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     };
   }
 
+  Map<String, bool> dataNyataSortOrder = {};
+  List<String> dataNyataSortOrderList = [];
+
   initTotalDataStatistic() async {
     ApiHelper api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
 
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
@@ -842,6 +803,130 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     }
   }
 
+  List<Map<String, dynamic>> dataLog = [
+    {
+      "isClicked": false,
+      "isHover": false,
+      "timeStamp_server": 1706561733680,
+      "tangkiData": [[]]
+    }
+  ];
+
+  // List<dynamic> tempSelData = [
+  //   [{}]
+  // ];
+
+  String dataDate = "";
+
+  int indexData = -1;
+
+  changeData(int index) {
+    if (index == indexData) return;
+    resetSelDataSort();
+
+    indexData = index;
+    // tempSelData = selData;
+    selData.clear();
+    // selData.add([[]]);
+    // selData = dataLog[index]["tangkiData"];
+    selData.addAll(dataLog[index]["tangkiData"] as List<dynamic>);
+
+    selData.insert(0, [
+      {
+        "tangki": 1,
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "tangki": 1,
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ]);
+
+    final df = DateFormat("dd/MM/yyy hh:mm");
+
+    dataDate = df.format(DateTime.fromMillisecondsSinceEpoch(
+        dataLog[index]["timeStamp_server"]));
+
+    getMax2();
+    getData(currTangki);
+    sortSelData();
+    setState(() {});
+  }
+
+  initDataLog() async {
+    final api = ApiHelper();
+
+    // while (ApiHelper.tokenMain == null) {
+    //   await Future.delayed(const Duration(seconds: 1));
+    // }
+
+    final r = await api.callAPI(
+        "/monitoring/find?limit=20", "POST", jsonEncode({"from": 0}), true);
+
+    if (r["error"] == null) {
+      List<dynamic> data = r['data'] as List<dynamic>;
+
+      if (kDebugMode) {
+        print("backend data2:  $data");
+      }
+
+      dataLog.clear();
+      for (var i = 0; i < data.length; i++) {
+        final val = data[i];
+
+        dataLog.add({
+          "isClicked": false,
+          "isHover": false,
+          "timeStamp_server": val["timeStamp_server"],
+          "tangkiData": val["tangkiData"] as List<dynamic>
+        });
+      }
+
+      if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -854,8 +939,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     // getData(0);
 
     filterTangki = FilterTangki(
-      tangkiValue: "Max",
-      items: const ["Max", "1", "2", "3", "4", "5", "6"],
+      tangkiValue: "Semua",
+      items: ["Semua", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
@@ -863,6 +948,74 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     initSelData();
     initTotalDataStatistic();
+
+    initDataLog();
+  }
+
+  resetSelDataSort() {
+    (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
+        .sort((dynamic a, dynamic b) {
+      final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
+      final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
+      final aVal2 = a["sel"] as double;
+      final bVal2 = b["sel"] as double;
+
+      // print(
+      //     "sel");
+      int r = aVal.compareTo(bVal);
+
+      if (r == 0) {
+        r = aVal2.compareTo(bVal2);
+      }
+
+      return r;
+    });
+  }
+
+  sortSelData() {
+    if (dataNyataSortOrderList.isEmpty || dataNyataSortOrder.isEmpty) return;
+    resetSelDataSort();
+    (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
+        .sort((dynamic a, dynamic b) {
+      final aVal =
+          a[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
+              0 as double;
+      final bVal =
+          b[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
+              0 as double;
+
+      // print("aVal: $aVal");
+
+      int r = dataNyataSortOrder[dataNyataSortOrderList[0]]!
+          ? bVal.compareTo(aVal)
+          : aVal.compareTo(bVal);
+
+      int i = 1;
+
+      while (r == 0 &&
+          dataNyataSortOrderList.length > 1 &&
+          i < dataNyataSortOrderList.length) {
+        if (i < dataNyataSortOrderList.length) {
+          final aVal =
+              a[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
+                  0 as double;
+          final bVal =
+              b[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
+                  0 as double;
+
+          // print("aVal: $aVal");
+
+          r = dataNyataSortOrder[dataNyataSortOrderList[i]]!
+              ? bVal.compareTo(aVal)
+              : aVal.compareTo(bVal);
+        }
+
+        i++;
+      }
+
+      return r;
+    });
+    setState(() {});
   }
 
   @override
@@ -966,76 +1119,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                               origin: Offset(
                                   (lWidth / lheight) < wide ? -150 : 0, 0),
                               child: Transform.translate(
-                                offset: Offset(
-                                    0,
-                                    lWidth >= 1920
-                                        ? (lheight >= 1080 ? -45 : -15)
-                                        : 0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  width: 500,
-                                  height: 620,
-                                  decoration: BoxDecoration(
-                                      color: MainStyle.secondaryColor,
-                                      borderRadius: BorderRadius.circular(30),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: const Offset(4, 4),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.05).toInt()),
-                                            blurRadius: 10,
-                                            spreadRadius: 0),
-                                        BoxShadow(
-                                            offset: const Offset(-4, -4),
-                                            color: Colors.white
-                                                .withAlpha((255 * 0.5).toInt()),
-                                            blurRadius: 13,
-                                            spreadRadius: 0),
-                                        BoxShadow(
-                                            offset: const Offset(6, 6),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.10).toInt()),
-                                            blurRadius: 20,
-                                            spreadRadius: 0),
-                                      ]),
-                                  child: Column(children: [
-                                    Row(
-                                      children: [
-                                        // SvgPicture.asset(
-                                        //   "assets/monitoring.svg",
-                                        //   width: 30,
-                                        //   color: MainStyle.primaryColor,
-                                        // ),
-                                        const Icon(
-                                          Icons.lan,
-                                          size: 30,
-                                          color: MainStyle.primaryColor,
-                                        ),
-                                        // const SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        MainStyle.sizedBoxW10,
-                                        Text(
-                                          "Diagnostic",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              MainStyle.primaryColor, 20),
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Column(children: getDiagnostiWidget(70))
-                                    // PanelNode(
-                                    //     tangki: 1,
-                                    //     sel: 1,
-                                    //     status: "active",
-                                    //     lastUpdated: "12 dec")
-                                  ]),
-                                ),
-                              ),
+                                  offset: Offset(
+                                      0,
+                                      lWidth >= 1920
+                                          ? (lheight >= 1080 ? -45 : -15)
+                                          : 0),
+                                  child: PanelTable(
+                                    dataLog: dataLog,
+                                    onTap: ((index) => changeData(index)),
+                                  )),
                             ),
                             const SizedBox(
                               width: 30,
@@ -1096,7 +1188,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                             // ),
                                             MainStyle.sizedBoxW10,
                                             Text(
-                                              "Data Nyata",
+                                              "Data Nyata $dataDate",
                                               style:
                                                   MyTextStyle.defaultFontCustom(
                                                       MainStyle.primaryColor,
@@ -1148,104 +1240,110 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                 .circular(4))),
                                                 child: Row(
                                                   children: titleData
-                                                      .map((e) => InkWell(
-                                                            onTap: () {
-                                                              if (dataNyataSortOrder
-                                                                  .containsKey(
-                                                                      e)) {
-                                                                if (dataNyataSortOrder[
-                                                                    e]!) {
-                                                                  dataNyataSortOrder[
-                                                                          e] =
-                                                                      !dataNyataSortOrder[
-                                                                          e]!;
-                                                                } else {
-                                                                  dataNyataSortOrder
-                                                                      .remove(
-                                                                          e);
-                                                                  dataNyataSortOrderList
-                                                                      .remove(
-                                                                          e);
+                                                      .map((e) => Visibility(
+                                                            visible: e !=
+                                                                    "Tangki" ||
+                                                                (e == "Tangki" &&
+                                                                    currTangki ==
+                                                                        0),
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                if (dataNyataSortOrder
+                                                                    .containsKey(
+                                                                        e)) {
+                                                                  if (dataNyataSortOrder[
+                                                                      e]!) {
+                                                                    dataNyataSortOrder[
+                                                                            e] =
+                                                                        !dataNyataSortOrder[
+                                                                            e]!;
+                                                                  } else {
+                                                                    dataNyataSortOrder
+                                                                        .remove(
+                                                                            e);
+                                                                    dataNyataSortOrderList
+                                                                        .remove(
+                                                                            e);
 
-                                                                  if (dataNyataSortOrder
-                                                                      .isEmpty) {
-                                                                    resetSelDataSort();
+                                                                    if (dataNyataSortOrder
+                                                                        .isEmpty) {
+                                                                      resetSelDataSort();
 
-                                                                    setState(
-                                                                        () {});
+                                                                      setState(
+                                                                          () {});
 
-                                                                    return;
+                                                                      return;
+                                                                    } else {
+                                                                      sortSelData();
+                                                                    }
                                                                   }
-                                                                  // else {
-                                                                  //   sortSelData();
-                                                                  //   getMax();
-                                                                  // }
+                                                                } else {
+                                                                  dataNyataSortOrderList
+                                                                      .add(e);
+                                                                  dataNyataSortOrder
+                                                                      .putIfAbsent(
+                                                                          e,
+                                                                          () =>
+                                                                              true);
                                                                 }
-                                                              } else {
-                                                                dataNyataSortOrderList
-                                                                    .add(e);
-                                                                dataNyataSortOrder
-                                                                    .putIfAbsent(
-                                                                        e,
-                                                                        () =>
-                                                                            true);
-                                                              }
 
-                                                              sortSelData();
-                                                              // getMax();
-                                                            },
-                                                            child: SizedBox(
-                                                              width: 90,
-                                                              child: Center(
-                                                                child: Row(
-                                                                  // crossAxisAlignment:
-                                                                  //     CrossAxisAlignment
-                                                                  //         .center,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      e,
-                                                                      style: MyTextStyle.defaultFontCustom(
+                                                                sortSelData();
+                                                                // setState(() {});
+                                                              },
+                                                              child: SizedBox(
+                                                                width:
+                                                                    currTangki ==
+                                                                            0
+                                                                        ? 82
+                                                                        : 90,
+                                                                child: Center(
+                                                                  child: Row(
+                                                                    // crossAxisAlignment:
+                                                                    //     CrossAxisAlignment
+                                                                    //         .center,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        e,
+                                                                        style: MyTextStyle
+                                                                            .defaultFontCustom(
                                                                           Colors
                                                                               .white,
-                                                                          15),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 3,
-                                                                    ),
-                                                                    Stack(
-                                                                      children: [
-                                                                        Center(
-                                                                          child:
-                                                                              Visibility(
-                                                                            visible: dataNyataSortOrder.containsKey(e)
-                                                                                ? !dataNyataSortOrder[e]!
-                                                                                : false,
+                                                                          15,
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            3,
+                                                                      ),
+                                                                      Stack(
+                                                                        children: [
+                                                                          Center(
                                                                             child:
-                                                                                Transform.translate(
-                                                                              offset: const Offset(0, -2),
-                                                                              child: const Icon(Icons.arrow_drop_up, size: 13, color: Colors.white),
+                                                                                Visibility(
+                                                                              visible: dataNyataSortOrder.containsKey(e) ? !dataNyataSortOrder[e]! : false,
+                                                                              child: Transform.translate(
+                                                                                offset: const Offset(0, -2),
+                                                                                child: const Icon(Icons.arrow_drop_up, size: 13, color: Colors.white),
+                                                                              ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                        Center(
-                                                                          child:
-                                                                              Visibility(
-                                                                            visible: dataNyataSortOrder.containsKey(e)
-                                                                                ? dataNyataSortOrder[e]!
-                                                                                : false,
+                                                                          Center(
                                                                             child:
-                                                                                Transform.translate(
-                                                                              offset: const Offset(0, 2),
-                                                                              child: const Icon(Icons.arrow_drop_down, size: 13, color: Colors.white),
+                                                                                Visibility(
+                                                                              visible: dataNyataSortOrder.containsKey(e) ? dataNyataSortOrder[e]! : false,
+                                                                              child: Transform.translate(
+                                                                                offset: const Offset(0, 2),
+                                                                                child: const Icon(Icons.arrow_drop_down, size: 13, color: Colors.white),
+                                                                              ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                      ],
-                                                                    )
-                                                                  ],
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -1259,7 +1357,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                   width: 600,
                                                   height: 200,
                                                   decoration: const BoxDecoration(
-                                                      color: Color(0xffC1E1DF),
+                                                      color:
+                                                          MainStyle.thirdColor,
                                                       borderRadius:
                                                           BorderRadius.only(
                                                               bottomLeft: Radius
@@ -1286,114 +1385,128 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                       filterTangki
                                                                           .tangkiValue) ??
                                                                   0][i];
+
                                                           List<Widget> listSel =
                                                               [];
                                                           List<Widget>
                                                               listTangki = [];
-                                                          val.forEach((key,
-                                                                  value) =>
-                                                              key == "sel"
-                                                                  ? listSel
-                                                                      .insert(
-                                                                          0,
-                                                                          SizedBox(
-                                                                            width:
-                                                                                90,
-                                                                            height:
-                                                                                35,
-                                                                            child:
-                                                                                Center(
-                                                                              child: Text(
-                                                                                (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                                style: MyTextStyle.defaultFontCustom(Colors.black, 16),
-                                                                              ),
-                                                                            ),
-                                                                          ))
-                                                                  : listSel.add(
-                                                                      Visibility(
-                                                                      visible:
-                                                                          key !=
-                                                                              "tangki",
+                                                          val.forEach((key, value) => key ==
+                                                                  "sel"
+                                                              ? listSel.insert(
+                                                                  currTangki ==
+                                                                          0
+                                                                      ? 1
+                                                                      : 0,
+                                                                  SizedBox(
+                                                                    width:
+                                                                        currTangki ==
+                                                                                0
+                                                                            ? 82
+                                                                            : 90,
+                                                                    height: 35,
+                                                                    child:
+                                                                        Center(
                                                                       child:
-                                                                          SizedBox(
-                                                                        width:
-                                                                            90,
-                                                                        height:
-                                                                            35,
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Text(
-                                                                            (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
-                                                                                (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                            style:
-                                                                                MyTextStyle.defaultFontCustom(Colors.black, 16),
-                                                                          ),
-                                                                        ),
+                                                                          Text(
+                                                                        (value as double).toStringAsFixed((key == "sel")
+                                                                                ? 0
+                                                                                : 2) +
+                                                                            (key == "suhu" || key == "celcius"
+                                                                                ? "\u00B0"
+                                                                                : ""),
+                                                                        style: MyTextStyle.defaultFontCustom(
+                                                                            Colors.black,
+                                                                            16),
                                                                       ),
-                                                                    )));
+                                                                    ),
+                                                                  ))
+                                                              : listSel
+                                                                  .add(SizedBox(
+                                                                  width:
+                                                                      currTangki ==
+                                                                              0
+                                                                          ? 82
+                                                                          : 90,
+                                                                  height: 35,
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      (value as double).toStringAsFixed(key == "tangki"
+                                                                              ? 0
+                                                                              : 2) +
+                                                                          (key == "suhu" || key == "celcius"
+                                                                              ? "\u00B0"
+                                                                              : ""),
+                                                                      style: MyTextStyle.defaultFontCustom(
+                                                                          Colors
+                                                                              .black,
+                                                                          16),
+                                                                    ),
+                                                                  ),
+                                                                )));
 
-                                                          tangkiMaxData[tangkiMaxData.indexOf(
-                                                                  tangkiMaxData.firstWhere((element) =>
-                                                                      element[
-                                                                          "sel"] ==
-                                                                      selData[0]
-                                                                              [i]
-                                                                          [
-                                                                          "sel"]))]
-                                                              .forEach(
-                                                                  (key, value) =>
-                                                                      listTangki
-                                                                          .add(
-                                                                              SizedBox(
-                                                                        width:
-                                                                            90,
-                                                                        // height: 35,
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Visibility(
-                                                                            visible:
-                                                                                key != "sel",
-                                                                            child:
-                                                                                Container(
-                                                                              width: 80,
-                                                                              padding: const EdgeInsets.all(2),
-                                                                              decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
-                                                                              child: Text(
-                                                                                "tangki " + (value as int).toString(),
-                                                                                style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12, weight: FontWeight.w600),
-                                                                                textAlign: TextAlign.center,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      )));
+                                                          // tangkiMaxData[i]
+                                                          //     .forEach((key,
+                                                          //             value) =>
+                                                          //         listTangki.add(
+                                                          //             SizedBox(
+                                                          //           width: 90,
+                                                          //           // height: 35,
+                                                          //           child:
+                                                          //               Center(
+                                                          //             child:
+                                                          //                 Visibility(
+                                                          //               visible:
+                                                          //                   key !=
+                                                          //                       "sel",
+                                                          //               child:
+                                                          //                   Container(
+                                                          //                 width:
+                                                          //                     80,
+                                                          //                 padding:
+                                                          //                     EdgeInsets.all(2),
+                                                          //                 decoration: BoxDecoration(
+                                                          //                     color: MainStyle.secondaryColor,
+                                                          //                     borderRadius: BorderRadius.circular(5)),
+                                                          //                 child:
+                                                          //                     Text(
+                                                          //                   "tangki " +
+                                                          //                       (value as int).toString(),
+                                                          //                   style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
+                                                          //                       12,
+                                                          //                       weight: FontWeight.w600),
+                                                          //                   textAlign:
+                                                          //                       TextAlign.center,
+                                                          //                 ),
+                                                          //               ),
+                                                          //             ),
+                                                          //           ),
+                                                          //         )));
 
                                                           // listSel.add();
+
                                                           return Column(
                                                             children: [
                                                               Row(
                                                                   children:
                                                                       listSel),
-                                                              SizedBox(
+                                                              const SizedBox(
                                                                 width: 600,
                                                                 child: Stack(
                                                                   children: [
-                                                                    const Divider(
+                                                                    Divider(
                                                                       color: Color(
                                                                           0xff9ACBC7),
                                                                     ),
-                                                                    Visibility(
-                                                                      visible:
-                                                                          currTangki ==
-                                                                              0,
-                                                                      child:
-                                                                          Row(
-                                                                        children:
-                                                                            listTangki,
-                                                                      ),
-                                                                    ),
+                                                                    // Visibility(
+                                                                    //   visible:
+                                                                    //       currTangki ==
+                                                                    //           0,
+                                                                    //   child:
+                                                                    //       Row(
+                                                                    //     children:
+                                                                    //         listTangki,
+                                                                    //   ),
+                                                                    // ),
                                                                   ],
                                                                 ),
                                                               )

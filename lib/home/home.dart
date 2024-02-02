@@ -9,6 +9,7 @@ import 'dart:math';
 
 import 'package:antam_monitoring/home/widget/content_call/widget/phonePanel.dart'
     if (dart.library.html) 'package:antam_monitoring/home/widget/content_call/widget/phonePanelWeb.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
 import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
@@ -39,6 +40,9 @@ part 'widget/content_home_mobile.dart';
 part 'widget/up.dart';
 part 'widget/content_diagnostic/content_diagnostic.dart';
 part 'widget/content_call/content_call.dart';
+part 'widget/content_setting/content_setting.dart';
+part 'widget/content_dataLogger/content_dataLogger.dart';
+part 'widget/content_dataLogger/content_dataLogger2.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -370,6 +374,21 @@ class _HomeState extends State<Home> {
       case 0:
         setState(() {
           page = Content_home(
+            mqtt: mqtt,
+            scSel: scSel,
+            selData: selData,
+          );
+          pageMobile = Content_home_mobile(
+            mqtt: mqtt,
+            selData: selData,
+            scSel: scSel,
+            menuItem: menuItems,
+          );
+        });
+        break;
+      case 1:
+        setState(() {
+          page = Content_dataLogger2(
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,

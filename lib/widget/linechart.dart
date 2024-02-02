@@ -100,7 +100,7 @@ class MyLineChart extends StatelessWidget {
             color: Colors.red,
             dashArray: [8, 4],
             // colorStops: [0.1, 1.0],
-            barWidth: 4,
+            barWidth: 1,
             isCurved: false,
           ),
         ],
