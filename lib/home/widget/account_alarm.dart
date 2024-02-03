@@ -59,6 +59,35 @@ class _Account_alarmState extends State<Account_alarm> {
   }
 
   final double wide = 16 / 9;
+
+  TextStyle textStyle16BlackBold =
+      MyTextStyle.defaultFontCustom(Colors.black, 16, weight: FontWeight.bold);
+
+  TextStyle textStyle26BlackBold =
+      MyTextStyle.defaultFontCustom(Colors.black, 26, weight: FontWeight.bold);
+
+  TextStyle textStyle16Black = MyTextStyle.defaultFontCustom(Colors.black, 16);
+
+  TextStyle textStyle26Black = MyTextStyle.defaultFontCustom(Colors.black, 26);
+
+  TextStyle textStyle24Grey = MyTextStyle.defaultFontCustom(Colors.grey, 24);
+
+  TextStyle textStyle16Grey = MyTextStyle.defaultFontCustom(
+    Colors.grey,
+    16,
+  );
+
+  TextStyle textStyle24Primary =
+      MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 24);
+
+  TextStyle textStyle14Primary =
+      MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 14);
+
+  Widget userSvg = SvgPicture.asset(
+    "assets/user.svg",
+    width: 30,
+  );
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -99,11 +128,9 @@ class _Account_alarmState extends State<Account_alarm> {
                           ),
                           Text(
                             e["title"] as String,
-                            style: MyTextStyle.defaultFontCustom(
-                                Colors.grey,
-                                (lWidth / lheight) < wide && lWidth > 900
-                                    ? 24
-                                    : 16),
+                            style: (lWidth / lheight) < wide && lWidth > 900
+                                ? textStyle24Grey
+                                : textStyle16Grey,
                           ),
                           // const SizedBox(
                           //   width: 10,
@@ -122,9 +149,9 @@ class _Account_alarmState extends State<Account_alarm> {
                 children: [
                   Text(
                     time,
-                    style: MyTextStyle.defaultFontCustom(
-                        Colors.black, (lWidth / lheight) < wide ? 26 : 16,
-                        weight: FontWeight.bold),
+                    style: (lWidth / lheight) < wide
+                        ? textStyle26BlackBold
+                        : textStyle16BlackBold,
                   ),
                   // const SizedBox(
                   //   width: 20,
@@ -132,19 +159,19 @@ class _Account_alarmState extends State<Account_alarm> {
                   MainStyle.sizedBoxW20,
                   Text(
                     date,
-                    style: MyTextStyle.defaultFontCustom(
-                      Colors.black,
-                      (lWidth / lheight) < wide ? 26 : 16,
-                    ),
+                    style: (lWidth / lheight) < wide
+                        ? textStyle26Black
+                        : textStyle16Black,
                   ),
                   // const SizedBox(
                   //   width: 20,
                   // ),
                   MainStyle.sizedBoxW20,
-                  SvgPicture.asset(
-                    "assets/user.svg",
-                    width: 30,
-                  ),
+                  // SvgPicture.asset(
+                  //   "assets/user.svg",
+                  //   width: 30,
+                  // ),
+                  userSvg,
                   // const SizedBox(
                   //   width: 5,
                   // ),
@@ -152,10 +179,9 @@ class _Account_alarmState extends State<Account_alarm> {
                   Expanded(
                     child: Text(
                       "admin",
-                      style: MyTextStyle.defaultFontCustom(
-                        MainStyle.primaryColor,
-                        (lWidth / lheight) < wide ? 24 : 14,
-                      ),
+                      style: (lWidth / lheight) < wide
+                          ? textStyle24Primary
+                          : textStyle14Primary,
                     ),
                   ),
                 ],

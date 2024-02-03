@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:flutter/rendering.dart';
 // import 'package:mqtt_client/mqtt_browser_client.dart';
 // import 'package:mqtt_client/mqtt_browser_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -48,12 +49,12 @@ class MyMqtt {
     client.disconnect();
   }
 
-  List<String> topics = [];
+  // List<String> topics = [];
 
   void subscribe(String topic) {
     client.subscribe(topic, MqttQos.atLeastOnce);
 
-    topics.add(topic);
+    // topics.add(topic);
   }
 
   void publish(Map<String, dynamic> data, String topic) {
@@ -160,20 +161,28 @@ class MyMqtt {
             'EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
       }
       client.disconnect();
-      exit(-1);
+      // exit(-1);
     }
 
     /// Ok, lets try a subscription
     if (kDebugMode) {
       print('EXAMPLE::Subscribing to the test/lol topic');
     }
-    // var topic = 'antam/device'; // Not a wildcard topic
-    // client.subscribe(topic, MqttQos.atLeastOnce);
-    client.subscribe('antam/device/node', MqttQos.atLeastOnce);
-    client.subscribe('antam/status', MqttQos.atLeastOnce);
-    client.subscribe('antam/statistic', MqttQos.atLeastOnce);
-    client.subscribe('antam/statusnode', MqttQos.atLeastOnce);
-    client.subscribe('antam/statusNode', MqttQos.atLeastOnce);
+
+    try {
+      // var topic = 'antam/device'; // Not a wildcard topic
+      // client.subscribe(topic, MqttQos.atLeastOnce);
+      client.subscribe('antam/device/node', MqttQos.atLeastOnce);
+      client.subscribe('antam/status', MqttQos.atLeastOnce);
+      client.subscribe('antam/statistic', MqttQos.atLeastOnce);
+      client.subscribe('antam/statusnode', MqttQos.atLeastOnce);
+      client.subscribe('antam/statusNode', MqttQos.atLeastOnce);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      client.disconnect();
+    }
 
     /// The client has a change notifier object(see the Observable class) which we then listen to to get
     /// notifications of published updates to each subscribed topic.
@@ -262,9 +271,9 @@ class MyMqtt {
       try {
         await connect();
 
-        topics.forEach((element) {
-          client.subscribe(element, MqttQos.atLeastOnce);
-        });
+        // topics.forEach((element) {
+        //   client.subscribe(element, MqttQos.atLeastOnce);
+        // });
 
         reconnecting = false;
       } catch (e) {

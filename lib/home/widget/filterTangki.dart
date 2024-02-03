@@ -13,11 +13,21 @@ class FilterTangki extends StatefulWidget {
 
   Function(String value) onChange;
 
+  // Function? dispose;
+
   @override
   State<FilterTangki> createState() => _FilterTangkiState();
 }
 
 class _FilterTangkiState extends State<FilterTangki> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // widget.dispose = () => this.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;

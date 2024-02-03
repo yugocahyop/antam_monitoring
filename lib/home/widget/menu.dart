@@ -68,135 +68,131 @@ class _MenuState extends State<Menu> {
             // crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: widget.menuItem
-                .map((e) => Material(
-                      type: MaterialType.transparency,
-                      child: InkWell(
-                        hoverColor: Colors.transparent,
-                        onHover: ((value) {
-                          setState(() {
-                            isHovers[widget.menuItem.indexOf(e)] = value;
-                          });
-                        }),
-                        onTap: () async {
-                          widget.menuItem
-                              .where((element) =>
-                                  (element["isActive"] as bool) == true)
-                              .first["isActive"] = false;
-                          setState(() {
-                            e["isActive"] = true;
-                          });
+                .map((e) => InkWell(
+                      hoverColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onHover: ((value) {
+                        setState(() {
+                          isHovers[widget.menuItem.indexOf(e)] = value;
+                        });
+                      }),
+                      onTap: () async {
+                        widget.menuItem
+                            .where((element) =>
+                                (element["isActive"] as bool) == true)
+                            .first["isActive"] = false;
+                        setState(() {
+                          e["isActive"] = true;
+                        });
 
-                          await Future.delayed(
-                              const Duration(milliseconds: 150));
+                        await Future.delayed(const Duration(milliseconds: 150));
 
-                          widget.menuItem[widget.menuItem.indexOf(e)]
-                              ["function"]();
-                        },
-                        child: AnimatedContainer(
-                          clipBehavior: Clip.none,
-                          duration: const Duration(milliseconds: 150),
-                          margin: const EdgeInsets.only(bottom: 20),
-                          width: (lWidth / lheight) < wide ? 406 : 206,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: !(e["isActive"] as bool)
-                                ? [const BoxShadow(color: Colors.transparent)]
-                                : [
-                                    BoxShadow(
-                                        offset: const Offset(0, 8),
-                                        blurRadius: 60,
-                                        spreadRadius: 0,
-                                        color: MainStyle.primaryColor.withAlpha(
-                                            ((255 * 0.13) * 0.3).toInt())),
-                                    BoxShadow(
-                                        offset: const Offset(0, 5.5),
-                                        blurRadius: 41,
-                                        spreadRadius: 0,
-                                        color: MainStyle.primaryColor.withAlpha(
-                                            ((255 * 0.9) * 0.3).toInt())),
-                                    BoxShadow(
-                                        offset: const Offset(0, 2.5),
-                                        blurRadius: 30,
-                                        spreadRadius: 0,
-                                        color: MainStyle.primaryColor.withAlpha(
-                                            ((255 * 0.07) * 0.3).toInt())),
-                                    BoxShadow(
-                                        offset: const Offset(0, 1),
-                                        blurRadius: 22,
-                                        spreadRadius: 0,
-                                        color: MainStyle.primaryColor.withAlpha(
-                                            ((255 * 0.06) * 0.3).toInt())),
-                                    BoxShadow(
-                                        offset: const Offset(0, 0.5),
-                                        blurRadius: 12,
-                                        spreadRadius: 0,
-                                        color: MainStyle.primaryColor.withAlpha(
-                                            ((255 * 0.04) * 0.3).toInt())),
-                                  ],
-                            // color: (e["isActive"] as bool)
-                            //     ? MainStyle.primaryColor
-                            //     : null,
-                            gradient: (e["isActive"] as bool)
-                                ? const LinearGradient(
-                                    colors: [
-                                        MainStyle.primaryColor,
-                                        MainStyle.primaryColor
-                                      ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight)
-                                : LinearGradient(
-                                    colors: grad_colors,
-                                    stops: const [0, 0.6, 1],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: (lWidth / lheight) < wide ? 80 : 35,
+                        widget.menuItem[widget.menuItem.indexOf(e)]
+                            ["function"]();
+                      },
+                      child: AnimatedContainer(
+                        clipBehavior: Clip.none,
+                        duration: const Duration(milliseconds: 150),
+                        margin: const EdgeInsets.only(bottom: 20),
+                        width: (lWidth / lheight) < wide ? 406 : 206,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: !(e["isActive"] as bool)
+                              ? [const BoxShadow(color: Colors.transparent)]
+                              : [
+                                  BoxShadow(
+                                      offset: const Offset(0, 8),
+                                      blurRadius: 60,
+                                      spreadRadius: 0,
+                                      color: MainStyle.primaryColor.withAlpha(
+                                          ((255 * 0.13) * 0.3).toInt())),
+                                  BoxShadow(
+                                      offset: const Offset(0, 5.5),
+                                      blurRadius: 41,
+                                      spreadRadius: 0,
+                                      color: MainStyle.primaryColor.withAlpha(
+                                          ((255 * 0.9) * 0.3).toInt())),
+                                  BoxShadow(
+                                      offset: const Offset(0, 2.5),
+                                      blurRadius: 30,
+                                      spreadRadius: 0,
+                                      color: MainStyle.primaryColor.withAlpha(
+                                          ((255 * 0.07) * 0.3).toInt())),
+                                  BoxShadow(
+                                      offset: const Offset(0, 1),
+                                      blurRadius: 22,
+                                      spreadRadius: 0,
+                                      color: MainStyle.primaryColor.withAlpha(
+                                          ((255 * 0.06) * 0.3).toInt())),
+                                  BoxShadow(
+                                      offset: const Offset(0, 0.5),
+                                      blurRadius: 12,
+                                      spreadRadius: 0,
+                                      color: MainStyle.primaryColor.withAlpha(
+                                          ((255 * 0.04) * 0.3).toInt())),
+                                ],
+                          // color: (e["isActive"] as bool)
+                          //     ? MainStyle.primaryColor
+                          //     : null,
+                          gradient: (e["isActive"] as bool)
+                              ? const LinearGradient(
+                                  colors: [
+                                      MainStyle.primaryColor,
+                                      MainStyle.primaryColor
+                                    ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight)
+                              : LinearGradient(
+                                  colors: grad_colors,
+                                  stops: const [0, 0.6, 1],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: (lWidth / lheight) < wide ? 80 : 35,
+                              child: Icon(
+                                e["icon"],
+                                size: (lWidth / lheight) < wide ? 55 : 25,
+                                color: (e["isActive"] as bool)
+                                    ? Colors.white
+                                    : MainStyle.primaryColor,
+                              ),
+                            ),
+                            SizedBox(
+                              width: (lWidth / lheight) < wide ? 220 : 120,
+                              child: Text(
+                                e["title"],
+                                style: MyTextStyle.defaultFontCustom(
+                                    (e["isActive"] as bool)
+                                        ? Colors.white
+                                        : MainStyle.primaryColor,
+                                    (lWidth / lheight) < wide ? 28 : 15),
+                              ),
+                            ),
+                            Container(
+                              clipBehavior: Clip.none,
+                              width: 32,
+                              decoration: const BoxDecoration(),
+                              child: AnimatedAlign(
+                                // curve: Curves.elasticInOut,
+                                duration: Duration(milliseconds: 200),
+                                alignment: !isHovers[widget.menuItem.indexOf(e)]
+                                    ? Alignment.centerLeft
+                                    : Alignment.centerRight,
                                 child: Icon(
-                                  e["icon"],
-                                  size: (lWidth / lheight) < wide ? 55 : 25,
+                                  Icons.chevron_right,
+                                  size: 25,
                                   color: (e["isActive"] as bool)
                                       ? Colors.white
                                       : MainStyle.primaryColor,
                                 ),
                               ),
-                              SizedBox(
-                                width: (lWidth / lheight) < wide ? 220 : 120,
-                                child: Text(
-                                  e["title"],
-                                  style: MyTextStyle.defaultFontCustom(
-                                      (e["isActive"] as bool)
-                                          ? Colors.white
-                                          : MainStyle.primaryColor,
-                                      (lWidth / lheight) < wide ? 28 : 15),
-                                ),
-                              ),
-                              Container(
-                                clipBehavior: Clip.none,
-                                width: 32,
-                                decoration: const BoxDecoration(),
-                                child: AnimatedAlign(
-                                  // curve: Curves.elasticInOut,
-                                  duration: Duration(milliseconds: 200),
-                                  alignment:
-                                      !isHovers[widget.menuItem.indexOf(e)]
-                                          ? Alignment.centerLeft
-                                          : Alignment.centerRight,
-                                  child: Icon(
-                                    Icons.chevron_right,
-                                    size: 25,
-                                    color: (e["isActive"] as bool)
-                                        ? Colors.white
-                                        : MainStyle.primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ))
