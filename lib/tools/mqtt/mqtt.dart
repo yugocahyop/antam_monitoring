@@ -267,7 +267,7 @@ class MyMqtt {
 
     reconnecting = true;
 
-    Future.delayed(Duration(seconds: 4), () async {
+    Future.delayed(const Duration(seconds: 4), () async {
       try {
         await connect();
 
@@ -278,6 +278,7 @@ class MyMqtt {
         reconnecting = false;
       } catch (e) {
         reconnecting = false;
+        client.disconnect();
       }
     });
     // if (client.connectionStatus!.disconnectionOrigin ==
