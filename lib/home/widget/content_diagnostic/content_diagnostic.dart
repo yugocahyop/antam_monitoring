@@ -458,6 +458,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     super.dispose();
 
     mqtt!.onUpdate = (t, d) {};
+
+    diagnosticData.clear();
     maxDdata.clear();
     tangkiMaxData.clear();
 
@@ -880,7 +882,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
           ? 1400
           : lWidth >= 1920
               ? lheight
-              : 740,
+              : 750,
       child: Stack(
         children: [
           Container(
@@ -894,7 +896,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                   ? 1400
                   : lWidth >= 1920
                       ? lheight
-                      : 740,
+                      : 750,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

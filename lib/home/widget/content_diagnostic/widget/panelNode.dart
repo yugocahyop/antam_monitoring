@@ -47,6 +47,7 @@ class _PanelNodeState extends State<PanelNode> {
           width: widget.width,
           height: widget.width,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               AnimatedContainer(
                 width: widget.width,
@@ -72,7 +73,7 @@ class _PanelNodeState extends State<PanelNode> {
                           widget.status.toLowerCase() == "inactive"
                               ? MainStyle.primaryColor
                               : Colors.white,
-                          14),
+                          12),
                     ),
                     Visibility(
                       visible: !widget.isSensor,
@@ -82,7 +83,7 @@ class _PanelNodeState extends State<PanelNode> {
                             widget.status.toLowerCase() == "inactive"
                                 ? MainStyle.primaryColor
                                 : Colors.white,
-                            14),
+                            12),
                       ),
                     ),
                   ],
@@ -91,17 +92,18 @@ class _PanelNodeState extends State<PanelNode> {
               Expanded(
                   child: Container(
                 width: widget.width,
-                padding: EdgeInsets.all(3),
+                padding: EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
                     color: MainStyle.thirdColor,
                     borderRadius:
                         BorderRadius.vertical(bottom: Radius.circular(10))),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       widget.status,
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 12),
+                      style: MyTextStyle.defaultFontCustom(Colors.black, 10),
                     ),
                     SizedBox(
                       width: widget.width,

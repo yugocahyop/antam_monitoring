@@ -781,7 +781,7 @@ class _Content_callState extends State<Content_call> {
           ? 1400
           : lWidth >= 1920
               ? lheight
-              : 740,
+              : 750,
       child: Stack(
         children: [
           Container(
@@ -795,7 +795,7 @@ class _Content_callState extends State<Content_call> {
                   ? 1400
                   : lWidth >= 1920
                       ? lheight
-                      : 740,
+                      : 750,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1228,43 +1228,42 @@ class _Content_callState extends State<Content_call> {
                                                                       ),
                                                                     )));
 
-                                                          tangkiMaxData[i]
-                                                              .forEach((key,
-                                                                      value) =>
-                                                                  listTangki.add(
-                                                                      SizedBox(
-                                                                    width: 90,
-                                                                    // height: 35,
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          Visibility(
-                                                                        visible:
-                                                                            key !=
-                                                                                "sel",
+                                                          tangkiMaxData[tangkiMaxData.indexOf(
+                                                                  tangkiMaxData.firstWhere((element) =>
+                                                                      element[
+                                                                          "sel"] ==
+                                                                      selData[0]
+                                                                              [i]
+                                                                          [
+                                                                          "sel"]))]
+                                                              .forEach(
+                                                                  (key, value) =>
+                                                                      listTangki
+                                                                          .add(
+                                                                              SizedBox(
+                                                                        width:
+                                                                            90,
+                                                                        // height: 35,
                                                                         child:
-                                                                            Container(
-                                                                          width:
-                                                                              80,
-                                                                          padding: const EdgeInsets
-                                                                              .all(
-                                                                              2),
-                                                                          decoration: BoxDecoration(
-                                                                              color: MainStyle.secondaryColor,
-                                                                              borderRadius: BorderRadius.circular(5)),
+                                                                            Center(
                                                                           child:
-                                                                              Text(
-                                                                            "tangki " +
-                                                                                (value as int).toString(),
-                                                                            style:
-                                                                                MainStyle.textStyleDefault12PrimaryW600,
-                                                                            textAlign:
-                                                                                TextAlign.center,
+                                                                              Visibility(
+                                                                            visible:
+                                                                                key != "sel",
+                                                                            child:
+                                                                                Container(
+                                                                              width: 80,
+                                                                              padding: const EdgeInsets.all(2),
+                                                                              decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
+                                                                              child: Text(
+                                                                                "tangki " + (value as int).toString(),
+                                                                                style: MainStyle.textStyleDefault12PrimaryW600,
+                                                                                textAlign: TextAlign.center,
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                  )));
+                                                                      )));
 
                                                           // listSel.add();
                                                           return Column(

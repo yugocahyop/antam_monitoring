@@ -343,10 +343,10 @@ class _Content_settingState extends State<Content_setting> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    mqtt!.onUpdate = (t, d) {};
 
-    tangkiMaxData.clear();
+    mqtt!.onUpdate = (t, d) {};
     maxDdata.clear();
+    tangkiMaxData.clear();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();
@@ -445,7 +445,17 @@ class _Content_settingState extends State<Content_setting> {
         print("mqtt topic $topic");
       }
 
-      if (topic == "antam/device") {
+      if (topic == "antam/statusNode" || topic == "antam/statusnode") {
+        int tangki = data["tangki"] as int;
+        int sel = data["node"] as int;
+        String status = data["status"] as String;
+        int timeStamp =
+            DateTime.now().millisecondsSinceEpoch - (data["timestamp"] as int);
+
+        DateFormat df = DateFormat("dd MMMM yyyy");
+
+        DateTime date = DateTime(timeStamp);
+      } else if (topic == "antam/device") {
         selData.clear();
         selData.add([
           {
@@ -729,7 +739,7 @@ class _Content_settingState extends State<Content_setting> {
 
     filterTangki = FilterTangki(
       tangkiValue: "Max",
-      items: ["Max", "1", "2", "3", "4", "5", "6"],
+      items: const ["Max", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
@@ -737,33 +747,6 @@ class _Content_settingState extends State<Content_setting> {
 
     initSelData();
     initTotalDataStatistic();
-  }
-
-  List<Map<String, dynamic>> callData = [
-    {
-      "name": "Yugo cahyopratopo",
-      "phone": "+6282120432996",
-      "role": "Developer"
-    },
-    {"name": "Tengku Ahmad", "phone": "+6285265262812", "role": "Developer"}
-  ];
-
-  List<Widget> createPhonePanels(double width) {
-    List<Widget> panels = [];
-
-    for (var i = 0; i < callData.length; i++) {
-      final val = callData[i];
-      panels.add(PhonePanel(
-          name: val["name"],
-          role: val["role"],
-          phone: val["phone"],
-          width: width));
-      panels.add(SizedBox(
-        height: 5,
-      ));
-    }
-
-    return panels;
   }
 
   @override
@@ -781,7 +764,7 @@ class _Content_settingState extends State<Content_setting> {
           ? 1400
           : lWidth >= 1920
               ? lheight
-              : 740,
+              : 750,
       child: Stack(
         children: [
           Container(
@@ -795,7 +778,7 @@ class _Content_settingState extends State<Content_setting> {
                   ? 1400
                   : lWidth >= 1920
                       ? lheight
-                      : 740,
+                      : 750,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -867,77 +850,13 @@ class _Content_settingState extends State<Content_setting> {
                               origin: Offset(
                                   (lWidth / lheight) < wide ? -150 : 0, 0),
                               child: Transform.translate(
-                                offset: Offset(
-                                    0,
-                                    lWidth >= 1920
-                                        ? (lheight >= 1080 ? -45 : -15)
-                                        : 0),
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  width: 500,
-                                  height: 620,
-                                  decoration: BoxDecoration(
-                                      color: MainStyle.secondaryColor,
-                                      borderRadius: BorderRadius.circular(30),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: const Offset(4, 4),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.05).toInt()),
-                                            blurRadius: 10,
-                                            spreadRadius: 0),
-                                        BoxShadow(
-                                            offset: const Offset(-4, -4),
-                                            color: Colors.white
-                                                .withAlpha((255 * 0.5).toInt()),
-                                            blurRadius: 13,
-                                            spreadRadius: 0),
-                                        BoxShadow(
-                                            offset: const Offset(6, 6),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.10).toInt()),
-                                            blurRadius: 20,
-                                            spreadRadius: 0),
-                                      ]),
-                                  child: Column(children: [
-                                    Row(
-                                      children: [
-                                        // SvgPicture.asset(
-                                        //   "assets/monitoring.svg",
-                                        //   width: 30,
-                                        //   color: MainStyle.primaryColor,
-                                        // ),
-                                        const Icon(
-                                          Icons.call_outlined,
-                                          size: 30,
-                                          color: MainStyle.primaryColor,
-                                        ),
-                                        // const SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        MainStyle.sizedBoxW10,
-                                        Text(
-                                          "Emergency Call",
-                                          style: MyTextStyle.defaultFontCustom(
-                                              MainStyle.primaryColor, 20),
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-
-                                    Column(children: createPhonePanels(500))
-                                    // PanelNode(
-                                    //     tangki: 1,
-                                    //     sel: 1,
-                                    //     status: "active",
-                                    //     lastUpdated: "12 dec")
-                                  ]),
-                                ),
-                              ),
+                                  offset: Offset(
+                                      0,
+                                      lWidth >= 1920
+                                          ? (lheight >= 1080 ? -45 : -15)
+                                          : 0),
+                                  child: PanelTableSetting(
+                                      dataLog: [], onTap: (index) {})),
                             ),
                             const SizedBox(
                               width: 30,
@@ -999,10 +918,8 @@ class _Content_settingState extends State<Content_setting> {
                                             MainStyle.sizedBoxW10,
                                             Text(
                                               "Data Nyata",
-                                              style:
-                                                  MyTextStyle.defaultFontCustom(
-                                                      MainStyle.primaryColor,
-                                                      20),
+                                              style: MainStyle
+                                                  .textStyleDefault20Primary,
                                             )
                                           ],
                                         ),
@@ -1077,9 +994,11 @@ class _Content_settingState extends State<Content_setting> {
                                                                         () {});
 
                                                                     return;
-                                                                  } else {
-                                                                    sortSelData();
                                                                   }
+                                                                  // else {
+                                                                  //   sortSelData();
+                                                                  //   getMax();
+                                                                  // }
                                                                 }
                                                               } else {
                                                                 dataNyataSortOrderList
@@ -1092,6 +1011,7 @@ class _Content_settingState extends State<Content_setting> {
                                                               }
 
                                                               sortSelData();
+                                                              // getMax();
                                                             },
                                                             child: SizedBox(
                                                               width: 90,
@@ -1106,10 +1026,8 @@ class _Content_settingState extends State<Content_setting> {
                                                                   children: [
                                                                     Text(
                                                                       e,
-                                                                      style: MyTextStyle.defaultFontCustom(
-                                                                          Colors
-                                                                              .white,
-                                                                          14),
+                                                                      style: MainStyle
+                                                                          .textStyleDefault15White,
                                                                     ),
                                                                     const SizedBox(
                                                                       width: 3,
@@ -1204,7 +1122,7 @@ class _Content_settingState extends State<Content_setting> {
                                                                                 Center(
                                                                               child: Text(
                                                                                 (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                                style: MyTextStyle.defaultFontCustom(Colors.black, 15),
+                                                                                style: MainStyle.textStyleDefault16Black,
                                                                               ),
                                                                             ),
                                                                           ))
@@ -1226,50 +1144,48 @@ class _Content_settingState extends State<Content_setting> {
                                                                             (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
                                                                                 (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                             style:
-                                                                                MyTextStyle.defaultFontCustom(Colors.black, 15),
+                                                                                MainStyle.textStyleDefault16Black,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     )));
 
-                                                          tangkiMaxData[i]
-                                                              .forEach((key,
-                                                                      value) =>
-                                                                  listTangki.add(
-                                                                      SizedBox(
-                                                                    width: 90,
-                                                                    // height: 35,
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          Visibility(
-                                                                        visible:
-                                                                            key !=
-                                                                                "sel",
+                                                          tangkiMaxData[tangkiMaxData.indexOf(
+                                                                  tangkiMaxData.firstWhere((element) =>
+                                                                      element[
+                                                                          "sel"] ==
+                                                                      selData[0]
+                                                                              [i]
+                                                                          [
+                                                                          "sel"]))]
+                                                              .forEach(
+                                                                  (key, value) =>
+                                                                      listTangki
+                                                                          .add(
+                                                                              SizedBox(
+                                                                        width:
+                                                                            90,
+                                                                        // height: 35,
                                                                         child:
-                                                                            Container(
-                                                                          width:
-                                                                              80,
-                                                                          padding: const EdgeInsets
-                                                                              .all(
-                                                                              2),
-                                                                          decoration: BoxDecoration(
-                                                                              color: MainStyle.secondaryColor,
-                                                                              borderRadius: BorderRadius.circular(5)),
+                                                                            Center(
                                                                           child:
-                                                                              Text(
-                                                                            "tangki " +
-                                                                                (value as int).toString(),
-                                                                            style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
-                                                                                12,
-                                                                                weight: FontWeight.w600),
-                                                                            textAlign:
-                                                                                TextAlign.center,
+                                                                              Visibility(
+                                                                            visible:
+                                                                                key != "sel",
+                                                                            child:
+                                                                                Container(
+                                                                              width: 80,
+                                                                              padding: const EdgeInsets.all(2),
+                                                                              decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
+                                                                              child: Text(
+                                                                                "tangki " + (value as int).toString(),
+                                                                                style: MainStyle.textStyleDefault12PrimaryW600,
+                                                                                textAlign: TextAlign.center,
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                  )));
+                                                                      )));
 
                                                           // listSel.add();
                                                           return Column(
@@ -1353,13 +1269,8 @@ class _Content_settingState extends State<Content_setting> {
                                                         width: 200,
                                                         child: Text(
                                                           e["title"] as String,
-                                                          style: MyTextStyle
-                                                              .defaultFontCustom(
-                                                                  Colors.black,
-                                                                  15,
-                                                                  weight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                          style: MainStyle
+                                                              .textStyleDefault15BlackBold,
                                                         ),
                                                       ),
                                                       Container(
@@ -1429,11 +1340,8 @@ class _Content_settingState extends State<Content_setting> {
                                                                         as double)
                                                                     .toStringAsFixed(
                                                                         2),
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        MainStyle
-                                                                            .primaryColor,
-                                                                        25),
+                                                                style: MainStyle
+                                                                    .textStyleDefault25Primary,
                                                               ),
                                                             ),
                                                             SizedBox(
@@ -1444,13 +1352,8 @@ class _Content_settingState extends State<Content_setting> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .right,
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        Colors
-                                                                            .black,
-                                                                        15,
-                                                                        weight:
-                                                                            FontWeight.bold),
+                                                                style: MainStyle
+                                                                    .textStyleDefault15BlackBold,
                                                               ),
                                                             )
                                                           ],
@@ -1537,9 +1440,8 @@ class _Content_settingState extends State<Content_setting> {
                                   ),
                                   Text(
                                     "Warning Message",
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 20,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault20BlackBold,
                                   )
                                 ],
                               ),
@@ -1550,9 +1452,8 @@ class _Content_settingState extends State<Content_setting> {
                                   child: Text(
                                     warningMsg,
                                     textAlign: TextAlign.center,
-                                    style: MyTextStyle.defaultFontCustom(
-                                        Colors.black, 40,
-                                        weight: FontWeight.bold),
+                                    style:
+                                        MainStyle.textStyleDefault40BlackBold,
                                   ),
                                 ),
                               ),

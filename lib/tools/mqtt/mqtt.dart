@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 // import 'package:mqtt_client/mqtt_browser_client.dart';
 // import 'package:mqtt_client/mqtt_browser_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -147,6 +147,7 @@ class MyMqtt {
         print('EXAMPLE::socket exception - $e');
       }
       client.disconnect();
+      return -1;
     }
 
     /// Check we are connected
@@ -161,6 +162,7 @@ class MyMqtt {
             'EXAMPLE::ERROR Mosquitto client connection failed - disconnecting, status is ${client.connectionStatus}');
       }
       client.disconnect();
+      return -1;
       // exit(-1);
     }
 
@@ -182,6 +184,7 @@ class MyMqtt {
         print(e);
       }
       client.disconnect();
+      return -1;
     }
 
     /// The client has a change notifier object(see the Observable class) which we then listen to to get
@@ -267,15 +270,18 @@ class MyMqtt {
 
     reconnecting = true;
 
-    Future.delayed(const Duration(seconds: 4), () async {
+    Timer.periodic(const Duration(seconds: 4), (t) async {
       try {
-        await connect();
+        int r = await connect();
 
-        // topics.forEach((element) {
-        //   client.subscribe(element, MqttQos.atLeastOnce);
-        // });
+        if (r == 0) {
+          // topics.forEach((element) {
+          //   client.subscribe(element, MqttQos.atLeastOnce);
+          // });
 
-        reconnecting = false;
+          reconnecting = false;
+          t.cancel();
+        }
       } catch (e) {
         reconnecting = false;
         client.disconnect();

@@ -111,7 +111,7 @@ class _MytextfieldState extends State<Mytextfield> {
             obscureText: widget.obscure && hidePass,
             keyboardType: widget.inputType!,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(5),
+              contentPadding: EdgeInsets.all(0),
               // filled: true,
               // fillColor: !focused ? Color(0xff00FBC2) : blue,
               enabledBorder: !widget.isBorder

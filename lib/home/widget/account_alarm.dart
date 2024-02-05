@@ -94,12 +94,12 @@ class _Account_alarmState extends State<Account_alarm> {
     final lheight = MediaQuery.of(context).size.height;
     return SizedBox(
       width: (lWidth / lheight) < wide
-          ? 1400
+          ? 1430
           : lWidth < 900
               ? lWidth < 500
                   ? lWidth
                   : lWidth * 0.4
-              : 1200,
+              : 1230,
       child: Row(
         mainAxisAlignment: lWidth < 900
             ? MainAxisAlignment.center
@@ -144,7 +144,7 @@ class _Account_alarmState extends State<Account_alarm> {
           Visibility(
             visible: lWidth >= 900,
             child: SizedBox(
-              width: (lWidth / lheight) < wide ? 400 : 270,
+              width: (lWidth / lheight) < wide ? 430 : 300,
               child: Row(
                 children: [
                   Text(

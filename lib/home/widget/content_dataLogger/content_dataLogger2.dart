@@ -1035,7 +1035,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
           ? 1400
           : lWidth >= 1920
               ? lheight
-              : 740,
+              : 750,
       child: Stack(
         children: [
           Container(
@@ -1049,7 +1049,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                   ? 1400
                   : lWidth >= 1920
                       ? lheight
-                      : 740,
+                      : 750,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

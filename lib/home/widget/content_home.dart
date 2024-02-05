@@ -818,7 +818,7 @@ class _Content_homeState extends State<Content_home> {
 
     filterTangki = FilterTangki(
       tangkiValue: "Semua",
-      items: ["Semua", "1", "2", "3", "4", "5", "6"],
+      items: const ["Semua", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
@@ -909,21 +909,21 @@ class _Content_homeState extends State<Content_home> {
           ? 1400
           : lWidth >= 1920
               ? lheight
-              : 740,
+              : 760,
       child: Stack(
         children: [
           Container(
               padding: const EdgeInsets.fromLTRB(45, 30, 30, 10),
               width: (lWidth / lheight) < wide
-                  ? 2200
+                  ? 2210
                   : lWidth >= 1920
                       ? lWidth
-                      : 1270,
+                      : 1280,
               height: (lWidth / lheight) < wide
                   ? 1400
                   : lWidth >= 1920
                       ? lheight
-                      : 740,
+                      : 760,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1003,6 +1003,8 @@ class _Content_homeState extends State<Content_home> {
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   width: 500,
+                                  // constraints: BoxConstraints.expand(
+                                  //     width: 500, height: 620),
                                   height: 620,
                                   decoration: BoxDecoration(
                                       color: MainStyle.secondaryColor,

@@ -11,6 +11,7 @@ import 'package:antam_monitoring/home/widget/content_call/widget/phonePanel.dart
     if (dart.library.html) 'package:antam_monitoring/home/widget/content_call/widget/phonePanelWeb.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
 import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
+import 'package:antam_monitoring/home/widget/content_setting/widget/panelTable.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
@@ -18,14 +19,12 @@ import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/barChart.dart';
 import 'package:antam_monitoring/widget/linechart.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
-import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:mqtt_client/mqtt_client.dart';
+// import 'package:mqtt_client/mqtt_client.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../controller/controller.dart';
@@ -433,6 +432,22 @@ class _HomeState extends State<Home> {
         });
 
         break;
+      case 4:
+        setState(() {
+          page = Content_setting(
+            mqtt: mqtt,
+            scSel: scSel,
+            selData: selData,
+          );
+          pageMobile = Content_home_mobile(
+            mqtt: mqtt,
+            selData: selData,
+            scSel: scSel,
+            menuItem: menuItems,
+          );
+        });
+
+        break;
     }
   }
 
@@ -614,16 +629,16 @@ class _HomeState extends State<Home> {
                             ),
                             Column(
                               children: [
-                                Visibility(
-                                  visible: false,
-                                  child: Transform.scale(
-                                      scale:
-                                          (lWidth / lheight) < wide ? 1.2 : 1,
-                                      origin: Offset(
-                                          (lWidth / lheight) < wide ? -610 : 0,
-                                          0),
-                                      child: Account_alarm(alarm: alarm)),
-                                ),
+                                // Visibility(
+                                //   visible: false,
+                                //   child: Transform.scale(
+                                //       scale:
+                                //           (lWidth / lheight) < wide ? 1.2 : 1,
+                                //       origin: Offset(
+                                //           (lWidth / lheight) < wide ? -610 : 0,
+                                //           0),
+                                //       child: Account_alarm(alarm: alarm)),
+                                // ),
                                 page
                               ],
                             )
