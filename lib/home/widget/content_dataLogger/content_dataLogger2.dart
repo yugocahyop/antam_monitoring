@@ -3,9 +3,12 @@ part of home;
 class Content_dataLogger2 extends StatefulWidget {
   Content_dataLogger2(
       {super.key,
+      required this.isAdmin,
       required this.scSel,
       required this.selData,
       required this.mqtt});
+
+  final bool isAdmin;
 
   List<dynamic> selData;
 
@@ -237,7 +240,9 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       default:
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   getMax() {
@@ -335,7 +340,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
 
-        if (index < 5) {
+        if (index < 5 && maxData.isNotEmpty) {
           maxData[index]["suhu"] = max(
               maxData[index]["suhu"] is int
                   ? (maxData[index]["suhu"] as int).toDouble()
@@ -398,7 +403,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     // TODO: implement dispose
     super.dispose();
 
-    mqtt!.onUpdate = (json, topic) {};
+    // mqtt!.onUpdate = (json, topic) {};
 
     dataLog.clear();
 
@@ -479,7 +484,9 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
 
     getMax2();
 
@@ -497,7 +504,9 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       });
     });
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   initMqtt() {
@@ -801,7 +810,9 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       totalData.clear();
       totalData.addAll(temp);
 
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -889,7 +900,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     getMax2();
     getData(currTangki);
     sortSelData();
-    setState(() {});
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   initDataLog() async {
@@ -1017,7 +1031,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
       return r;
     });
-    setState(() {});
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -1057,7 +1074,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                   Transform.scale(
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
-                      child: Account_alarm(alarm: alarm)),
+                      child: Account_alarm(
+                        alarm: alarm,
+                        isAdmin: widget.isAdmin,
+                      )),
                   // const SizedBox(
                   //   height: 20,
                   // ),
@@ -1269,8 +1289,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                         .isEmpty) {
                                                                       resetSelDataSort();
 
-                                                                      setState(
-                                                                          () {});
+                                                                      if (mounted) {
+                                                                        setState(
+                                                                            () {});
+                                                                      }
 
                                                                       return;
                                                                     } else {
@@ -1677,9 +1699,11 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                   opacity: msgOpacity,
                   onEnd: () {
                     if (msgOpacity == 0) {
-                      setState(() {
-                        isMsgVisible = false;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          isMsgVisible = false;
+                        });
+                      }
                     }
                   },
                   child: Container(
@@ -1755,9 +1779,11 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                       color: const Color(0xffFCECDA),
                                       text: "Dismiss",
                                       onPressed: () {
-                                        setState(() {
-                                          msgOpacity = 0;
-                                        });
+                                        if (mounted) {
+                                          setState(() {
+                                            msgOpacity = 0;
+                                          });
+                                        }
                                       },
                                       textColor: const Color(0xffDF7B00)),
                                 ),

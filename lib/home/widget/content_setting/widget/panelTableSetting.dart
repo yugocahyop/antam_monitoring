@@ -1,17 +1,26 @@
-import 'dart:convert';
+// import 'dart:convert';
 
-import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTableItem.dart';
+// import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTableItem.dart';
+
 import 'package:antam_monitoring/home/widget/content_setting/widget/page/account.dart';
+import 'package:antam_monitoring/home/widget/content_setting/widget/page/userRole.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
-import 'package:antam_monitoring/tools/apiHelper.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:antam_monitoring/tools/apiHelper.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PanelTableSetting extends StatefulWidget {
-  PanelTableSetting({super.key, required this.dataLog, required this.onTap});
+  PanelTableSetting(
+      {super.key,
+      required this.dataLog,
+      required this.onTap,
+      required this.email,
+      required this.isAdmin});
 
   List<Map<String, dynamic>> dataLog;
+  final String email;
+  final bool isAdmin;
 
   Function(int index) onTap;
 
@@ -20,18 +29,49 @@ class PanelTableSetting extends StatefulWidget {
 }
 
 class _PanelTableSettingState extends State<PanelTableSetting> {
-  List<Map<String, dynamic>> tabItems = [
-    {"title": "Account", "icon": Icons.person, "shown": true},
-    {"title": "User role", "icon": Icons.manage_accounts, "shown": false},
-    {"title": "Monitoring", "icon": Icons.bar_chart, "shown": false},
-    {"title": "Call", "icon": Icons.phone, "shown": false},
-  ];
+  late List<Map<String, dynamic>> tabItems;
   List<Map<String, dynamic>> dataLog = [{}];
+
+  late Widget mainWidget;
+  changeMain(Widget? m) {
+    setState(() {
+      mainWidget = m ??
+          AccountSetting(
+            email: widget.email,
+            isAdmin: widget.isAdmin,
+          );
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    mainWidget = AccountSetting(
+      email: widget.email,
+      isAdmin: widget.isAdmin,
+    );
+
+    tabItems = [
+      {
+        "title": "Account",
+        "icon": Icons.person,
+        "shown": true,
+        "widget": AccountSetting(
+          email: widget.email,
+          isAdmin: widget.isAdmin,
+        )
+      },
+      {
+        "title": "User role",
+        "icon": Icons.manage_accounts,
+        "shown": false,
+        "widget": UserRole()
+      },
+      {"title": "Monitoring", "icon": Icons.bar_chart, "shown": false},
+      {"title": "Call", "icon": Icons.phone, "shown": false},
+    ];
 
     dataLog.clear();
 
@@ -141,7 +181,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
                         blurRadius: 20,
                         spreadRadius: 0),
                   ]),
-              child: AccountSetting(),
+              child: mainWidget,
             ),
           ),
           SizedBox(
@@ -160,6 +200,8 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
                                 element["shown"] == true)["shown"] = false;
                             e["shown"] = true;
                             setState(() {});
+
+                            changeMain(e["widget"]);
                           },
                           child: Container(
                             width: 120,

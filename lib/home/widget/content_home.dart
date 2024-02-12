@@ -3,6 +3,8 @@ part of home;
 class Content_home extends StatefulWidget {
   Content_home(
       {super.key,
+      // required this.email,
+      required this.isAdmin,
       required this.scSel,
       required this.selData,
       required this.mqtt});
@@ -12,6 +14,10 @@ class Content_home extends StatefulWidget {
   MyMqtt mqtt;
 
   ScrollController scSel;
+
+  // final String email;
+
+  final bool isAdmin;
 
   @override
   State<Content_home> createState() => _Content_homeState();
@@ -335,7 +341,7 @@ class _Content_homeState extends State<Content_home> {
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
 
-        if (index < 5) {
+        if (index < 5 && maxData.isNotEmpty) {
           maxData[index]["suhu"] = max(
               maxData[index]["suhu"] is int
                   ? (maxData[index]["suhu"] as int).toDouble()
@@ -398,7 +404,7 @@ class _Content_homeState extends State<Content_home> {
     // TODO: implement dispose
     super.dispose();
 
-    mqtt!.onUpdate = (json, topic) {};
+    // mqtt!.onUpdate = (json, topic) {};
 
     maxData.clear();
     tangkiMaxData.clear();
@@ -931,7 +937,8 @@ class _Content_homeState extends State<Content_home> {
                   Transform.scale(
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
-                      child: Account_alarm(alarm: alarm)),
+                      child:
+                          Account_alarm(alarm: alarm, isAdmin: widget.isAdmin)),
                   // const SizedBox(
                   //   height: 20,
                   // ),

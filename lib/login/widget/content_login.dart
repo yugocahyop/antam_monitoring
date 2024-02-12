@@ -15,21 +15,9 @@ class Content_login extends StatefulWidget {
 class _Content_loginState extends State<Content_login> {
   bool isRemember = false;
 
-  final Mytextfield email = Mytextfield(
-    width: 500,
-    hintText: "Email",
-    obscure: false,
-    inputType: TextInputType.emailAddress,
-    prefixIcon: Icons.email,
-  );
+  late Mytextfield email;
 
-  final Mytextfield password = Mytextfield(
-    width: 500,
-    hintText: "Password",
-    obscure: true,
-    prefixIcon: Icons.lock,
-    // inputType: TextInputType.emailAddress,
-  );
+  late Mytextfield password;
 
   final cc = Login_controller();
   final sc = ScrollController();
@@ -51,6 +39,26 @@ class _Content_loginState extends State<Content_login> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    email = Mytextfield(
+      width: 500,
+      hintText: "Email",
+      obscure: false,
+      inputType: TextInputType.emailAddress,
+      prefixIcon: Icons.email,
+      onSubmitted: (val) => cc.login(
+          [email, password], context, isRemember, () => widget.toggleOverlay()),
+    );
+
+    password = Mytextfield(
+      width: 500,
+      hintText: "Password",
+      obscure: true,
+      prefixIcon: Icons.lock,
+      // inputType: TextInputType.emailAddress,
+      onSubmitted: (val) => cc.login(
+          [email, password], context, isRemember, () => widget.toggleOverlay()),
+    );
 
     getEmail();
   }

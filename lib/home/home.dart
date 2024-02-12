@@ -2,19 +2,22 @@ library home;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:html';
 // import 'dart:js_interop';
 import 'dart:math';
 
 // import 'dart:ui_web';
 
+import 'package:antam_monitoring/home/model/homeArgument.dart';
 import 'package:antam_monitoring/home/widget/content_call/widget/phonePanel.dart'
     if (dart.library.html) 'package:antam_monitoring/home/widget/content_call/widget/phonePanelWeb.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
 import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
-import 'package:antam_monitoring/home/widget/content_setting/widget/panelTable.dart';
+import 'package:antam_monitoring/home/widget/content_setting/widget/panelTableSetting.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/encrypt.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/barChart.dart';
 import 'package:antam_monitoring/widget/linechart.dart';
@@ -46,11 +49,14 @@ part 'widget/content_dataLogger/content_dataLogger2.dart';
 class Home extends StatefulWidget {
   Home({super.key});
 
+  static String email = "";
+  static bool isAdmin = false;
+
   @override
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   var alarm = [
     {
       "title": "Status",
@@ -373,11 +379,13 @@ class _HomeState extends State<Home> {
       case 0:
         setState(() {
           page = Content_home(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
             scSel: scSel,
@@ -388,11 +396,13 @@ class _HomeState extends State<Home> {
       case 1:
         setState(() {
           page = Content_dataLogger2(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
             scSel: scSel,
@@ -403,11 +413,13 @@ class _HomeState extends State<Home> {
       case 2:
         setState(() {
           page = Content_diagnostic(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
             scSel: scSel,
@@ -419,11 +431,13 @@ class _HomeState extends State<Home> {
       case 3:
         setState(() {
           page = Content_call(
+            isAdmin: false,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
             scSel: scSel,
@@ -435,11 +449,14 @@ class _HomeState extends State<Home> {
       case 4:
         setState(() {
           page = Content_setting(
+            email: email,
+            isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
             scSel: scSel,
@@ -466,18 +483,69 @@ class _HomeState extends State<Home> {
   initToken() async {
     if (ApiHelper.tokenMain.isEmpty) {
       final c = Controller();
-      ApiHelper.tokenMain = await c.loadSharedPref("antam.token", "String");
+      final encrypt = MyEncrtypt();
+
+      final tokenEncrypted = await c.loadSharedPref("antam.data", "String");
+      ApiHelper.tokenMain = encrypt.decrypt(tokenEncrypted);
     }
   }
+
+  late Timer timer;
+
+  void onFocus(Event e) {
+    didChangeAppLifecycleState(AppLifecycleState.resumed);
+  }
+
+  void onBlur(Event e) {
+    didChangeAppLifecycleState(AppLifecycleState.paused);
+  }
+
+  String email = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    WidgetsFlutterBinding.ensureInitialized();
+
+    // WidgetsBinding.instance!.addObserver(this);
+
+    if (kIsWeb) {
+      window.addEventListener('focus', onFocus);
+      window.addEventListener('blur', onBlur);
+    } else {
+      WidgetsBinding.instance!.addObserver(this);
+    }
     // final r = Random(70);
     initToken();
 
     mqtt = MyMqtt(onUpdate: (data, topic) {});
+
+    timer = Timer.periodic(const Duration(seconds: 4), (t) async {
+      try {
+        if (!mqtt.isConnected && mqtt.reconnecting) {
+          MyMqtt? temp = mqtt;
+          mqtt = MyMqtt(onUpdate: temp.onUpdate);
+
+          // int r = await mqtt.connect();
+
+          // if (r == 0) {
+          //   // topics.forEach((element) {
+          //   //   client.subscribe(element, MqttQos.atLeastOnce);
+          //   // });
+
+          //   mqtt.reconnecting = false;
+
+          //   setState(() {});
+          //   // t.cancel();
+          // }
+        }
+      } catch (e) {
+        // reconnecting = false;
+        mqtt.client.disconnect();
+      }
+    });
 
     menuItems = [
       {
@@ -513,12 +581,14 @@ class _HomeState extends State<Home> {
     ];
 
     page = Content_home(
+      isAdmin: isAdmin,
       mqtt: mqtt,
       scSel: scSel,
       selData: selData,
     );
 
     pageMobile = Content_home_mobile(
+      isAdmin: isAdmin,
       mqtt: mqtt,
       selData: selData,
       scSel: scSel,
@@ -561,14 +631,123 @@ class _HomeState extends State<Home> {
     // TODO: implement dispose
     super.dispose();
     scSel.dispose();
+    timer.cancel();
     mqtt.disconnect();
+    mqtt.dispose();
+
+    if (kIsWeb) {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('blur', onBlur);
+    } else {
+      WidgetsBinding.instance!.removeObserver(this);
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(final AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // if (kDebugMode) {
+      //   print("home state : $state");
+      // }
+      // mqtt.unsubscribeAll();
+      // mqtt.disconnect();
+      // // mqtt.dispose();
+
+      // mqtt.isConnected = false;
+    } else if (state == AppLifecycleState.resumed) {
+      mqtt.unsubscribeAll();
+      mqtt.disconnect();
+      mqtt.reconnecting = true;
+      mqtt.isConnected = false;
+      //   mqtt.connect();
+
+      //   mqtt.reconnecting = false;
+
+      if (kDebugMode) {
+        print("home state : $state");
+      }
+    }
   }
 
   // double currSelOffset = 0;
+  loadEmail() async {
+    Controller controller = Controller();
+    email = await controller.loadSharedPref("antam.email", email);
+
+    // print("email: $email");
+    if (mounted) setState(() {});
+  }
+
+  // loadIsAdmin() async {
+  //   // Controller controller = Controller();
+  //   isAdmin = Home.isAdmin;
+
+  //   if (mounted) setState(() {});
+  // }
+
+  checkAccess() async {
+    await initToken();
+    final api = ApiHelper();
+
+    final r =
+        await api.callAPI("/user/find?limit=1&id=342", "POST", "{}", true);
+
+    if (r["error"] == null) {
+      if (kDebugMode) {
+        print("user data: $r");
+      }
+
+      email = r["email"] ?? "";
+
+      isAdmin = r["isAdmin"] ?? false;
+
+      if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+    }
+  }
+
+  bool isAdmin = false;
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
     final lheight = MediaQuery.of(context).size.height;
+
+    if (email.isEmpty) {
+      final args = ((ModalRoute.of(context)!.settings.arguments ??
+          HomeArgument(email: "", isAdmin: false)) as HomeArgument);
+
+      if (args.email == "") {
+        checkAccess();
+        // loadEmail();
+        // loadIsAdmin();
+      } else {
+        email = args.email;
+        isAdmin = args.isAdmin;
+
+        if (kDebugMode) {
+          print("isAdmin: ${args.isAdmin}");
+        }
+      }
+
+      page = Content_home(
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        scSel: scSel,
+        selData: selData,
+      );
+
+      pageMobile = Content_home_mobile(
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        selData: selData,
+        scSel: scSel,
+        menuItem: menuItems,
+      );
+    }
     // print(lheight);
     return Scaffold(
       resizeToAvoidBottomInset: false,

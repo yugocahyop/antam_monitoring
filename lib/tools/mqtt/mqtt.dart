@@ -19,8 +19,33 @@ class MyMqtt {
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
   Function(Map<String, dynamic> json, String topic) onUpdate;
 
+  bool isConnected = false;
+
+  late Timer timer;
+
   MyMqtt({required this.onUpdate}) {
+    // reconnecting = true;
     connect();
+
+    // timer = Timer.periodic(const Duration(seconds: 4), (t) async {
+    //   try {
+    //     if (!isConnected && reconnecting) {
+    //       int r = await connect();
+
+    //       if (r == 0) {
+    //         // topics.forEach((element) {
+    //         //   client.subscribe(element, MqttQos.atLeastOnce);
+    //         // });
+
+    //         reconnecting = false;
+    //         // t.cancel();
+    //       }
+    //     }
+    //   } catch (e) {
+    //     // reconnecting = false;
+    //     client.disconnect();
+    //   }
+    // });
 
     subs = client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       final recMess = c![0].payload as MqttPublishMessage;
@@ -45,8 +70,14 @@ class MyMqtt {
   }
 
   void disconnect() {
+    isConnected = false;
+
     client.onDisconnected = null;
     client.disconnect();
+  }
+
+  void dispose() {
+    timer.cancel();
   }
 
   // List<String> topics = [];
@@ -95,7 +126,7 @@ class MyMqtt {
     client.setProtocolV311();
 
     /// If you intend to use a keep alive you must set it here otherwise keep alive will be disabled.
-    client.keepAlivePeriod = 20;
+    client.keepAlivePeriod = 10;
 
     /// The connection timeout period can be set if needed, the default is 5 seconds.
     client.connectTimeoutPeriod = 10000; // milliseconds
@@ -168,7 +199,7 @@ class MyMqtt {
 
     /// Ok, lets try a subscription
     if (kDebugMode) {
-      print('EXAMPLE::Subscribing to the test/lol topic');
+      print('EXAMPLE::Subscribing to  topics');
     }
 
     try {
@@ -216,6 +247,7 @@ class MyMqtt {
     // print('EXAMPLE::Disconnecting');
     // client.disconnect();
     // print('EXAMPLE::Exiting normally');
+    isConnected = true;
     return 0;
   }
 
@@ -247,6 +279,25 @@ class MyMqtt {
     }
   }
 
+  unsubscribeAll() {
+    try {
+      // var topic = 'antam/device'; // Not a wildcard topic
+      // client.subscribe(topic, MqttQos.atLeastOnce);
+      client.unsubscribe('antam/device/node');
+      client.unsubscribe('antam/status');
+      client.unsubscribe('antam/statistic');
+      client.unsubscribe('antam/statusnode');
+      client.unsubscribe('antam/statusNode');
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      client.disconnect();
+      // return -1;
+      return;
+    }
+  }
+
   /// The unsolicited disconnect callback
   bool reconnecting = false;
   void onDisconnected() {
@@ -262,6 +313,23 @@ class MyMqtt {
     //   subs!.cancel();
     // }
 
+    try {
+      // var topic = 'antam/device'; // Not a wildcard topic
+      // client.subscribe(topic, MqttQos.atLeastOnce);
+      client.unsubscribe('antam/device/node');
+      client.unsubscribe('antam/status');
+      client.unsubscribe('antam/statistic');
+      client.unsubscribe('antam/statusnode');
+      client.unsubscribe('antam/statusNode');
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      // client.disconnect();
+      // return -1;
+      // return;
+    }
+
     if (kDebugMode) {
       print('EXAMPLE::OnDisconnected client callback - Client disconnection');
     }
@@ -270,23 +338,8 @@ class MyMqtt {
 
     reconnecting = true;
 
-    Timer.periodic(const Duration(seconds: 4), (t) async {
-      try {
-        int r = await connect();
+    isConnected = false;
 
-        if (r == 0) {
-          // topics.forEach((element) {
-          //   client.subscribe(element, MqttQos.atLeastOnce);
-          // });
-
-          reconnecting = false;
-          t.cancel();
-        }
-      } catch (e) {
-        reconnecting = false;
-        client.disconnect();
-      }
-    });
     // if (client.connectionStatus!.disconnectionOrigin ==
     //     MqttDisconnectionOrigin.solicited) {
     //   print('EXAMPLE::OnDisconnected callback is solicited, this is correct');

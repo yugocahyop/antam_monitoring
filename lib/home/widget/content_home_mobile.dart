@@ -3,10 +3,13 @@ part of home;
 class Content_home_mobile extends StatefulWidget {
   Content_home_mobile(
       {super.key,
+      required this.isAdmin,
       required this.mqtt,
       required this.selData,
       required this.scSel,
       required this.menuItem});
+
+  final bool isAdmin;
 
   List<dynamic> selData;
 
@@ -701,7 +704,9 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                     child: Column(
                       children: [
                         SizedBox(
-                            height: 20, child: Account_alarm(alarm: alarm)),
+                            height: 20,
+                            child: Account_alarm(
+                                alarm: alarm, isAdmin: widget.isAdmin)),
                         // const SizedBox(
                         //   height: 5,
                         // ),

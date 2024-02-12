@@ -3,9 +3,12 @@ part of home;
 class Content_diagnostic extends StatefulWidget {
   Content_diagnostic(
       {super.key,
+      required this.isAdmin,
       required this.scSel,
       required this.selData,
       required this.mqtt});
+
+  final bool isAdmin;
 
   List<dynamic> selData;
 
@@ -327,7 +330,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
 
-        if (index < 5) {
+        if (index < 5 && tangkiMaxData.isNotEmpty) {
           selData[0][index]["suhu"] = max(
               selData[0][index]["suhu"] is int
                   ? (selData[0][index]["suhu"] as int).toDouble()
@@ -449,7 +452,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
       return r;
     });
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -457,7 +460,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     // TODO: implement dispose
     super.dispose();
 
-    mqtt!.onUpdate = (t, d) {};
+    // mqtt!.onUpdate = (t, d) {};
 
     diagnosticData.clear();
     maxDdata.clear();
@@ -533,7 +536,9 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
 
     getMax();
 
@@ -840,7 +845,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       totalData.clear();
       totalData.addAll(temp);
 
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 
@@ -904,7 +909,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                   Transform.scale(
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
-                      child: Account_alarm(alarm: alarm)),
+                      child:
+                          Account_alarm(alarm: alarm, isAdmin: widget.isAdmin)),
                   // const SizedBox(
                   //   height: 20,
                   // ),
@@ -1171,8 +1177,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                       .isEmpty) {
                                                                     resetSelDataSort();
 
-                                                                    setState(
-                                                                        () {});
+                                                                    if (mounted) {
+                                                                      setState(
+                                                                          () {});
+                                                                    }
 
                                                                     return;
                                                                   }
@@ -1568,7 +1576,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                   duration: const Duration(milliseconds: 200),
                   opacity: msgOpacity,
                   onEnd: () {
-                    if (msgOpacity == 0) {
+                    if (msgOpacity == 0 && mounted) {
                       setState(() {
                         isMsgVisible = false;
                       });
@@ -1647,9 +1655,11 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                       color: const Color(0xffFCECDA),
                                       text: "Dismiss",
                                       onPressed: () {
-                                        setState(() {
-                                          msgOpacity = 0;
-                                        });
+                                        if (mounted) {
+                                          setState(() {
+                                            msgOpacity = 0;
+                                          });
+                                        }
                                       },
                                       textColor: const Color(0xffDF7B00)),
                                 ),

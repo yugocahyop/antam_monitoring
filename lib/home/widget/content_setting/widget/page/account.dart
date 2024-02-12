@@ -5,7 +5,10 @@ import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:flutter/material.dart';
 
 class AccountSetting extends StatelessWidget {
-  const AccountSetting({super.key});
+  const AccountSetting({super.key, required this.email, required this.isAdmin});
+
+  final String email;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class AccountSetting extends StatelessWidget {
                             const Color(0xff919798), 14),
                       ),
                       Text(
-                        "Administrator",
+                        isAdmin ? "Administrator" : "User",
                         style: MyTextStyle.defaultFontCustom(
                             MainStyle.primaryColor, 14),
                       ),
@@ -97,14 +100,14 @@ class AccountSetting extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "admin",
+                    email,
                     style: MyTextStyle.defaultFontCustom(
                         MainStyle.primaryColor, 14,
                         weight: FontWeight.w600),
                   ),
                   MainStyle.sizedBoxH10,
                   Text(
-                    "Administrator",
+                    isAdmin ? "Administrator" : "User",
                     style: MyTextStyle.defaultFontCustom(
                         MainStyle.primaryColor, 14,
                         weight: FontWeight.w600),

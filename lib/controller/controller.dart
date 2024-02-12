@@ -77,6 +77,8 @@ class Controller {
       await prefs.setString(key, val);
     } else if (val is int) {
       await prefs.setInt(key, val);
+    } else if (val is bool) {
+      await prefs.setBool(key, val);
     }
   }
 
@@ -90,6 +92,8 @@ class Controller {
         return prefs.getInt(key);
       case "String":
         return prefs.getString(key);
+      case "bool":
+        return prefs.getBool(key);
 
       default:
     }

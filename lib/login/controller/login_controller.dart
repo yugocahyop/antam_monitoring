@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/home/home.dart';
+import 'package:antam_monitoring/home/model/homeArgument.dart';
 import 'package:antam_monitoring/login/login.dart';
 import 'package:antam_monitoring/sign-up/sign-up.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/encrypt.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../widget/myTextField.dart';
@@ -54,16 +57,31 @@ class Login_controller extends Controller {
     if (r["error"] == null) {
       await Future.delayed(const Duration(seconds: 1));
 
+      if (kDebugMode) {
+        print(r["isAdmin"]);
+      }
+
       ApiHelper.tokenMain = r["activeToken"];
 
-      saveSharedPref("antam.token", r["activeToken"]);
+      final encrypt = MyEncrtypt();
+      saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
+
+      saveSharedPref("antam.token", "sdfdf");
+
+      // saveSharedPref("antam.email", r["email"]);
+      // saveSharedPref("antam.isAdmin", r["isAdmin"]);
+
+      Home.email = r["email"] ?? "";
+      Home.isAdmin = (r["isAdmin"] ?? false);
 
       toggleLoading();
 
       // await Future.delayed(Duration(milliseconds: 200));
 
       // super.pageRoute(context, Home());
-      Navigator.pushNamed(context, "/home");
+      Navigator.pushNamed(context, "/home",
+          arguments: HomeArgument(
+              email: inputs.first.con.text, isAdmin: (r["isAdmin"] ?? false)));
     } else {
       await Future.delayed(const Duration(seconds: 1));
 

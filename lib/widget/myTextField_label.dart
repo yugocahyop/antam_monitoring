@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import '../style/textStyle.dart';
 
-class Mytextfield extends StatefulWidget {
+class Mytextfield_label extends StatefulWidget {
   String hintText;
   bool obscure;
   TextEditingController con = TextEditingController();
@@ -16,12 +16,11 @@ class Mytextfield extends StatefulWidget {
   String suffixText;
   bool isCapitalize, isBorder;
   bool isInvalid = false;
+  Function(String val)? onTap;
 
-  Function(String val)? onSubmitted;
-
-  Mytextfield(
+  Mytextfield_label(
       {Key? key,
-      this.onSubmitted,
+      this.onTap,
       this.isBorder = false,
       this.inputType,
       this.prefixIcon,
@@ -46,10 +45,10 @@ class Mytextfield extends StatefulWidget {
   }
 
   @override
-  _MytextfieldState createState() => _MytextfieldState();
+  _Mytextfield_labelState createState() => _Mytextfield_labelState();
 }
 
-class _MytextfieldState extends State<Mytextfield> {
+class _Mytextfield_labelState extends State<Mytextfield_label> {
   bool hidePass = true, focused = false, isCapitalize = false;
 
   @override
@@ -60,14 +59,12 @@ class _MytextfieldState extends State<Mytextfield> {
       if (mounted) setState(() {});
     });
 
-    // widget.con.addListener(() {
-    //   // print("text ${widget.con.text.length}");
-    //   if (widget.isCapitalize) {
-    //     setState(() {
-    //       widget.isInvalid = false;
-    //     });
-    //   }
-    // });
+    widget.con.addListener(() {
+      // print("text ${widget.con.text.length}");
+      if (widget.onTap != null) {
+        widget.onTap!(widget.con.text);
+      }
+    });
   }
 
   @override
@@ -82,9 +79,10 @@ class _MytextfieldState extends State<Mytextfield> {
 
     return Container(
         // margin: const EdgeInsets.only(top: 5),
-        padding: const EdgeInsets.only(top: 10),
+        // padding: const EdgeInsets.only(top: 10),
+        padding: EdgeInsets.all(10),
         width: widget.width,
-        // height: 100,
+        height: 50,
         child: Focus(
             // onFocusChange: (focused) => {
             //       // setState(() {
@@ -100,7 +98,6 @@ class _MytextfieldState extends State<Mytextfield> {
               const AnimationPreferences(autoPlay: AnimationPlayStates.None),
           key: widget.shake,
           child: TextField(
-            onSubmitted: widget.onSubmitted ?? (val) {},
             textCapitalization: widget.isCapitalize
                 ? (widget.con.text.length < 1
                     ? TextCapitalization.words
@@ -110,29 +107,30 @@ class _MytextfieldState extends State<Mytextfield> {
             focusNode: widget.focusNode,
             enableSuggestions: false,
             autocorrect: false,
-            style: MyTextStyle.defaultFontCustom(Colors.black87, 14),
+            style: MyTextStyle.defaultFontCustom(Colors.black, 14),
             cursorColor: blue,
             controller: widget.con,
             obscureText: widget.obscure && hidePass,
             keyboardType: widget.inputType!,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.all(0),
-              // filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.all(5),
+              filled: true,
               // fillColor: !focused ? Color(0xff00FBC2) : blue,
               enabledBorder: !widget.isBorder
                   ? const UnderlineInputBorder(
                       borderSide: BorderSide(width: 3, color: Colors.grey))
                   : OutlineInputBorder(
                       borderSide:
-                          const BorderSide(width: 3, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(15),
+                          const BorderSide(width: 3, color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
                     ),
               labelStyle: MyTextStyle.defaultFontCustom(
                   focused ? blue : Colors.black38, 14
 
                   // color: Color(0xff00FBC2),
                   ),
-              labelText: widget.hintText,
+              hintText: widget.hintText,
               focusedBorder: !widget.isBorder
                   ? UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -141,8 +139,9 @@ class _MytextfieldState extends State<Mytextfield> {
                               ? Colors.red
                               : MainStyle.primaryColor))
                   : OutlineInputBorder(
-                      borderSide: const BorderSide(width: 3, color: blue),
-                      borderRadius: BorderRadius.circular(15),
+                      borderSide:
+                          const BorderSide(width: 3, color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
                     ),
               suffixText: widget.suffixText,
               prefixIcon: widget.prefixIcon != null

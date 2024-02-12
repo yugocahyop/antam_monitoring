@@ -10,9 +10,9 @@ class MyOverlay extends StatelessWidget {
   bool isTransparent;
   bool isBlur;
 
-  final loadingAnimation = SizedBox(
+  final loadingAnimation = const SizedBox(
     width: 350,
-    child: const FlareActor("assets/xirkaLoading.flr",
+    child: FlareActor("assets/xirkaLoading.flr",
         alignment: Alignment.center,
         fit: BoxFit.fitWidth,
         animation: "Untitled"),
@@ -111,7 +111,7 @@ class MyOverlay extends StatelessWidget {
               ? const SizedBox()
               : Center(
                   child: Transform.translate(
-                      offset: Offset(0, -200),
+                      offset: const Offset(0, -200),
                       child: Transform.scale(
                           scale: 0.8,
                           child: Hero(

@@ -118,19 +118,20 @@ class MyLineChart extends StatelessWidget {
                 interval: points.first.y,
                 reservedSize: 60,
                 showTitles: true,
-                getTitlesWidget: (value, meta) =>
-                    value == points.last.y ? Text("  Setting") : Text(""),
+                getTitlesWidget: (value, meta) => value == points.last.y
+                    ? const Text("  Setting")
+                    : const Text(""),
               ),
             ),
             topTitles: AxisTitles(
                 axisNameSize: 30,
                 sideTitles: SideTitles(showTitles: false),
-                axisNameWidget: Text("")),
+                axisNameWidget: const Text("")),
             bottomTitles: AxisTitles(
               axisNameSize: 20,
               // axisNameWidget:  Text(title ?? "" , style: TextStyle(fontSize: 16, color: Colors.green),),
               sideTitles: SideTitles(
-                getTitlesWidget: (value, meta) => Text(""),
+                getTitlesWidget: (value, meta) => const Text(""),
                 showTitles: true,
               ),
             )),

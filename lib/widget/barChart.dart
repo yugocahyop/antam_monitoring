@@ -113,12 +113,12 @@ class MyBarChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 60,
-                getTitlesWidget: (value, meta) => Text(""),
+                getTitlesWidget: (value, meta) => const Text(""),
               ),
             ),
             topTitles: AxisTitles(
               axisNameSize: 30,
-              axisNameWidget: Text(
+              axisNameWidget: const Text(
                 "",
                 textAlign: TextAlign.left,
               ),
@@ -132,18 +132,18 @@ class MyBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) => Stack(
                   children: [
                     Transform.translate(
-                      offset: Offset(10, 0),
+                      offset: Offset(tangkiMaxData.isEmpty ? 0 : 10, 0),
                       child: Text(
                         "Sel ${value.toInt()}",
                         style: MyTextStyle.defaultFontCustom(Colors.black, 14),
                       ),
                     ),
                     Transform.translate(
-                      offset: Offset(0, 20),
+                      offset: const Offset(0, 20),
                       child: Visibility(
                         visible: tangkiMaxData.isNotEmpty,
                         child: Container(
-                          padding: EdgeInsets.all(3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: MainStyle.primaryColor),

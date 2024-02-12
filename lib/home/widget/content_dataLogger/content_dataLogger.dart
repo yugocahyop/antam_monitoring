@@ -3,9 +3,12 @@ part of home;
 class Content_dataLogger extends StatefulWidget {
   Content_dataLogger(
       {super.key,
+      required this.isAdmin,
       required this.scSel,
       required this.selData,
       required this.mqtt});
+
+  final bool isAdmin;
 
   List<dynamic> selData;
 
@@ -1140,7 +1143,8 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
                   Transform.scale(
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
-                      child: Account_alarm(alarm: alarm)),
+                      child:
+                          Account_alarm(alarm: alarm, isAdmin: widget.isAdmin)),
                   // const SizedBox(
                   //   height: 20,
                   // ),

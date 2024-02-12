@@ -3,9 +3,15 @@ part of home;
 class Content_setting extends StatefulWidget {
   Content_setting(
       {super.key,
+      required this.email,
+      required this.isAdmin,
       required this.scSel,
       required this.selData,
       required this.mqtt});
+
+  final bool isAdmin;
+
+  final String email;
 
   List<dynamic> selData;
 
@@ -214,7 +220,7 @@ class _Content_settingState extends State<Content_setting> {
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
 
-        if (index < 5) {
+        if (index < 5 && tangkiMaxData.isNotEmpty) {
           selData[0][index]["suhu"] = max(
               selData[0][index]["suhu"] is int
                   ? (selData[0][index]["suhu"] as int).toDouble()
@@ -336,7 +342,7 @@ class _Content_settingState extends State<Content_setting> {
 
       return r;
     });
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -344,7 +350,7 @@ class _Content_settingState extends State<Content_setting> {
     // TODO: implement dispose
     super.dispose();
 
-    mqtt!.onUpdate = (t, d) {};
+    // mqtt!.onUpdate = (t, d) {};
     maxDdata.clear();
     tangkiMaxData.clear();
 
@@ -418,7 +424,9 @@ class _Content_settingState extends State<Content_setting> {
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
 
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
 
     getMax();
 
@@ -722,7 +730,7 @@ class _Content_settingState extends State<Content_setting> {
       totalData.clear();
       totalData.addAll(temp);
 
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 
@@ -786,7 +794,8 @@ class _Content_settingState extends State<Content_setting> {
                   Transform.scale(
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
-                      child: Account_alarm(alarm: alarm)),
+                      child:
+                          Account_alarm(alarm: alarm, isAdmin: widget.isAdmin)),
                   // const SizedBox(
                   //   height: 20,
                   // ),
@@ -856,7 +865,10 @@ class _Content_settingState extends State<Content_setting> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTableSetting(
-                                      dataLog: [], onTap: (index) {})),
+                                      email: widget.email,
+                                      isAdmin: widget.isAdmin,
+                                      dataLog: [],
+                                      onTap: (index) {})),
                             ),
                             const SizedBox(
                               width: 30,
@@ -990,8 +1002,10 @@ class _Content_settingState extends State<Content_setting> {
                                                                       .isEmpty) {
                                                                     resetSelDataSort();
 
-                                                                    setState(
-                                                                        () {});
+                                                                    if (mounted) {
+                                                                      setState(
+                                                                          () {});
+                                                                    }
 
                                                                     return;
                                                                   }

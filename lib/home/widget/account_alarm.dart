@@ -1,9 +1,11 @@
 part of home;
 
 class Account_alarm extends StatefulWidget {
-  Account_alarm({super.key, required this.alarm});
+  Account_alarm({super.key, required this.alarm, required this.isAdmin});
 
   List<Map> alarm;
+
+  final bool isAdmin;
 
   @override
   State<Account_alarm> createState() => _Account_alarmState();
@@ -178,7 +180,7 @@ class _Account_alarmState extends State<Account_alarm> {
                   MainStyle.sizedBoxW5,
                   Expanded(
                     child: Text(
-                      "admin",
+                      widget.isAdmin ? "Admin" : "User",
                       style: (lWidth / lheight) < wide
                           ? textStyle24Primary
                           : textStyle14Primary,
