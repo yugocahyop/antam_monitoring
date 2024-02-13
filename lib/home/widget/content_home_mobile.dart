@@ -30,7 +30,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     },
     {
       "title": "Alarm Arus",
-      "isActive": true,
+      "isActive": false,
     },
     {
       "title": "Alarm Tegangan",
@@ -204,7 +204,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
     getTotal(currPage, tangki);
     // }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   setSetting(String data, double value) {
@@ -220,7 +220,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
       default:
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   getMax2() {
@@ -303,7 +303,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
       // }
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   getMax() {
@@ -444,13 +444,13 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
 
     getMax2();
 
     Future.delayed(Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() {});
+      if (mounted) setState(() {});
       getData(0);
 
       Future.delayed(Duration(milliseconds: 300), () {
@@ -1153,7 +1153,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                 duration: const Duration(milliseconds: 200),
                 opacity: msgOpacity,
                 onEnd: () {
-                  if (msgOpacity == 0) {
+                  if (msgOpacity == 0 && mounted) {
                     setState(() {
                       isMsgVisible = false;
                     });

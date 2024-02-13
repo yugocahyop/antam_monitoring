@@ -31,7 +31,7 @@ class _Content_homeState extends State<Content_home> {
     },
     {
       "title": "Alarm Arus",
-      "isActive": true,
+      "isActive": false,
     },
     {
       "title": "Alarm Tegangan",
@@ -243,7 +243,7 @@ class _Content_homeState extends State<Content_home> {
       default:
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   getMax() {
@@ -483,13 +483,13 @@ class _Content_homeState extends State<Content_home> {
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
 
-    setState(() {});
+    if (mounted) setState(() {});
 
     getMax2();
 
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
-      setState(() {});
+      if (mounted) setState(() {});
       getData(0);
 
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -501,7 +501,7 @@ class _Content_homeState extends State<Content_home> {
       });
     });
 
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   initMqtt() {
@@ -807,7 +807,7 @@ class _Content_homeState extends State<Content_home> {
       totalData.clear();
       totalData.addAll(temp);
 
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 
@@ -897,7 +897,7 @@ class _Content_homeState extends State<Content_home> {
 
       return r;
     });
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -1261,8 +1261,10 @@ class _Content_homeState extends State<Content_home> {
                                                                         .isEmpty) {
                                                                       resetSelDataSort();
 
-                                                                      setState(
-                                                                          () {});
+                                                                      if (mounted) {
+                                                                        setState(
+                                                                            () {});
+                                                                      }
 
                                                                       return;
                                                                     } else {
@@ -1668,7 +1670,7 @@ class _Content_homeState extends State<Content_home> {
                   duration: const Duration(milliseconds: 200),
                   opacity: msgOpacity,
                   onEnd: () {
-                    if (msgOpacity == 0) {
+                    if (msgOpacity == 0 && mounted) {
                       setState(() {
                         isMsgVisible = false;
                       });

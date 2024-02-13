@@ -47,8 +47,9 @@ part 'widget/content_dataLogger/content_dataLogger.dart';
 part 'widget/content_dataLogger/content_dataLogger2.dart';
 
 class Home extends StatefulWidget {
-  Home({super.key});
+  Home({super.key, this.page = ""});
 
+  String page;
   static String email = "";
   static bool isAdmin = false;
 
@@ -375,8 +376,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   ];
 
   changePage(int p) {
+    final c = Controller();
+    final encrypt = MyEncrtypt();
     switch (p) {
       case 0:
+        c.saveSharedPref("antam.access", encrypt.encrypt("home"));
         setState(() {
           page = Content_home(
             isAdmin: isAdmin,
@@ -394,6 +398,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         });
         break;
       case 1:
+        c.saveSharedPref("antam.access", encrypt.encrypt("datalog"));
         setState(() {
           page = Content_dataLogger2(
             isAdmin: isAdmin,
@@ -411,6 +416,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         });
         break;
       case 2:
+        c.saveSharedPref("antam.access", encrypt.encrypt("diagnostic"));
         setState(() {
           page = Content_diagnostic(
             isAdmin: isAdmin,
@@ -429,6 +435,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
         break;
       case 3:
+        c.saveSharedPref("antam.access", encrypt.encrypt("call"));
         setState(() {
           page = Content_call(
             isAdmin: false,
@@ -447,6 +454,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
         break;
       case 4:
+        c.saveSharedPref("antam.access", encrypt.encrypt("setting"));
         setState(() {
           page = Content_setting(
             email: email,
@@ -485,8 +493,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       final c = Controller();
       final encrypt = MyEncrtypt();
 
-      final tokenEncrypted = await c.loadSharedPref("antam.data", "String");
-      ApiHelper.tokenMain = encrypt.decrypt(tokenEncrypted);
+      //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
+      final token2 =
+          encrypt.decrypt(await c.loadSharedPref("antam.log", "String"));
+      final token3 =
+          encrypt.decrypt(await c.loadSharedPref("antam.public", "String"));
+
+      final token1 =
+          encrypt.decrypt(await c.loadSharedPref("antam.data", "String"));
+
+      ApiHelper.tokenMain = ("$token1.$token2.$token3");
     }
   }
 
@@ -501,6 +517,57 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   String email = "";
+
+  initPage() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    String p = "";
+    if (widget.page.isEmpty) {
+      final c = Controller();
+
+      final encrypt = MyEncrtypt();
+
+      final raw = await c.loadSharedPref("antam.access", "String");
+
+      p = raw != null ? encrypt.decrypt(raw) : "";
+    } else {
+      p = widget.page;
+    }
+
+    switch (p) {
+      case "home":
+        menuItems.firstWhere(
+            (element) => element["isActive"] == true)["isActive"] = false;
+        menuItems[0]["isActive"] = true;
+        changePage(0);
+        break;
+      case "datalog":
+        menuItems.firstWhere(
+            (element) => element["isActive"] == true)["isActive"] = false;
+        menuItems[1]["isActive"] = true;
+        changePage(1);
+        break;
+      case "diagnostic":
+        menuItems.firstWhere(
+            (element) => element["isActive"] == true)["isActive"] = false;
+        menuItems[2]["isActive"] = true;
+        changePage(2);
+        break;
+      case "call":
+        menuItems.firstWhere(
+            (element) => element["isActive"] == true)["isActive"] = false;
+        menuItems[3]["isActive"] = true;
+        // print("initpage: $p");
+        changePage(3);
+        break;
+      case "setting":
+        menuItems.firstWhere(
+            (element) => element["isActive"] == true)["isActive"] = false;
+        menuItems[4]["isActive"] = true;
+        changePage(4);
+        break;
+      default:
+    }
+  }
 
   @override
   void initState() {
@@ -594,6 +661,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       scSel: scSel,
       menuItem: menuItems,
     );
+
+    initPage();
 
     // for (var i = 0; i < selData.length; i++) {
     //   final v = selData[i];

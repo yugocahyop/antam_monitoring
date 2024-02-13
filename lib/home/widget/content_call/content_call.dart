@@ -28,7 +28,7 @@ class _Content_callState extends State<Content_call> {
     },
     {
       "title": "Alarm Arus",
-      "isActive": true,
+      "isActive": false,
     },
     {
       "title": "Alarm Tegangan",

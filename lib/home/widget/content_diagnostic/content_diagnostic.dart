@@ -28,7 +28,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     },
     {
       "title": "Alarm Arus",
-      "isActive": true,
+      "isActive": false,
     },
     {
       "title": "Alarm Tegangan",

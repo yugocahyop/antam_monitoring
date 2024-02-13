@@ -1214,6 +1214,12 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    loadmore: () async {
+                                      await Future.delayed(
+                                          Duration(seconds: 1));
+                                      return true;
+                                    },
+                                    max: 1,
                                     onTap: (index) {},
                                     dataLog: dataLog,
                                   )),

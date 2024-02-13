@@ -6,13 +6,23 @@ import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:loadmore/loadmore.dart';
 
 class PanelTable extends StatefulWidget {
-  PanelTable({super.key, required this.dataLog, required this.onTap});
+  PanelTable(
+      {super.key,
+      required this.loadmore,
+      required this.dataLog,
+      required this.onTap,
+      required this.max});
 
   List<Map<String, dynamic>> dataLog;
 
+  int max;
+
   Function(int index) onTap;
+
+  Future<bool> Function() loadmore;
 
   @override
   State<PanelTable> createState() => _PanelTableState();
@@ -143,33 +153,42 @@ class _PanelTableState extends State<PanelTable> {
                         blurRadius: 20,
                         spreadRadius: 0),
                   ]),
-              child: ListView.builder(
-                  itemCount: dataLog.length,
-                  itemBuilder: ((context, index) => InkWell(
-                      onTap: () {
-                        try {
-                          dataLog.firstWhere((element) =>
-                                  element["isClicked"] == true)["isClicked"] =
-                              false;
-                        } catch (e) {}
+              child: LoadMore(
+                textBuilder: (LoadMoreStatus) {
+                  return "Loading Data";
+                },
+                // delegate: DelegateBuilder(context),
+                isFinish: dataLog.length > widget.max,
+                onLoadMore: widget.loadmore,
+                // delegate: ,
+                child: ListView.builder(
+                    itemCount: dataLog.length,
+                    itemBuilder: ((context, index) => InkWell(
+                        onTap: () {
+                          try {
+                            dataLog.firstWhere((element) =>
+                                    element["isClicked"] == true)["isClicked"] =
+                                false;
+                          } catch (e) {}
 
-                        dataLog[index]["isClicked"] =
-                            !dataLog[index]["isClicked"];
+                          dataLog[index]["isClicked"] =
+                              !dataLog[index]["isClicked"];
 
-                        widget.onTap(index);
-                      },
-                      onHover: (value) => setState(() {
-                            // print("hovered $value");
-                            dataLog[index]["isHover"] = value;
-                          }),
-                      child: PanelItem(
-                          primaryColor: dataLog[index]["isClicked"]
-                              ? MainStyle.thirdColor.withAlpha(150)
-                              : dataLog[index]["isHover"]
-                                  ? MainStyle.thirdColor.withAlpha(150)
-                                  : Colors.transparent,
-                          date: dataLog[index]["timeStamp_server"],
-                          title: "Data ${index + 1}")))),
+                          widget.onTap(index);
+                        },
+                        onHover: (value) => setState(() {
+                              // print("hovered $value");
+                              dataLog[index]["isHover"] = value;
+                            }),
+                        child: PanelItem(
+                            primaryColor: dataLog[index]["isClicked"]
+                                ? MainStyle.thirdColor.withAlpha(150)
+                                : dataLog[index]["isHover"]
+                                    ? MainStyle.thirdColor.withAlpha(150)
+                                    : Colors.transparent,
+                            date: dataLog[index]["timeStamp_server"],
+                            title: "Data ${index + 1}")))),
+              ),
             ),
           ),
           SizedBox(

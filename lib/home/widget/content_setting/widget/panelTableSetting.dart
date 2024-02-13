@@ -3,6 +3,7 @@
 // import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTableItem.dart';
 
 import 'package:antam_monitoring/home/widget/content_setting/widget/page/account.dart';
+import 'package:antam_monitoring/home/widget/content_setting/widget/page/monitoring.dart';
 import 'package:antam_monitoring/home/widget/content_setting/widget/page/userRole.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
@@ -67,9 +68,14 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
         "title": "User role",
         "icon": Icons.manage_accounts,
         "shown": false,
-        "widget": UserRole()
+        "widget": const UserRole()
       },
-      {"title": "Monitoring", "icon": Icons.bar_chart, "shown": false},
+      {
+        "title": "Monitoring",
+        "icon": Icons.bar_chart,
+        "shown": false,
+        "widget": const MonitoringSetting()
+      },
       {"title": "Call", "icon": Icons.phone, "shown": false},
     ];
 

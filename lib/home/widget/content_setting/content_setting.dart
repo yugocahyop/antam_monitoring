@@ -31,7 +31,7 @@ class _Content_settingState extends State<Content_setting> {
     },
     {
       "title": "Alarm Arus",
-      "isActive": true,
+      "isActive": false,
     },
     {
       "title": "Alarm Tegangan",
@@ -1401,7 +1401,7 @@ class _Content_settingState extends State<Content_setting> {
                   duration: const Duration(milliseconds: 200),
                   opacity: msgOpacity,
                   onEnd: () {
-                    if (msgOpacity == 0) {
+                    if (msgOpacity == 0 && mounted) {
                       setState(() {
                         isMsgVisible = false;
                       });

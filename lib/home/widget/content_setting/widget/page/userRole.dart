@@ -38,11 +38,11 @@ class _UserRoleState extends State<UserRole> {
   ];
 
   List<dynamic> userData = [
-    {"email": "test@test.com", "isAdmin": true, "id": "1"},
-    {"email": "test@test.com", "isAdmin": true, "id": "2"},
-    {"email": "test@test.com", "isAdmin": false, "id": "3"},
-    {"email": "test@test.com", "isAdmin": false, "id": "3"},
-    {"email": "test@test.com", "isAdmin": false, "id": "3"},
+    // {"email": "test@test.com", "isAdmin": true, "id": "1"},
+    // {"email": "test@test.com", "isAdmin": true, "id": "2"},
+    // {"email": "test@test.com", "isAdmin": false, "id": "3"},
+    // {"email": "test@test.com", "isAdmin": false, "id": "3"},
+    // {"email": "test@test.com", "isAdmin": false, "id": "3"},
   ];
   int page = 1;
   int maxPage = 1;
@@ -51,6 +51,8 @@ class _UserRoleState extends State<UserRole> {
 
   nextData() {
     if (page == maxPage) return;
+    userData.clear();
+    setState(() {});
     page++;
     offset += int.tryParse(dataNum) ?? 0;
 
@@ -59,6 +61,8 @@ class _UserRoleState extends State<UserRole> {
 
   prevData() {
     if (page == 1) return;
+    userData.clear();
+    setState(() {});
     page--;
     offset -= int.tryParse(dataNum) ?? 0;
 
@@ -66,6 +70,8 @@ class _UserRoleState extends State<UserRole> {
   }
 
   firstData() {
+    userData.clear();
+    setState(() {});
     page = 1;
     offset = 0;
     getUserData(offset);
@@ -73,6 +79,9 @@ class _UserRoleState extends State<UserRole> {
 
   lastData() {
     final num = int.tryParse(dataNum) ?? 0;
+    userData.clear();
+
+    setState(() {});
 
     page = maxPage;
 
@@ -146,17 +155,23 @@ class _UserRoleState extends State<UserRole> {
 
   late Mytextfield_label serchText;
 
+  seachTap(String val) {
+    qString = val;
+    page = 1;
+    offset = 0;
+    getUserData(0);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    userData.clear;
+    setState(() {});
     getUserData(0);
 
     serchText = Mytextfield_label(
-        onTap: (val) {
-          qString = val;
-          getUserData(0);
-        },
+        onTap: (val) => seachTap(val),
         isBorder: true,
         width: 120,
         hintText: "search",
@@ -315,73 +330,95 @@ class _UserRoleState extends State<UserRole> {
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
                                     bottom: Radius.circular(10))),
-                            child: ListView.builder(
-                                itemCount: userData.length,
-                                itemBuilder: ((context, index) {
-                                  final Color color = (index % 2) == 0
-                                      ? const Color(0xfff2f2f2)
-                                      : const Color(0xffd9d9d9);
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                            child: userData.isEmpty
+                                ? const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Container(
-                                        width: titleData.firstWhere((element) =>
-                                            element["title"] ==
-                                            "Role")["width"],
-                                        height: 50,
-                                        color: color,
-                                        child: Center(
-                                          child: Text(userData[index]
-                                                      ["isAdmin"] ??
-                                                  false
-                                              ? "Admin"
-                                              : "User"),
-                                        ),
+                                      CircularProgressIndicator(
+                                        color: Colors.blue,
                                       ),
-                                      Container(
-                                        width: titleData.firstWhere((element) =>
-                                            element["title"] ==
-                                            "Email")["width"],
-                                        height: 50,
-                                        color: color,
-                                        child: Center(
-                                          child: Text(userData[index]["email"]),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: titleData.firstWhere((element) =>
-                                            element["title"] ==
-                                            "Action")["width"],
-                                        height: 50,
-                                        color: color,
-                                        child: Center(
-                                          child: MyDropDownGreen(
-                                              width: 60,
-                                              items: [
-                                                "Pilih",
-                                                "Atur sebagai ${userData[index]["isAdmin"] ?? false ? "User" : "Admin"}"
-                                              ],
-                                              value: "Pilih",
-                                              onChange: (val) {
-                                                if (val!.contains("Admin")) {
-                                                  updateUser(
-                                                      userData[index]["email"],
-                                                      userData[index]["_id"],
-                                                      true);
-                                                } else if (val!
-                                                    .contains("User")) {
-                                                  updateUser(
-                                                      userData[index]["email"],
-                                                      userData[index]["_id"],
-                                                      false);
-                                                }
-                                              }),
-                                        ),
-                                      ),
+                                      MainStyle.sizedBoxW10,
+                                      Text("Loading Data")
                                     ],
-                                  );
-                                })),
+                                  )
+                                : ListView.builder(
+                                    itemCount: userData.length,
+                                    itemBuilder: ((context, index) {
+                                      final Color color = (index % 2) == 0
+                                          ? const Color(0xfff2f2f2)
+                                          : const Color(0xffd9d9d9);
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: titleData.firstWhere(
+                                                (element) =>
+                                                    element["title"] ==
+                                                    "Role")["width"],
+                                            height: 50,
+                                            color: color,
+                                            child: Center(
+                                              child: Text(userData[index]
+                                                          ["isAdmin"] ??
+                                                      false
+                                                  ? "Admin"
+                                                  : "User"),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: titleData.firstWhere(
+                                                (element) =>
+                                                    element["title"] ==
+                                                    "Email")["width"],
+                                            height: 50,
+                                            color: color,
+                                            child: Center(
+                                              child: Text(
+                                                  userData[index]["email"]),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: titleData.firstWhere(
+                                                (element) =>
+                                                    element["title"] ==
+                                                    "Action")["width"],
+                                            height: 50,
+                                            color: color,
+                                            child: Center(
+                                              child: MyDropDownGreen(
+                                                  width: 60,
+                                                  items: [
+                                                    "Pilih",
+                                                    "Atur sebagai ${userData[index]["isAdmin"] ?? false ? "User" : "Admin"}"
+                                                  ],
+                                                  value: "Pilih",
+                                                  onChange: (val) {
+                                                    if (val!
+                                                        .contains("Admin")) {
+                                                      updateUser(
+                                                          userData[index]
+                                                              ["email"],
+                                                          userData[index]
+                                                              ["_id"],
+                                                          true);
+                                                    } else if (val!
+                                                        .contains("User")) {
+                                                      updateUser(
+                                                          userData[index]
+                                                              ["email"],
+                                                          userData[index]
+                                                              ["_id"],
+                                                          false);
+                                                    }
+                                                  }),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    })),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(5),

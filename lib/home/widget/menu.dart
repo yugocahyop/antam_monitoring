@@ -229,8 +229,13 @@ class _MenuState extends State<Menu> {
                     shape: BoxShape.circle,
                   ),
                   child: GestureDetector(
-                    onTap: () => Navigator.pushNamedAndRemoveUntil(
-                        context, '/login', ((route) => false)),
+                    onTap: () {
+                      final c = Controller();
+                      c.saveSharedPref("antam.token", "");
+                      c.saveSharedPref("antam.data", "");
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/login', ((route) => false));
+                    },
                     child: const Icon(
                       Icons.logout_outlined,
                       color: Colors.white,

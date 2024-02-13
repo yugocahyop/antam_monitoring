@@ -46,6 +46,7 @@ class Login_controller extends Controller {
         (value) => login_done(inputs, value, context, () => toggleLoading()));
 
     if (isRemember) {
+      final encrypt = MyEncrtypt();
       super.saveSharedPref("com.antam.email", inputs.first.con.text);
     } else {
       super.saveSharedPref("com.antam.email", "");
@@ -64,9 +65,17 @@ class Login_controller extends Controller {
       ApiHelper.tokenMain = r["activeToken"];
 
       final encrypt = MyEncrtypt();
-      saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
 
-      saveSharedPref("antam.token", "sdfdf");
+      final tokensplit = ApiHelper.tokenMain.split(".");
+
+      saveSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
+      saveSharedPref("antam.log", encrypt.encrypt(tokensplit[1]));
+      saveSharedPref("antam.public", encrypt.encrypt(tokensplit[2]));
+
+      // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
+
+      saveSharedPref("antam.token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
 
       // saveSharedPref("antam.email", r["email"]);
       // saveSharedPref("antam.isAdmin", r["isAdmin"]);

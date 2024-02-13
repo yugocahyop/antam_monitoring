@@ -28,7 +28,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     },
     {
       "title": "Alarm Arus",
-      "isActive": true,
+      "isActive": false,
     },
     {
       "title": "Alarm Tegangan",
@@ -906,7 +906,19 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
   }
 
-  initDataLog() async {
+  Future<bool> loadMore() async {
+    offset += dataNum;
+
+    await getDataLog(offset);
+
+    return true;
+  }
+
+  int offset = 0;
+  int dataNum = 20;
+  int maxDataNum = 0;
+
+  getDataLog(int offsetNum) async {
     final api = ApiHelper();
 
     // while (ApiHelper.tokenMain == null) {
@@ -914,16 +926,22 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     // }
 
     final r = await api.callAPI(
-        "/monitoring/find?limit=20", "POST", jsonEncode({"from": 0}), true);
+        "/monitoring/find?limit=$dataNum&offset=$offsetNum",
+        "POST",
+        jsonEncode({"from": 0}),
+        true);
 
     if (r["error"] == null) {
       List<dynamic> data = r['data'] as List<dynamic>;
+
+      maxDataNum = r["count"];
 
       if (kDebugMode) {
         print("backend data2:  $data");
       }
 
-      dataLog.clear();
+      if (offset == 0) dataLog.clear();
+
       for (var i = 0; i < data.length; i++) {
         final val = data[i];
 
@@ -965,7 +983,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     initSelData();
     initTotalDataStatistic();
 
-    initDataLog();
+    getDataLog(0);
   }
 
   resetSelDataSort() {
@@ -1147,6 +1165,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    max: maxDataNum,
+                                    loadmore: loadMore,
                                     dataLog: dataLog,
                                     onTap: ((index) => changeData(index)),
                                   )),

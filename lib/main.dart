@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:antam_monitoring/home/home.dart';
 // import 'package:antam_monitoring/home_mobile/home_mobile.dart';
 import 'package:antam_monitoring/login/login.dart';
+import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/certHttpOveride.dart';
 import 'package:flutter/material.dart';
 
@@ -33,17 +34,28 @@ class MyApp extends StatelessWidget {
       scrollBehavior: MyCustomScrollBehavior(),
       title: 'Antam Monitoring',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
+          colorScheme: const ColorScheme(
+              brightness: Brightness.light,
+              primary: MainStyle.secondaryColor,
+              onPrimary: MainStyle.secondaryColor,
+              secondary: MainStyle.secondaryColor,
+              onSecondary: MainStyle.secondaryColor,
+              error: Colors.red,
+              onError: Colors.red,
+              background: MainStyle.secondaryColor,
+              onBackground: MainStyle.secondaryColor,
+              surface: Colors.white,
+              onSurface: Colors.black)),
       // home: Login(),
       initialRoute: "/login",
       routes: {
