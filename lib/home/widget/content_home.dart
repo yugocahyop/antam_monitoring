@@ -653,68 +653,118 @@ class _Content_homeState extends State<Content_home> {
 
         temp.clear();
       } else if (topic == "antam/statistic") {
-        final temp = [
-          {
-            "title": "Total Waktu",
-            "value": data["totalWaktu"] == null
+        totalData.firstWhere(
+                (element) => element["title"] == "Total Waktu")["value"] =
+            data["totalWaktu"] == null
                 ? totalData
                     .where((element) => element["title"] == "Total Waktu")
                     .first["value"]!
                 : (data["totalWaktu"] is double
                     ? (data["totalWaktu"] as double)
-                    : (data["totalWaktu"] as int).toDouble()),
-            "unit": "Jam"
-          },
-          {
-            "title": "Tegangan Total",
-            "value": data["teganganTotal"] == null
+                    : (data["totalWaktu"] as int).toDouble());
+
+        totalData.firstWhere(
+                (element) => element["title"] == "Tegangan Total")["value"] =
+            data["teganganTotal"] == null
                 ? totalData
                     .where((element) => element["title"] == "Tegangan Total")
                     .first["value"]!
                 : (data["teganganTotal"] is double
                     ? (data["teganganTotal"] as double)
-                    : (data["teganganTotal"] as int).toDouble()),
-            "unit": "Volt"
-          },
-          {
-            "title": "Arus Total",
-            "value": data["arusTotal"] == null
+                    : (data["teganganTotal"] as int).toDouble());
+
+        totalData.firstWhere(
+                (element) => element["title"] == "Arus Total")["value"] =
+            data["arusTotal"] == null
                 ? totalData
                     .where((element) => element["title"] == "Arus Total")
                     .first["value"]!
                 : (data["arusTotal"] is double
                     ? (data["arusTotal"] as double)
-                    : (data["arusTotal"] as int).toDouble()),
-            "unit": "Ampere"
-          },
-          {
-            "title": "Power",
-            "value": data["power"] == null
+                    : (data["arusTotal"] as int).toDouble());
+
+        totalData
+                .firstWhere((element) => element["title"] == "Power")["value"] =
+            data["power"] == null
                 ? totalData
                     .where((element) => element["title"] == "Power")
                     .first["value"]!
                 : (data["power"] is double
                     ? (data["power"] as double)
-                    : (data["power"] as int).toDouble()),
-            "unit": "Watt"
-          },
-          {
-            "title": "Energi",
-            "value": data["energi"] == null
+                    : (data["power"] as int).toDouble());
+
+        totalData.firstWhere(
+                (element) => element["title"] == "Energi")["value"] =
+            data["energi"] == null
                 ? totalData
                     .where((element) => element["title"] == "Energi")
                     .first["value"]!
                 : (data["energi"] is double
                     ? (data["energi"] as double)
-                    : (data["energi"] as int).toDouble()),
-            "unit": "Watt_Jam"
-          },
-        ];
+                    : (data["energi"] as int).toDouble());
 
-        totalData.clear();
-        totalData.addAll(temp);
+        // final temp = [
+        //   {
+        //     "title": "Total Waktu",
+        //     "value": data["totalWaktu"] == null
+        //         ? totalData
+        //             .where((element) => element["title"] == "Total Waktu")
+        //             .first["value"]!
+        //         : (data["totalWaktu"] is double
+        //             ? (data["totalWaktu"] as double)
+        //             : (data["totalWaktu"] as int).toDouble()),
+        //     "unit": "Jam"
+        //   },
+        //   {
+        //     "title": "Tegangan Total",
+        //     "value": data["teganganTotal"] == null
+        //         ? totalData
+        //             .where((element) => element["title"] == "Tegangan Total")
+        //             .first["value"]!
+        //         : (data["teganganTotal"] is double
+        //             ? (data["teganganTotal"] as double)
+        //             : (data["teganganTotal"] as int).toDouble()),
+        //     "unit": "Volt"
+        //   },
+        //   {
+        //     "title": "Arus Total",
+        //     "value": data["arusTotal"] == null
+        //         ? totalData
+        //             .where((element) => element["title"] == "Arus Total")
+        //             .first["value"]!
+        //         : (data["arusTotal"] is double
+        //             ? (data["arusTotal"] as double)
+        //             : (data["arusTotal"] as int).toDouble()),
+        //     "unit": "Ampere"
+        //   },
+        //   {
+        //     "title": "Power",
+        //     "value": data["power"] == null
+        //         ? totalData
+        //             .where((element) => element["title"] == "Power")
+        //             .first["value"]!
+        //         : (data["power"] is double
+        //             ? (data["power"] as double)
+        //             : (data["power"] as int).toDouble()),
+        //     "unit": "Watt"
+        //   },
+        //   {
+        //     "title": "Energi",
+        //     "value": data["energi"] == null
+        //         ? totalData
+        //             .where((element) => element["title"] == "Energi")
+        //             .first["value"]!
+        //         : (data["energi"] is double
+        //             ? (data["energi"] as double)
+        //             : (data["energi"] as int).toDouble()),
+        //     "unit": "Watt_Jam"
+        //   },
+        // ];
 
-        temp.clear();
+        // totalData.clear();
+        // totalData.addAll(temp);
+
+        // temp.clear();
       }
 
       data.clear();
@@ -811,10 +861,14 @@ class _Content_homeState extends State<Content_home> {
     }
   }
 
+  late Account_alarm account_alarm;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 
     mqtt = widget.mqtt;
 
@@ -937,8 +991,7 @@ class _Content_homeState extends State<Content_home> {
                   Transform.scale(
                       scale: (lWidth / lheight) < wide ? 1.2 : 1,
                       origin: Offset((lWidth / lheight) < wide ? -610 : 0, 0),
-                      child:
-                          Account_alarm(alarm: alarm, isAdmin: widget.isAdmin)),
+                      child: account_alarm),
                   // const SizedBox(
                   //   height: 20,
                   // ),
