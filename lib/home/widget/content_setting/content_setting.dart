@@ -584,6 +584,10 @@ class _Content_settingState extends State<Content_setting> {
 
         alarm.clear();
         alarm.addAll(temp);
+
+        account_alarm.setState!();
+
+        temp.clear();
       } else if (topic == "antam/statistic") {
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =

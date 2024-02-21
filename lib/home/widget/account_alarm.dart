@@ -7,6 +7,8 @@ class Account_alarm extends StatefulWidget {
 
   final bool isAdmin;
 
+  Function()? setState;
+
   @override
   State<Account_alarm> createState() => _Account_alarmState();
 }
@@ -31,6 +33,8 @@ class _Account_alarmState extends State<Account_alarm> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    widget.setState = () => setState(() {});
 
     DateTime dateTime = DateTime.now();
 

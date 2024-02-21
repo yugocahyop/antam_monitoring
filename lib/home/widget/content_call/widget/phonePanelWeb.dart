@@ -53,7 +53,8 @@ class _PhonePanelState extends State<PhonePanel> {
               Column(
                 children: [
                   Text(
-                    widget.name,
+                    widget.name.substring(0, 1).toUpperCase() +
+                        widget.name.substring(1, widget.name.length),
                     style: MyTextStyle.defaultFontCustom(Colors.white, 16),
                   ),
                   Text(
@@ -64,7 +65,8 @@ class _PhonePanelState extends State<PhonePanel> {
               ),
               Expanded(
                 child: Text(
-                  widget.role,
+                  widget.role.substring(0, 1).toUpperCase() +
+                      widget.role.substring(1, widget.role.length),
                   style: MyTextStyle.defaultFontCustom(Colors.white, 16),
                   textAlign: TextAlign.end,
                 ),

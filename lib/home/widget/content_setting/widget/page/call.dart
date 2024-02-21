@@ -7,29 +7,30 @@ import 'package:antam_monitoring/home/widget/content_setting/widget/myDropDownWh
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/widget/form.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:antam_monitoring/widget/myTextField_label.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class UserRole extends StatefulWidget {
-  const UserRole({super.key});
+class CallSetting extends StatefulWidget {
+  const CallSetting({super.key});
 
   @override
-  State<UserRole> createState() => _UserRoleState();
+  State<CallSetting> createState() => _CallSettingState();
 }
 
-class _UserRoleState extends State<UserRole> {
+class _CallSettingState extends State<CallSetting> {
   String dataNum = "5";
   List<Map<String, dynamic>> titleData = [
     {
       "title": "Role",
-      "width": 84,
+      "width": 169,
     },
     {
-      "title": "Email",
-      "width": 258,
+      "title": "Name",
+      "width": 169,
     },
     {
       "title": "Action",
@@ -108,8 +109,8 @@ class _UserRoleState extends State<UserRole> {
 
     final r = await api.callAPI(
         qString.isEmpty
-            ? "/user/find?limit=$dataNum&offset=$offset"
-            : "/user/find?limit=$dataNum&offset=$offset&q=$qString",
+            ? "/call/find?limit=$dataNum&offset=$offset"
+            : "/call/find?limit=$dataNum&offset=$offset&q=$qString",
         "POST",
         "{}",
         true);
@@ -141,21 +142,63 @@ class _UserRoleState extends State<UserRole> {
 
   String qString = "";
 
-  updateUser(String email, String id, bool isAdmin) async {
+  bool validasi(
+      Mytextfield_label name, Mytextfield_label role, Mytextfield_label phone) {
+    RegExp exp_phone =
+        RegExp(r'^(\+62|62)?[\s-]?0?8[1-9]{1}\d{1}[\s-]?\d{4}[\s-]?\d{2,5}$');
+
+    final isMatchPhonre = exp_phone.hasMatch(phone.con.text);
+
+    if (name.con.text.isEmpty) {
+      name.startShake();
+
+      Future.delayed(Duration(milliseconds: 200), () {
+        name.focusNode.requestFocus();
+      });
+
+      return false;
+    } else if (role.con.text.isEmpty) {
+      role.startShake();
+
+      Future.delayed(Duration(milliseconds: 200), () {
+        role.focusNode.requestFocus();
+      });
+
+      return false;
+    } else if (phone.con.text.isEmpty || !isMatchPhonre) {
+      phone.startShake();
+
+      if (!isMatchPhonre) {
+        final c = Controller();
+
+        c.showSnackBar(context, 'Bentuk telephone salah');
+      }
+
+      Future.delayed(Duration(milliseconds: 200), () {
+        phone.focusNode.requestFocus();
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
+  updateUser(String id, String name, String role, String phone) async {
     final api = ApiHelper();
 
-    final r = await api.callAPI(
-        "/user/$id",
-        "PUT",
-        jsonEncode({"isAdmin": isAdmin, "role": isAdmin ? "Admin" : "User"}),
-        true);
+    final r = await api.callAPI("/call/$id", "PUT",
+        jsonEncode({"role": role, "name": name, "phone": phone}), true);
 
     if (r["error"] == null) {
       final c = Controller();
-      c.showSnackBar(context, "Update $email berhasil");
+      c.showSnackBar(context, "Update $name berhasil");
 
-      userData.firstWhere((element) => element["email"] == email)["isAdmin"] =
-          isAdmin;
+      final user = userData.firstWhere((element) => element["_id"] == id);
+
+      user["name"] = name;
+      user["role"] = role;
+      user["phone"] = phone;
 
       if (mounted) setState(() {});
     } else {
@@ -163,7 +206,52 @@ class _UserRoleState extends State<UserRole> {
         print(r["error"]);
       }
       final c = Controller();
-      c.showSnackBar(context, "Update $email gagal - ${r["error"]}");
+      c.showSnackBar(context, "Update $name gagal - ${r["error"]}");
+    }
+  }
+
+  deleteUser(String id, String name) async {
+    final api = ApiHelper();
+
+    final r = await api.callAPI("/call/$id", "DELETE", "", true);
+
+    if (r["error"] == null) {
+      final c = Controller();
+      c.showSnackBar(context, "Delete $name berhasil");
+
+      final user = userData.firstWhere((element) => element["_id"] == id);
+
+      userData.remove(user);
+
+      if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+      final c = Controller();
+      c.showSnackBar(context, "Delete $name gagal - ${r["error"]}");
+    }
+  }
+
+  createUser(String name, String role, String phone) async {
+    final api = ApiHelper();
+
+    final r = await api.callAPI("/call/", "POST",
+        jsonEncode({"role": role, "name": name, "phone": phone}), true);
+
+    if (r["error"] == null) {
+      final c = Controller();
+      c.showSnackBar(context, "Tambah berhasil");
+
+      firstData();
+
+      if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+      final c = Controller();
+      c.showSnackBar(context, "Tambah gagal - ${r["error"]}");
     }
   }
 
@@ -174,6 +262,104 @@ class _UserRoleState extends State<UserRole> {
     page = 1;
     offset = 0;
     getUserData(0);
+  }
+
+  addData() {
+    final c = Controller();
+    c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Tambah Kontak",
+            height: 420,
+            onSubmit: (mapTextField) {
+              bool r = validasi(mapTextField["Nama"]!, mapTextField["Role"]!,
+                  mapTextField["Nomor WA"]!);
+
+              // print("object ${mapTextField["Nama"]}");
+
+              if (!r) {
+                return;
+              } else {
+                createUser(
+                    mapTextField["Nama"]!.con.text,
+                    mapTextField["Role"]!.con.text,
+                    mapTextField["Nomor WA"]!.con.text);
+              }
+              Navigator.pop(context);
+            },
+            listTextParam: [
+              {"label": "Nama", "hint": "Nama lengkap"},
+              {"label": "Role", "hint": "Contoh: teknisi, manager, developer "},
+              {"label": "Nomor WA", "hint": "+62 81212341234 "}
+            ]));
+  }
+
+  editData(String id, String nama, String role, String phone) {
+    final c = Controller();
+    c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Edit Kontak",
+            height: 420,
+            onSubmit: (mapTextField) {
+              bool r = validasi(mapTextField["Nama"]!, mapTextField["Role"]!,
+                  mapTextField["Nomor WA"]!);
+
+              // print("object ${mapTextField["Nama"]}");
+
+              if (!r) {
+                return;
+              } else {
+                updateUser(
+                    id,
+                    mapTextField["Nama"]!.con.text,
+                    mapTextField["Role"]!.con.text,
+                    mapTextField["Nomor WA"]!.con.text);
+              }
+              Navigator.pop(context);
+            },
+            listTextParam: [
+              {"label": "Nama", "hint": "Nama lengkap", "value": nama},
+              {
+                "label": "Role",
+                "hint": "Contoh: teknisi, manager, developer ",
+                "value": role
+              },
+              {"label": "Nomor WA", "hint": "+62 81212341234 ", "value": phone}
+            ]));
+  }
+
+  deleteData(String id, String name) {
+    final c = Controller();
+    c.goToDialog(
+        context,
+        AlertDialog(
+          title: Text("Hapus $name ?"),
+          actions: [
+            SizedBox(
+              width: 80,
+              child: MyButton(
+                  color: MainStyle.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: "No"),
+            ),
+            MainStyle.sizedBoxW10,
+            SizedBox(
+              width: 80,
+              child: MyButton(
+                  color: MainStyle.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    deleteUser(id, name);
+                  },
+                  text: ("Yes")),
+            ),
+          ],
+        ));
   }
 
   @override
@@ -208,14 +394,14 @@ class _UserRoleState extends State<UserRole> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("User Role",
+                  Text("Emergency Call Setting",
                       style: MyTextStyle.defaultFontCustom(Colors.black, 22,
                           weight: FontWeight.w700)),
                   MainStyle.sizedBoxH10,
                   Row(
                     children: [
                       Text(
-                        "Merupakan menu untuk mengganti role user ",
+                        "Merupakan menu untuk mensetting emergency call. (max 5) ",
                         style: MyTextStyle.defaultFontCustom(
                             const Color(0xff919798), 14),
                       ),
@@ -224,7 +410,7 @@ class _UserRoleState extends State<UserRole> {
                 ],
               ),
               const Icon(
-                Icons.manage_accounts,
+                Icons.phone,
                 color: MainStyle.primaryColor,
                 size: 60,
               )
@@ -256,7 +442,7 @@ class _UserRoleState extends State<UserRole> {
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(10))),
                       child: Text(
-                        "Table Role",
+                        "Table Call",
                         style: MyTextStyle.defaultFontCustom(Colors.white, 12),
                       ),
                     )
@@ -270,10 +456,28 @@ class _UserRoleState extends State<UserRole> {
                           BorderRadius.vertical(bottom: Radius.circular(15)),
                       color: Color(0xff9ACAC8)),
                   child: Column(children: [
-                    // Align(
-                    //   alignment: Alignment.topRight,
-                    //   child: TextButton(child: , onPressed: (),),
-                    // )
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: SizedBox(
+                        width: 170,
+                        child: TextButton(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.add_circle_outline,
+                                color: Colors.white,
+                              ),
+                              Text(
+                                " Tambah Kontak",
+                                style: MyTextStyle.defaultFontCustom(
+                                    Colors.white, 16),
+                              ),
+                            ],
+                          ),
+                          onPressed: () => addData(),
+                        ),
+                      ),
+                    ),
                     Container(
                       width: 500,
                       padding: const EdgeInsets.all(5),
@@ -375,23 +579,25 @@ class _UserRoleState extends State<UserRole> {
                                             height: 50,
                                             color: color,
                                             child: Center(
-                                              child: Text(userData[index]
-                                                          ["isAdmin"] ??
-                                                      false
-                                                  ? "Admin"
-                                                  : "User"),
+                                              child:
+                                                  Text(userData[index]["role"]),
                                             ),
                                           ),
                                           Container(
                                             width: titleData.firstWhere(
                                                 (element) =>
                                                     element["title"] ==
-                                                    "Email")["width"],
+                                                    "Name")["width"],
                                             height: 50,
                                             color: color,
                                             child: Center(
-                                              child: Text(
-                                                  userData[index]["email"]),
+                                              child: Column(
+                                                children: [
+                                                  Text(userData[index]["name"]),
+                                                  Text(
+                                                      userData[index]["phone"]),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           Container(
@@ -406,26 +612,27 @@ class _UserRoleState extends State<UserRole> {
                                                   width: 60,
                                                   items: [
                                                     "Pilih",
-                                                    "Atur sebagai ${userData[index]["isAdmin"] ?? false ? "User" : "Admin"}"
+                                                    "Edit",
+                                                    "Hapus"
                                                   ],
                                                   value: "Pilih",
                                                   onChange: (val) {
-                                                    if (val!
-                                                        .contains("Admin")) {
-                                                      updateUser(
-                                                          userData[index]
-                                                              ["email"],
+                                                    if (val!.contains("Edit")) {
+                                                      editData(
                                                           userData[index]
                                                               ["_id"],
-                                                          true);
+                                                          userData[index]
+                                                              ["name"],
+                                                          userData[index]
+                                                              ["role"],
+                                                          userData[index]
+                                                              ["phone"]);
                                                     } else if (val!
-                                                        .contains("User")) {
-                                                      updateUser(
-                                                          userData[index]
-                                                              ["email"],
-                                                          userData[index]
-                                                              ["_id"],
-                                                          false);
+                                                        .contains("Hapus")) {
+                                                      deleteData(
+                                                        userData[index]["_id"],
+                                                        userData[index]["name"],
+                                                      );
                                                     }
                                                   }),
                                             ),

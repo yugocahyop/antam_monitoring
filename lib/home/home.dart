@@ -27,6 +27,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 // import 'package:mqtt_client/mqtt_client.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
@@ -493,16 +494,23 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       final c = Controller();
       final encrypt = MyEncrtypt();
 
+      try {
+        final token2 =
+            encrypt.decrypt(await c.loadSharedPref("antam.log", "String"));
+        final token3 =
+            encrypt.decrypt(await c.loadSharedPref("antam.public", "String"));
+
+        final token1 =
+            encrypt.decrypt(await c.loadSharedPref("antam.data", "String"));
+
+        ApiHelper.tokenMain = ("$token1.$token2.$token3");
+      } catch (e) {
+        if (kDebugMode) {
+          print("error: $e");
+        }
+      }
+
       //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
-      final token2 =
-          encrypt.decrypt(await c.loadSharedPref("antam.log", "String"));
-      final token3 =
-          encrypt.decrypt(await c.loadSharedPref("antam.public", "String"));
-
-      final token1 =
-          encrypt.decrypt(await c.loadSharedPref("antam.data", "String"));
-
-      ApiHelper.tokenMain = ("$token1.$token2.$token3");
     }
   }
 
@@ -520,52 +528,58 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   initPage() async {
     await Future.delayed(const Duration(milliseconds: 1000));
-    String p = "";
-    if (widget.page.isEmpty) {
-      final c = Controller();
+    try {
+      String p = "";
+      if (widget.page.isEmpty) {
+        final c = Controller();
 
-      final encrypt = MyEncrtypt();
+        final encrypt = MyEncrtypt();
 
-      final raw = await c.loadSharedPref("antam.access", "String");
+        final raw = await c.loadSharedPref("antam.access", "String");
 
-      p = raw != null ? encrypt.decrypt(raw) : "";
-    } else {
-      p = widget.page;
-    }
+        p = raw != null ? encrypt.decrypt(raw) : "";
+      } else {
+        p = widget.page;
+      }
 
-    switch (p) {
-      case "home":
-        menuItems.firstWhere(
-            (element) => element["isActive"] == true)["isActive"] = false;
-        menuItems[0]["isActive"] = true;
-        changePage(0);
-        break;
-      case "datalog":
-        menuItems.firstWhere(
-            (element) => element["isActive"] == true)["isActive"] = false;
-        menuItems[1]["isActive"] = true;
-        changePage(1);
-        break;
-      case "diagnostic":
-        menuItems.firstWhere(
-            (element) => element["isActive"] == true)["isActive"] = false;
-        menuItems[2]["isActive"] = true;
-        changePage(2);
-        break;
-      case "call":
-        menuItems.firstWhere(
-            (element) => element["isActive"] == true)["isActive"] = false;
-        menuItems[3]["isActive"] = true;
-        // print("initpage: $p");
-        changePage(3);
-        break;
-      case "setting":
-        menuItems.firstWhere(
-            (element) => element["isActive"] == true)["isActive"] = false;
-        menuItems[4]["isActive"] = true;
-        changePage(4);
-        break;
-      default:
+      switch (p) {
+        case "home":
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[0]["isActive"] = true;
+          changePage(0);
+          break;
+        case "datalog":
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[1]["isActive"] = true;
+          changePage(1);
+          break;
+        case "diagnostic":
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[2]["isActive"] = true;
+          changePage(2);
+          break;
+        case "call":
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[3]["isActive"] = true;
+          // print("initpage: $p");
+          changePage(3);
+          break;
+        case "setting":
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[4]["isActive"] = true;
+          changePage(4);
+          break;
+        default:
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("error: $e");
+      }
     }
   }
 
@@ -593,7 +607,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       try {
         if (!mqtt.isConnected && mqtt.reconnecting) {
           MyMqtt? temp = mqtt;
+
           mqtt = MyMqtt(onUpdate: temp.onUpdate);
+
+          while (!mqtt.isConnected) {
+            await Future.delayed(const Duration(milliseconds: 200));
+          }
+
+          initPage();
+
+          setState(() {});
 
           // int r = await mqtt.connect();
 
@@ -604,13 +627,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
           //   mqtt.reconnecting = false;
 
+          //   initPage();
+
           //   setState(() {});
           //   // t.cancel();
           // }
         }
       } catch (e) {
         // reconnecting = false;
-        mqtt.client.disconnect();
+        mqtt.disconnect();
       }
     });
 
@@ -697,6 +722,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    final c = Controller();
+
+    c.saveSharedPref("antam.data", "");
+    // c.saveSharedPref("antam.log", "");
+    // c.saveSharedPref("antam.public", "");
+    c.saveSharedPref("antam.access", "");
+
+    // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
+
+    c.saveSharedPref("antam.token", "");
     // TODO: implement dispose
     super.dispose();
     scSel.dispose();

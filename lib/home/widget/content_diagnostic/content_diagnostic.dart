@@ -112,12 +112,18 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   ];
 
   togglePanelMqtt(int tangki, int sel, bool isActive) {
-    mqtt!.publish({
-      "tangki": tangki,
-      "node": sel,
-      "activate": isActive ? false : true
-      // "status": isActive ? false : true
-    }, "antam/command");
+    // while (!mqtt!.isConnected) {
+    //   await Future.delayed(Duration(milliseconds: 500));
+    // }
+
+    try {
+      mqtt2.publish({
+        "tangki": tangki,
+        "node": sel,
+        "activate": isActive ? false : true
+        // "status": isActive ? false : true
+      }, "antam/command");
+    } catch (e) {}
   }
 
   List<Widget> getDiagnostiWidget(double width) {
@@ -384,7 +390,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     }
   }
 
-  MyMqtt? mqtt;
+  late MyMqtt mqtt;
+  late MyMqtt mqtt2;
 
   Map<String, bool> dataNyataSortOrder = {};
   List<String> dataNyataSortOrderList = [];
@@ -461,6 +468,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     super.dispose();
 
     // mqtt!.onUpdate = (t, d) {};
+    mqtt2.disconnect();
+    mqtt2.dispose();
 
     diagnosticData.clear();
     maxDdata.clear();
@@ -699,6 +708,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
         alarm.clear();
         alarm.addAll(temp);
+
+        account_alarm.setState!();
+
+        temp.clear();
       } else if (topic == "antam/statistic") {
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =
@@ -909,6 +922,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 
     mqtt = widget.mqtt;
+    mqtt2 = MyMqtt(onUpdate: (data, topic) {});
 
     selData = widget.selData;
 

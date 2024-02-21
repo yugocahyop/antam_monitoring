@@ -185,6 +185,50 @@ class _Content_callState extends State<Content_call> {
     if (mounted) setState(() {});
   }
 
+  bool isLoading = true;
+
+  getUserData(int offset) async {
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+
+    final api = ApiHelper();
+
+    final r =
+        await api.callAPI("/call/find?limit=5&offset=0", "POST", "{}", true);
+
+    if (r["error"] == null) {
+      if (kDebugMode) {
+        print("user data: ${r['data']}");
+      }
+
+      if ((r["data"] as List<dynamic>).isNotEmpty) {
+        callData.clear();
+        callData = r["data"];
+      }
+
+      createPhonePanels(500);
+
+      // final int count = r["count"];
+
+      // maxPage = (count / (int.tryParse(dataNum) ?? 0)).ceil();
+
+      // if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   late FilterTangki filterTangki;
 
   setSetting(String data, double value) {
@@ -571,6 +615,10 @@ class _Content_callState extends State<Content_call> {
 
         alarm.clear();
         alarm.addAll(temp);
+
+        account_alarm.setState!();
+
+        temp.clear();
       } else if (topic == "antam/statistic") {
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =
@@ -798,9 +846,10 @@ class _Content_callState extends State<Content_call> {
 
     initSelData();
     initTotalDataStatistic();
+    getUserData(0);
   }
 
-  List<Map<String, dynamic>> callData = [
+  List<dynamic> callData = [
     {
       "name": "Yugo cahyopratopo",
       "phone": "+6282120432996",
@@ -990,7 +1039,22 @@ class _Content_callState extends State<Content_call> {
                                       height: 20,
                                     ),
 
-                                    Column(children: createPhonePanels(500))
+                                    isLoading
+                                        ? const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                color: Colors.blue,
+                                              ),
+                                              MainStyle.sizedBoxW10,
+                                              Text("Loading Data")
+                                            ],
+                                          )
+                                        : Column(
+                                            children: createPhonePanels(500))
                                     // PanelNode(
                                     //     tangki: 1,
                                     //     sel: 1,

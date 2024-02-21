@@ -657,6 +657,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
         alarm.clear();
         alarm.addAll(temp);
+
+        account_alarm.setState!();
+
+        temp.clear();
       } else if (topic == "antam/statistic") {
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =

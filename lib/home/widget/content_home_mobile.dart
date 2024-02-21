@@ -577,8 +577,12 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
           }
         ];
 
+        account_alarm.setState!();
+
         alarm.clear();
         alarm.addAll(temp);
+
+        temp.clear();
       } else if (topic == "antam/statistic") {
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =

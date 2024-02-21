@@ -15,13 +15,17 @@ import 'server.dart' if (dart.library.html) 'browser.dart' as mqttsetup;
 class MyMqtt {
   StreamSubscription? subs;
 
-  final client = mqttsetup.setup('ws://202.148.1.57',
+  MqttClient client = mqttsetup.setup('ws://202.148.1.57',
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
   Function(Map<String, dynamic> json, String topic) onUpdate;
 
   bool isConnected = false;
 
   late Timer timer;
+
+  // setup() async {
+  //   await connect();
+  // }
 
   MyMqtt({required this.onUpdate}) {
     // reconnecting = true;
@@ -46,38 +50,50 @@ class MyMqtt {
     //     client.disconnect();
     //   }
     // });
+  }
 
-    subs = client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
-      final recMess = c![0].payload as MqttPublishMessage;
-      final pt =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-      /// The above may seem a little convoluted for users only interested in the
-      /// payload, some users however may be interested in the received publish message,
-      /// lets not constrain ourselves yet until the package has been in the wild
-      /// for a while.
-      /// The payload is a byte buffer, this will be specific to the topic
-      final json = jsonDecode(pt);
-
+  Future<int> reconnect() async {
+    try {
+      await client.connect("xirka", "xirka@30");
+    } on NoConnectionException catch (e) {
+      // Raised by the client when connection fails.
       if (kDebugMode) {
-        print(json);
+        print('EXAMPLE::client exception - $e');
       }
 
-      // if (json["tangkiData"] != null) {
-      onUpdate(json, c[0].topic);
-      // }
-    });
+      client.disconnect();
+    } on SocketException catch (e) {
+      // Raised by the socket layer
+      if (kDebugMode) {
+        print('EXAMPLE::socket exception - $e');
+      }
+      client.disconnect();
+      return -1;
+    }
+
+    return 0;
   }
 
   void disconnect() {
     isConnected = false;
 
+    if (subs != null) subs!.cancel();
+
     client.onDisconnected = null;
     client.disconnect();
+
+    if (kDebugMode) {
+      print("mqtt disconnected");
+    }
   }
 
   void dispose() {
-    timer.cancel();
+    // timer.cancel();
+    subs!.cancel();
+
+    if (kDebugMode) {
+      print("mqtt disposed");
+    }
   }
 
   // List<String> topics = [];
@@ -114,7 +130,11 @@ class MyMqtt {
     /// setter, read the API docs for further details here, the vast majority of brokers will support the client default
     /// list so in most cases you can ignore this.
     ///
+    ///
+    ///
 
+    // MqttClient client = mqttsetup.setup('ws://202.148.1.57',
+    //     "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
     client.port = 7008;
 
     client.websocketProtocols = MqttClientConstants.protocolsSingleDefault;
@@ -217,6 +237,31 @@ class MyMqtt {
       client.disconnect();
       return -1;
     }
+
+    if (subs != null) {
+      subs!.cancel();
+    }
+
+    subs = client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+      final recMess = c![0].payload as MqttPublishMessage;
+      final pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      /// The above may seem a little convoluted for users only interested in the
+      /// payload, some users however may be interested in the received publish message,
+      /// lets not constrain ourselves yet until the package has been in the wild
+      /// for a while.
+      /// The payload is a byte buffer, this will be specific to the topic
+      final json = jsonDecode(pt);
+
+      if (kDebugMode) {
+        print(json);
+      }
+
+      // if (json["tangkiData"] != null) {
+      onUpdate(json, c[0].topic);
+      // }
+    });
 
     /// The client has a change notifier object(see the Observable class) which we then listen to to get
     /// notifications of published updates to each subscribed topic.
