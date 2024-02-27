@@ -7,9 +7,11 @@ import 'package:antam_monitoring/login/login.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/certHttpOveride.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   HttpOverrides.global = DevHttpOverrides();
+  GoogleFonts.config.allowRuntimeFetching = false;
   runApp(const MyApp());
 }
 
