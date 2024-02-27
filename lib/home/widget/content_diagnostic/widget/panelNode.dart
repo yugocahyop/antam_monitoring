@@ -66,9 +66,7 @@ class _PanelNodeState extends State<PanelNode> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.isSensor
-                          ? "Sensor node"
-                          : "Tangki ${widget.tangki}",
+                      widget.isSensor ? "Sensor node" : "Sel ${widget.tangki}",
                       style: MyTextStyle.defaultFontCustom(
                           widget.status.toLowerCase() == "inactive"
                               ? MainStyle.primaryColor
@@ -78,7 +76,7 @@ class _PanelNodeState extends State<PanelNode> {
                     Visibility(
                       visible: !widget.isSensor,
                       child: Text(
-                        widget.isSensor ? "" : "#Sel ${widget.sel}",
+                        widget.isSensor ? "" : "#Anoda ${widget.sel}",
                         style: MyTextStyle.defaultFontCustom(
                             widget.status.toLowerCase() == "inactive"
                                 ? MainStyle.primaryColor

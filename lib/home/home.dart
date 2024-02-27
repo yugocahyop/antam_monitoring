@@ -376,9 +376,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     ],
   ];
 
+  int curr_page = 0;
+
   changePage(int p) {
     final c = Controller();
     final encrypt = MyEncrtypt();
+    curr_page = p;
+    mqtt.onUpdate = (data, topi) {};
     switch (p) {
       case 0:
         c.saveSharedPref("antam.access", encrypt.encrypt("home"));
@@ -439,7 +443,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         c.saveSharedPref("antam.access", encrypt.encrypt("call"));
         setState(() {
           page = Content_call(
-            isAdmin: false,
+            isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
@@ -590,11 +594,31 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     WidgetsFlutterBinding.ensureInitialized();
 
+    final encrypt = MyEncrtypt();
+    final c = Controller();
+
+    c.saveSharedPref("antam.access", encrypt.encrypt("home"));
+
     // WidgetsBinding.instance!.addObserver(this);
 
     if (kIsWeb) {
       window.addEventListener('focus', onFocus);
       window.addEventListener('blur', onBlur);
+      window.addEventListener('visibilitychange', onFocus);
+
+      // window.onPageShow.listen((event) {
+      //   try {
+      //     mqtt.publish({}, "antam/command");
+      //   } catch (e) {
+      //     mqtt.unsubscribeAll();
+      //     mqtt.disconnect();
+      //     mqtt.reconnecting = true;
+      //     mqtt.isConnected = false;
+      //   }
+      //   if (kDebugMode) {
+      //     print("page shown");
+      //   }
+      // });
     } else {
       WidgetsBinding.instance!.addObserver(this);
     }
@@ -610,13 +634,34 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
           mqtt = MyMqtt(onUpdate: temp.onUpdate);
 
-          while (!mqtt.isConnected) {
-            await Future.delayed(const Duration(milliseconds: 200));
-          }
+          // while (!mqtt.isConnected) {
+          //   await Future.delayed(const Duration(milliseconds: 200));
+          // }
 
-          initPage();
+          page = const SizedBox(
+            width: 1200,
+            height: 500,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator(
+                      color: MainStyle.primaryColor,
+                    ))
+              ],
+            ),
+          );
 
           setState(() {});
+
+          await Future.delayed(Duration(seconds: 1));
+
+          changePage(curr_page);
+
+          // setState(() {});
 
           // int r = await mqtt.connect();
 
@@ -742,6 +787,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     if (kIsWeb) {
       window.removeEventListener('focus', onFocus);
       window.removeEventListener('blur', onBlur);
+      window.removeEventListener('visibilitychange', onBlur);
     } else {
       WidgetsBinding.instance!.removeObserver(this);
     }
@@ -758,11 +804,18 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       // // mqtt.dispose();
 
       // mqtt.isConnected = false;
+      // mqtt.reconnecting = true;
+      // mqtt.isConnected = false;
     } else if (state == AppLifecycleState.resumed) {
-      mqtt.unsubscribeAll();
-      mqtt.disconnect();
-      mqtt.reconnecting = true;
-      mqtt.isConnected = false;
+      try {
+        mqtt.publish({}, "antam/command");
+      } catch (e) {
+        mqtt.unsubscribeAll();
+        mqtt.disconnect();
+        mqtt.reconnecting = true;
+        mqtt.isConnected = false;
+      }
+
       //   mqtt.connect();
 
       //   mqtt.reconnecting = false;

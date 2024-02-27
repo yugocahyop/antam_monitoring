@@ -36,7 +36,7 @@ class _Content_callState extends State<Content_call> {
     }
   ];
 
-  var titleData = ["#Sel", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
@@ -248,6 +248,50 @@ class _Content_callState extends State<Content_call> {
   }
 
   getMax() {
+    selData[0].clear();
+
+    selData[0] = ([
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ]);
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
@@ -1383,7 +1427,7 @@ class _Content_callState extends State<Content_call> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "tangki " + (value as int).toString(),
+                                                                                "Sel " + (value as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

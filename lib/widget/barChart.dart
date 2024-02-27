@@ -65,7 +65,7 @@ class MyBarChart extends StatelessWidget {
         barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
           getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
-              "Sel ${group.x}:\n",
+              "Anoda ${group.x}:\n",
               MyTextStyle.defaultFontCustom(Colors.white, 16,
                   weight: FontWeight.bold),
               children: [
@@ -132,14 +132,14 @@ class MyBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) => Stack(
                   children: [
                     Transform.translate(
-                      offset: Offset(tangkiMaxData.isEmpty ? 0 : 10, 0),
+                      offset: Offset(tangkiMaxData.isEmpty ? 0 : 0, 0),
                       child: Text(
-                        "Sel ${value.toInt()}",
+                        "Anoda ${value.toInt()}",
                         style: MyTextStyle.defaultFontCustom(Colors.black, 14),
                       ),
                     ),
                     Transform.translate(
-                      offset: const Offset(0, 20),
+                      offset: const Offset(10, 20),
                       child: Visibility(
                         visible: tangkiMaxData.isNotEmpty,
                         child: Container(
@@ -150,7 +150,7 @@ class MyBarChart extends StatelessWidget {
                           child: Text(
                             tangkiMaxData.isEmpty
                                 ? ""
-                                : "Tangki ${tangkiMaxData[value.toInt() - 1][title!.toLowerCase()]}",
+                                : "Sel ${tangkiMaxData[value.toInt() - 1][title!.toLowerCase()]}",
                             style:
                                 MyTextStyle.defaultFontCustom(Colors.white, 12),
                           ),

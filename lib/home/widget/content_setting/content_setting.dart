@@ -39,7 +39,7 @@ class _Content_settingState extends State<Content_setting> {
     }
   ];
 
-  var titleData = ["#Sel", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
@@ -207,6 +207,50 @@ class _Content_settingState extends State<Content_setting> {
   }
 
   getMax() {
+    selData[0].clear();
+
+    selData[0] = ([
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ]);
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
@@ -454,15 +498,15 @@ class _Content_settingState extends State<Content_setting> {
       }
 
       if (topic == "antam/statusNode" || topic == "antam/statusnode") {
-        int tangki = data["tangki"] as int;
-        int sel = data["node"] as int;
-        String status = data["status"] as String;
-        int timeStamp =
-            DateTime.now().millisecondsSinceEpoch - (data["timestamp"] as int);
+        // int tangki = data["tangki"] as int;
+        // int sel = data["node"] as int;
+        // String status = data["status"] as String;
+        // int timeStamp =
+        //     DateTime.now().millisecondsSinceEpoch - (data["timeStamp"] as int);
 
-        DateFormat df = DateFormat("dd MMMM yyyy");
+        // DateFormat df = DateFormat("dd MMMM yyyy");
 
-        DateTime date = DateTime(timeStamp);
+        // DateTime date = DateTime(timeStamp);
       } else if (topic == "antam/device") {
         selData.clear();
         selData.add([
@@ -1249,7 +1293,7 @@ class _Content_settingState extends State<Content_setting> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "tangki " + (value as int).toString(),
+                                                                                "Sel " + (value as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

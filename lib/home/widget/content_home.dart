@@ -40,8 +40,8 @@ class _Content_homeState extends State<Content_home> {
   ];
 
   var titleData = [
-    "Tangki",
-    "#Sel",
+    "Sel",
+    "#Anoda",
     "Suhu",
     "Tegangan",
     "Arus",
@@ -316,6 +316,50 @@ class _Content_homeState extends State<Content_home> {
 
   getMax2() {
     selData[0].clear();
+    maxData.clear();
+
+    maxData.addAll([
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ]);
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
@@ -407,7 +451,7 @@ class _Content_homeState extends State<Content_home> {
     // mqtt!.onUpdate = (json, topic) {};
 
     maxData.clear();
-    tangkiMaxData.clear();
+    // tangkiMaxData.clear();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();
@@ -563,9 +607,10 @@ class _Content_homeState extends State<Content_home> {
 
         getMax2();
 
-        getData(currTangki);
-
-        sortSelData();
+        Future.delayed(Duration(seconds: 1), () {
+          getData(currTangki);
+          sortSelData();
+        });
 
         // List<String> items = [];
 
@@ -875,6 +920,7 @@ class _Content_homeState extends State<Content_home> {
     mqtt = widget.mqtt;
 
     selData = widget.selData;
+    getMax2();
 
     // getData(0);
 
@@ -915,12 +961,18 @@ class _Content_homeState extends State<Content_home> {
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal =
-          a[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
-      final bVal =
-          b[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
+      final aVal = a[dataNyataSortOrderList[0]
+              .toLowerCase()
+              .replaceAll("#", "")
+              .replaceAll("sel", "tangki")
+              .replaceAll("anoda", "sel")] ??
+          0 as double;
+      final bVal = b[dataNyataSortOrderList[0]
+              .toLowerCase()
+              .replaceAll("#", "")
+              .replaceAll("sel", "tangki")
+              .replaceAll("anoda", "sel")] ??
+          0 as double;
 
       // print("aVal: $aVal");
 
@@ -934,12 +986,18 @@ class _Content_homeState extends State<Content_home> {
           dataNyataSortOrderList.length > 1 &&
           i < dataNyataSortOrderList.length) {
         if (i < dataNyataSortOrderList.length) {
-          final aVal =
-              a[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
-          final bVal =
-              b[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
+          final aVal = a[dataNyataSortOrderList[i]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0 as double;
+          final bVal = b[dataNyataSortOrderList[i]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0 as double;
 
           // print("aVal: $aVal");
 
@@ -1289,8 +1347,8 @@ class _Content_homeState extends State<Content_home> {
                                                   children: titleData
                                                       .map((e) => Visibility(
                                                             visible: e !=
-                                                                    "Tangki" ||
-                                                                (e == "Tangki" &&
+                                                                    "Sel" ||
+                                                                (e == "Sel" &&
                                                                     currTangki ==
                                                                         0),
                                                             child: InkWell(

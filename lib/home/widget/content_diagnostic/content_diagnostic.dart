@@ -36,7 +36,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     }
   ];
 
-  var titleData = ["#Sel", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
@@ -129,25 +129,62 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   List<Widget> getDiagnostiWidget(double width) {
     List<Widget> rows = [];
 
+    DateFormat df = DateFormat("dd MMM yyyy HH:mm");
+
     for (var i = 0; i < diagnosticData.length; i++) {
       final sel = diagnosticData[i];
       List<Widget> pn = [];
 
-      DateFormat df = DateFormat("dd MMMM yyyy");
+      // DateFormat df2 = DateFormat("dd MMM yyyy");
 
       for (var ii = 0; ii < sel.length; ii++) {
+        DateTime now = DateTime.now();
         DateTime date =
             DateTime.fromMillisecondsSinceEpoch(sel[ii]["lastUpdated"] as int);
         String status = sel[ii]["status"] as String;
+
+        String lastUpdated = "";
+
+        // if (kDebugMode) {
+        print("now : ${df.format(now)} date: ${df.format(date)} ");
+        // }
+
+        if (now.year == date.year) {
+          if (now.month == date.month) {
+            if (now.day == (date.day)) {
+              if (now.hour == date.hour) {
+                if (now.minute == date.minute) {
+                  if (now.second == date.second) {
+                    lastUpdated = "baru";
+                  } else {
+                    lastUpdated = "${now.second - date.second} detik lalu";
+                  }
+                } else {
+                  lastUpdated = "${now.minute - date.minute} menit lalu";
+                }
+              } else {
+                lastUpdated = "${now.hour - date.hour} jam lalu";
+              }
+            } else {
+              lastUpdated = "${now.day - date.day} hari lalu";
+            }
+          } else {
+            lastUpdated = "${now.month - date.month} bulan lalu";
+          }
+        } else {
+          lastUpdated = "${now.year - date.year} tahun lalu";
+        }
         pn.add(PanelNode(
-            tapFunction: () => togglePanelMqtt(
-                i + 1, ii + 1, status == "active" ? true : false),
-            isSensor: i == 6,
-            width: width,
-            tangki: i + 1,
-            sel: ii + 1,
-            status: status,
-            lastUpdated: df.format(date)));
+          tapFunction: () =>
+              togglePanelMqtt(i + 1, ii + 1, status == "active" ? true : false),
+          isSensor: i == 6,
+          width: width,
+          tangki: i + 1,
+          sel: ii + 1,
+          status: status,
+          lastUpdated: lastUpdated,
+          // lastUpdated:  df.format(date)
+        ));
       }
 
       rows.add(SizedBox(
@@ -323,6 +360,50 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   }
 
   getMax() {
+    selData[0].clear();
+
+    selData[0] = ([
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ]);
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
@@ -471,7 +552,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     mqtt2.disconnect();
     mqtt2.dispose();
 
-    diagnosticData.clear();
+    // diagnosticData.clear();
     maxDdata.clear();
     tangkiMaxData.clear();
 
@@ -481,6 +562,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   }
 
   int currTangki = 0;
+
+  initDiagnosticData() async {}
 
   initSelData() async {
     final api = ApiHelper();
@@ -568,6 +651,28 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     if (mounted) setState(() {});
   }
 
+  initDiagData() async {
+    final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    final r = await api.callAPI("/diagnostic/find/last", "POST", "", true);
+
+    if (kDebugMode) {
+      print("backend data: $r");
+    }
+
+    if (r["error"] == null) {
+      diagnosticData.clear();
+
+      diagnosticData.addAll(r["data"][0]["diagnosticData"] ?? []);
+    }
+
+    if (mounted) setState(() {});
+  }
+
   initMqtt() {
     mqtt!.onUpdate = (data, topic) {
       if (kDebugMode) {
@@ -578,15 +683,14 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         int tangki = data["tangki"] as int;
         int sel = data["node"] as int;
         String status = data["status"] as String;
-        int timeStamp =
-            DateTime.now().millisecondsSinceEpoch - (data["timestamp"] as int);
+        int timeStamp = (data["timeStamp"] as int) * 1000;
 
-        DateFormat df = DateFormat("dd MMMM yyyy");
+        // DateFormat df = DateFormat("dd MMMM yyyy");
 
-        DateTime date = DateTime(timeStamp);
+        // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
         diagnosticData[tangki - 1][sel - 1]["status"] = status;
-        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = df.format(date);
+        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
       } else if (topic == "antam/device") {
         selData.clear();
         selData.add([
@@ -938,6 +1042,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     initSelData();
     initTotalDataStatistic();
+    initDiagData();
   }
 
   @override
@@ -1434,7 +1539,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "tangki " + (value as int).toString(),
+                                                                                "Sel " + (value as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

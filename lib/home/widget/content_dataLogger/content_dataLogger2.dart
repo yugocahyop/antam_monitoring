@@ -37,8 +37,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   ];
 
   var titleData = [
-    "Tangki",
-    "#Sel",
+    "Sel",
+    "#Anoda",
     "Suhu",
     "Tegangan",
     "Arus",
@@ -1028,6 +1028,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
     selData = widget.selData;
 
+    getMax2();
+
     // getData(0);
 
     filterTangki = FilterTangki(
@@ -1337,8 +1339,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                   children: titleData
                                                       .map((e) => Visibility(
                                                             visible: e !=
-                                                                    "Tangki" ||
-                                                                (e == "Tangki" &&
+                                                                    "Sel" ||
+                                                                (e == "Sel" &&
                                                                     currTangki ==
                                                                         0),
                                                             child: InkWell(

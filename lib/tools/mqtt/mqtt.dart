@@ -89,7 +89,10 @@ class MyMqtt {
 
   void dispose() {
     // timer.cancel();
-    subs!.cancel();
+    unsubscribeAll();
+    try {
+      subs!.cancel();
+    } catch (e) {}
 
     if (kDebugMode) {
       print("mqtt disposed");
