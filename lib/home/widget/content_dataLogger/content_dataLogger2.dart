@@ -161,7 +161,13 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   filterChange() {
     // widget.changePage(1,
     //     dari: filterTglDari.today, hingga: filterTglHingga.today);
+    dataLog.clear();
     getDataLog(0);
+
+    // if (mounted) {
+    //   setState(() {});
+    // }
+    // ;
   }
 
   getTotal(int tangki) {
@@ -1013,10 +1019,92 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   bool isLoading = false;
 
-  Future<void> getDataLog(int offsetNum) async {
+  Future<void> getDataLog2(int offsetNum) async {
+    // if (!setFilter) {
+    //   setState(() {
+    //     isLoading = true;
+    //   });
+    // }
+
+    // await Future.delayed(const Duration(milliseconds: 1000));
+
+    final api = ApiHelper();
+
+    // while (ApiHelper.tokenMain == null) {
+    //   await Future.delayed(const Duration(seconds: 1));
+    // }
+
+    // print("is alarm: $isAlarm");
+
+    final r = await api.callAPI(
+        "/${isAlarm ? "alarm" : "monitoring"}/find?limit=$dataNum&offset=$offsetNum",
+        "POST",
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today}),
+        true);
+
+    if (r["error"] == null) {
+      if (isAlarm) {
+        if (kDebugMode) {
+          print("alarm r: $r");
+        }
+      }
+      List<dynamic> data = r['data'] as List<dynamic>;
+
+      maxDataNum = r["count"];
+      // if (mounted) setState(() {});
+
+      if (kDebugMode) {
+        print("backend data2:  $data");
+      }
+
+      if (offset == 0) dataLog.clear();
+
+      for (var i = 0; i < data.length; i++) {
+        final val = data[i];
+
+        String msg = "";
+
+        if (isAlarm) {
+          final String status = val["status"];
+          if (status == "alarm") {
+            msg =
+                ("Terjadi masalah pada sel ${val["tangki"]} - ${val["node"]}");
+          } else {
+            msg =
+                ("${status.contains("Rendah") ? "Minimum" : "Maksimum"} ${status.replaceAll("alarm", "").replaceAll("Tinggi", "").replaceAll("Rendah", "")} telah di lewati pada sel ${val["tangki"]} - ${val["node"]}");
+          }
+        }
+
+        dataLog.add({
+          "isClicked": false,
+          "isHover": false,
+          "timeStamp_server": val["timeStamp_server"],
+          "msg": isAlarm ? msg : "",
+          "tangkiData": isAlarm ? null : val["tangkiData"] as List<dynamic>
+        });
+      }
+
+      // if (mounted) setState(() {});
+    } else {
+      if (kDebugMode) {
+        print("error : ${r["error"]}");
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> getDataLog(int offsetNum, {bool setFilter = false}) async {
+    // if (!setFilter) {
     setState(() {
       isLoading = true;
     });
+    // }
+
+    // await Future.delayed(const Duration(milliseconds: 1000));
+
     final api = ApiHelper();
 
     // while (ApiHelper.tokenMain == null) {
