@@ -14,9 +14,10 @@ class PanelItem extends StatelessWidget {
   int date;
   String title;
 
+  final df = DateFormat("dd/MM/yyyy HH:mm:ss");
+
   @override
   Widget build(BuildContext context) {
-    final df = DateFormat("dd/MM/yyyy hh:mm");
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

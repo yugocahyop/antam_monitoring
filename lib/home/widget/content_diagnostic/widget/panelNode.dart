@@ -58,7 +58,7 @@ class _PanelNodeState extends State<PanelNode> {
                         BorderRadius.vertical(top: Radius.circular(10)),
                     color: widget.status.toLowerCase() == "active"
                         ? MainStyle.primaryColor
-                        : widget.status.toLowerCase() == "alarm"
+                        : widget.status.toLowerCase().contains("alarm")
                             ? Colors.red
                             : MainStyle.thirdColor),
                 child: Column(

@@ -11,6 +11,7 @@ import 'package:loadmore/loadmore.dart';
 class PanelTable extends StatefulWidget {
   PanelTable(
       {super.key,
+      required this.changeIsAlarm,
       required this.loadmore,
       required this.dataLog,
       required this.onTap,
@@ -24,6 +25,8 @@ class PanelTable extends StatefulWidget {
 
   Future<bool> Function() loadmore;
 
+  Function(bool isAlarm) changeIsAlarm;
+
   @override
   State<PanelTable> createState() => _PanelTableState();
 }
@@ -34,6 +37,8 @@ class _PanelTableState extends State<PanelTable> {
     {"title": "Alarm", "icon": Icons.message, "shown": false},
   ];
   List<Map<String, dynamic>> dataLog = [{}];
+
+  bool isAlarm = false;
 
   @override
   void initState() {
@@ -187,7 +192,9 @@ class _PanelTableState extends State<PanelTable> {
                                     ? MainStyle.thirdColor.withAlpha(150)
                                     : Colors.transparent,
                             date: dataLog[index]["timeStamp_server"],
-                            title: "Data ${index + 1}")))),
+                            title: isAlarm
+                                ? dataLog[index]["msg"]
+                                : "Data ${index + 1}")))),
               ),
             ),
           ),
@@ -203,10 +210,19 @@ class _PanelTableState extends State<PanelTable> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
                             splashColor: Colors.transparent,
-                            onTap: () {
+                            onTap: () async {
                               tabItems.firstWhere((element) =>
                                   element["shown"] == true)["shown"] = false;
                               e["shown"] = true;
+                              isAlarm = e["title"] == "Alarm";
+
+                              print("is alarm : $isAlarm");
+                              setState(() {});
+
+                              dataLog.clear();
+
+                              await widget.changeIsAlarm(isAlarm);
+
                               setState(() {});
                             },
                             child: Container(

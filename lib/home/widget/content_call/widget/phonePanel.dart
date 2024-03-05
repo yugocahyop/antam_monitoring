@@ -47,29 +47,35 @@ class _PhonePanelState extends State<PhonePanel> {
                   : MainStyle.primaryColor,
               borderRadius: BorderRadius.circular(10)),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Icon(Icons.account_circle,
                   color: MainStyle.secondaryColor, size: 35),
-              Column(
-                children: [
-                  Text(
-                    widget.name.substring(0, 1).toUpperCase() +
-                        widget.name.substring(1, widget.name.length),
-                    style: MyTextStyle.defaultFontCustom(Colors.white, 16),
-                  ),
-                  Text(
-                    widget.phone,
-                    style: MyTextStyle.defaultFontCustom(Colors.white, 14),
-                  ),
-                ],
-              ),
+              MainStyle.sizedBoxW10,
               Expanded(
-                child: Text(
-                  widget.role.substring(0, 1).toUpperCase() +
-                      widget.role.substring(1, widget.role.length),
-                  style: MyTextStyle.defaultFontCustom(Colors.white, 16),
-                  textAlign: TextAlign.end,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.name.substring(0, 1).toUpperCase() +
+                          widget.name.substring(1, widget.name.length),
+                      textAlign: TextAlign.start,
+                      style: MyTextStyle.defaultFontCustom(Colors.white, 16),
+                    ),
+                    Text(
+                      widget.phone.trim(),
+                      style: MyTextStyle.defaultFontCustom(Colors.white, 14),
+                    ),
+                  ],
                 ),
+              ),
+              Text(
+                widget.role.substring(0, 1).toUpperCase() +
+                    widget.role.substring(1, widget.role.length),
+                style: MyTextStyle.defaultFontCustom(Colors.white, 16),
+                textAlign: TextAlign.end,
               )
             ],
           ),

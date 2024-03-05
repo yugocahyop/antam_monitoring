@@ -12,6 +12,7 @@ import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:antam_monitoring/widget/myTextField_label.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class UserRole extends StatefulWidget {
   const UserRole({super.key});
@@ -34,6 +35,22 @@ class _UserRoleState extends State<UserRole> {
     {
       "title": "Action",
       "width": 84,
+    }
+  ];
+
+  List<Map<String, dynamic>> titleDataUserLog = [
+    {
+      "title": "Date",
+      "width": 169,
+    },
+    {
+      "title": "Log",
+      "width": 253,
+    },
+    {
+      "title": "",
+      // "width": 84,
+      "width": 0
     }
   ];
 
@@ -96,6 +113,7 @@ class _UserRoleState extends State<UserRole> {
   }
 
   bool isLoading = true;
+  bool isUserLog = false;
 
   getUserData(int offset) async {
     if (mounted) {
@@ -108,8 +126,8 @@ class _UserRoleState extends State<UserRole> {
 
     final r = await api.callAPI(
         qString.isEmpty
-            ? "/user/find?limit=$dataNum&offset=$offset"
-            : "/user/find?limit=$dataNum&offset=$offset&q=$qString",
+            ? "/${isUserLog ? "logs" : "user"}/find?limit=$dataNum&offset=$offset"
+            : "/${isUserLog ? "logs" : "user"}/find?limit=$dataNum&offset=$offset&q=$qString",
         "POST",
         "{}",
         true);
@@ -128,7 +146,7 @@ class _UserRoleState extends State<UserRole> {
       if (mounted) setState(() {});
     } else {
       if (kDebugMode) {
-        print(r["error"]);
+        print("error: ${r["error"]}");
       }
     }
 
@@ -249,17 +267,60 @@ class _UserRoleState extends State<UserRole> {
               children: [
                 Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                          color: Color(0xff9ACAC8),
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(10))),
-                      child: Text(
-                        "Table Role",
-                        style: MyTextStyle.defaultFontCustom(Colors.white, 12),
+                    InkWell(
+                      onTap: () {
+                        userData.clear();
+                        setState(() {
+                          qString = "";
+                          page = 1;
+                          offset = 0;
+                          isUserLog = false;
+                        });
+
+                        getUserData(0);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: isUserLog
+                                ? const Color(0xffC4DBD9)
+                                : const Color(0xff9ACAC8),
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(10))),
+                        child: Text(
+                          "Table Role",
+                          style:
+                              MyTextStyle.defaultFontCustom(Colors.white, 12),
+                        ),
                       ),
-                    )
+                    ),
+                    InkWell(
+                      onTap: () {
+                        userData.clear();
+                        setState(() {
+                          qString = "";
+                          page = 1;
+                          offset = 0;
+                          isUserLog = true;
+                        });
+
+                        getUserData(0);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: isUserLog
+                                ? const Color(0xff9ACAC8)
+                                : const Color(0xffC4DBD9),
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(10))),
+                        child: Text(
+                          "Log User",
+                          style:
+                              MyTextStyle.defaultFontCustom(Colors.white, 12),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 Container(
@@ -319,7 +380,9 @@ class _UserRoleState extends State<UserRole> {
                                     top: Radius.circular(10))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: titleData
+                              children: (isUserLog
+                                      ? titleDataUserLog
+                                      : titleData)
                                   .map((e) => Container(
                                         width: e["width"],
                                         padding: const EdgeInsets.all(5),
@@ -363,73 +426,97 @@ class _UserRoleState extends State<UserRole> {
                                       final Color color = (index % 2) == 0
                                           ? const Color(0xfff2f2f2)
                                           : const Color(0xffd9d9d9);
+                                      DateFormat df =
+                                          DateFormat("dd/MM/yyyy HH:mm:ss");
                                       return Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            width: titleData.firstWhere(
-                                                (element) =>
+                                            width: (isUserLog
+                                                    ? titleDataUserLog
+                                                    : titleData)
+                                                .firstWhere((element) =>
                                                     element["title"] ==
-                                                    "Role")["width"],
-                                            height: 50,
+                                                    (isUserLog
+                                                        ? "Date"
+                                                        : "Role"))["width"],
+                                            height: isUserLog ? 100 : 50,
                                             color: color,
                                             child: Center(
-                                              child: Text(userData[index]
-                                                          ["isAdmin"] ??
-                                                      false
-                                                  ? "Admin"
-                                                  : "User"),
+                                              child: Text(isUserLog
+                                                  ? df.format(DateTime
+                                                      .fromMillisecondsSinceEpoch(
+                                                          userData[index]
+                                                              ["datetime"]))
+                                                  : userData[index]
+                                                              ["isAdmin"] ??
+                                                          false
+                                                      ? "Admin"
+                                                      : "User"),
                                             ),
                                           ),
                                           Container(
-                                            width: titleData.firstWhere(
-                                                (element) =>
+                                            width: (isUserLog
+                                                    ? titleDataUserLog
+                                                    : titleData)
+                                                .firstWhere((element) =>
                                                     element["title"] ==
-                                                    "Email")["width"],
-                                            height: 50,
+                                                    (isUserLog
+                                                        ? "Log"
+                                                        : "Email"))["width"],
+                                            height: isUserLog ? 100 : 50,
+                                            padding: isUserLog
+                                                ? EdgeInsets.all(8)
+                                                : null,
                                             color: color,
                                             child: Center(
-                                              child: Text(
-                                                  userData[index]["email"]),
+                                              child: Text(isUserLog
+                                                  ? userData[index]["data_name"]
+                                                  : userData[index]["email"]),
                                             ),
                                           ),
-                                          Container(
-                                            width: titleData.firstWhere(
-                                                (element) =>
-                                                    element["title"] ==
-                                                    "Action")["width"],
-                                            height: 50,
-                                            color: color,
-                                            child: Center(
-                                              child: MyDropDownGreen(
-                                                  width: 60,
-                                                  items: [
-                                                    "Pilih",
-                                                    "Atur sebagai ${userData[index]["isAdmin"] ?? false ? "User" : "Admin"}"
-                                                  ],
-                                                  value: "Pilih",
-                                                  onChange: (val) {
-                                                    if (val!
-                                                        .contains("Admin")) {
-                                                      updateUser(
-                                                          userData[index]
-                                                              ["email"],
-                                                          userData[index]
-                                                              ["_id"],
-                                                          true);
-                                                    } else if (val!
-                                                        .contains("User")) {
-                                                      updateUser(
-                                                          userData[index]
-                                                              ["email"],
-                                                          userData[index]
-                                                              ["_id"],
-                                                          false);
-                                                    }
-                                                  }),
-                                            ),
-                                          ),
+                                          isUserLog
+                                              ? Column()
+                                              : Container(
+                                                  width: (isUserLog
+                                                          ? titleDataUserLog
+                                                          : titleData)
+                                                      .firstWhere((element) =>
+                                                          element["title"] ==
+                                                          "Action")["width"],
+                                                  height: isUserLog ? 100 : 50,
+                                                  color: color,
+                                                  child: Center(
+                                                    child: MyDropDownGreen(
+                                                        width: 60,
+                                                        items: [
+                                                          "Pilih",
+                                                          "Atur sebagai ${userData[index]["isAdmin"] ?? false ? "User" : "Admin"}"
+                                                        ],
+                                                        value: "Pilih",
+                                                        onChange: (val) {
+                                                          if (val!.contains(
+                                                              "Admin")) {
+                                                            updateUser(
+                                                                userData[index]
+                                                                    ["email"],
+                                                                userData[index]
+                                                                    ["_id"],
+                                                                true);
+                                                          } else if (val!
+                                                              .contains(
+                                                                  "User")) {
+                                                            updateUser(
+                                                                userData[index]
+                                                                    ["email"],
+                                                                userData[index]
+                                                                    ["_id"],
+                                                                false);
+                                                          }
+                                                        }),
+                                                  ),
+                                                ),
                                         ],
                                       );
                                     })),

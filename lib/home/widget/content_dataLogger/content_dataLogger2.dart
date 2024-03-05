@@ -874,6 +874,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     {
       "isClicked": false,
       "isHover": false,
+      "msg": "",
       "timeStamp_server": 1706561733680,
       "tangkiData": [[]]
     }
@@ -971,21 +972,41 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   int offset = 0;
   int dataNum = 20;
   int maxDataNum = 0;
+  bool isAlarm = false;
 
-  getDataLog(int offsetNum) async {
+  changeIsAlarm(bool isAlarm2) async {
+    isAlarm = isAlarm2;
+
+    print("change isAlarm");
+
+    dataLog.clear();
+
+    await getDataLog(0);
+
+    setState(() {});
+  }
+
+  Future<void> getDataLog(int offsetNum) async {
     final api = ApiHelper();
 
     // while (ApiHelper.tokenMain == null) {
     //   await Future.delayed(const Duration(seconds: 1));
     // }
 
+    print("is alarm: $isAlarm");
+
     final r = await api.callAPI(
-        "/monitoring/find?limit=$dataNum&offset=$offsetNum",
+        "/${isAlarm ? "alarm" : "monitoring"}/find?limit=$dataNum&offset=$offsetNum",
         "POST",
         jsonEncode({"from": 0}),
         true);
 
     if (r["error"] == null) {
+      if (isAlarm) {
+        if (kDebugMode) {
+          print("alarm r: $r");
+        }
+      }
       List<dynamic> data = r['data'] as List<dynamic>;
 
       maxDataNum = r["count"];
@@ -999,18 +1020,32 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       for (var i = 0; i < data.length; i++) {
         final val = data[i];
 
+        String msg = "";
+
+        if (isAlarm) {
+          final String status = val["status"];
+          if (status == "alarm") {
+            msg =
+                ("Terjadi masalah pada sel ${val["tangki"]} - ${val["node"]}");
+          } else {
+            msg =
+                ("${status.contains("Rendah") ? "Minimum" : "Maksimum"} ${status.replaceAll("alarm", "").replaceAll("Tinggi", "").replaceAll("Rendah", "")} telah di lewati pada sel ${val["tangki"]} - ${val["node"]}");
+          }
+        }
+
         dataLog.add({
           "isClicked": false,
           "isHover": false,
           "timeStamp_server": val["timeStamp_server"],
-          "tangkiData": val["tangkiData"] as List<dynamic>
+          "msg": isAlarm ? msg : "",
+          "tangkiData": isAlarm ? null : val["tangkiData"] as List<dynamic>
         });
       }
 
       if (mounted) setState(() {});
     } else {
       if (kDebugMode) {
-        print(r["error"]);
+        print("error : ${r["error"]}");
       }
     }
   }
@@ -1222,6 +1257,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    changeIsAlarm: changeIsAlarm,
                                     max: maxDataNum,
                                     loadmore: loadMore,
                                     dataLog: dataLog,

@@ -530,20 +530,24 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   String email = "";
 
-  initPage() async {
+  Future<void> initPage() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     try {
       String p = "";
-      if (widget.page.isEmpty) {
-        final c = Controller();
+      // if (widget.page.isEmpty) {
+      final c = Controller();
 
-        final encrypt = MyEncrtypt();
+      final encrypt = MyEncrtypt();
 
-        final raw = await c.loadSharedPref("antam.access", "String");
+      final raw = await c.loadSharedPref("antam.access", "String");
 
-        p = raw != null ? encrypt.decrypt(raw) : "";
-      } else {
-        p = widget.page;
+      p = raw != null ? encrypt.decrypt(raw) : "";
+      // } else {
+      //   p = widget.page;
+      // }
+
+      if (kDebugMode) {
+        print("init page: $p");
       }
 
       switch (p) {
@@ -597,7 +601,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     final encrypt = MyEncrtypt();
     final c = Controller();
 
-    c.saveSharedPref("antam.access", encrypt.encrypt("home"));
+    // c.saveSharedPref("antam.access", encrypt.encrypt("home"));
 
     // WidgetsBinding.instance!.addObserver(this);
 
@@ -660,6 +664,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           await Future.delayed(Duration(seconds: 1));
 
           changePage(curr_page);
+
+          // await initPage();
+
+          mqtt.onUpdate = temp.onUpdate;
 
           // setState(() {});
 

@@ -116,11 +116,19 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     //   await Future.delayed(Duration(milliseconds: 500));
     // }
 
+    final api = ApiHelper();
+
+    api.callAPI(
+        "/diagnostic/toggle",
+        "POST",
+        jsonEncode({"tangki": tangki, "node": sel, "isActive": isActive}),
+        true);
+
     try {
       mqtt2.publish({
         "tangki": tangki,
         "node": sel,
-        "activate": isActive ? false : true
+        "activate": !isActive,
         // "status": isActive ? false : true
       }, "antam/command");
     } catch (e) {}
@@ -175,8 +183,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
           lastUpdated = "${now.year - date.year} tahun lalu";
         }
         pn.add(PanelNode(
-          tapFunction: () =>
-              togglePanelMqtt(i + 1, ii + 1, status == "active" ? true : false),
+          tapFunction: () => togglePanelMqtt(i + 1, ii + 1,
+              status == "active" || status.contains("alarm") ? true : false),
           isSensor: i == 6,
           width: width,
           tangki: i + 1,

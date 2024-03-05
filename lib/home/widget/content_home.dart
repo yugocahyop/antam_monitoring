@@ -29,14 +29,8 @@ class _Content_homeState extends State<Content_home> {
       "title": "Status",
       "isActive": true,
     },
-    {
-      "title": "Alarm Arus",
-      "isActive": false,
-    },
-    {
-      "title": "Alarm Tegangan",
-      "isActive": false,
-    }
+    {"title": "Alarm Arus", "isActive": false, "list": []},
+    {"title": "Alarm Tegangan", "isActive": false, "list": []}
   ];
 
   var titleData = [
@@ -157,6 +151,15 @@ class _Content_homeState extends State<Content_home> {
   final filterTglDari = FilterTgl(
     title: "Dari",
   );
+
+  showMsg(String msg) {
+    warningMsg = msg;
+
+    setState(() {
+      isMsgVisible = true;
+      msgOpacity = 1;
+    });
+  }
 
   getTotal(int tangki) {
     // final d = selData[tangki];
@@ -625,6 +628,64 @@ class _Content_homeState extends State<Content_home> {
         //   items: items,
         //   onChange: (value) => getData(int.tryParse(value) ?? 0),
         // );
+      } else if (topic == "antam/statusNode") {
+        final String status = data["status"] as String;
+
+        if (status.contains("alarmArusTinggi") ||
+            status.contains("alarmArusRendah") ||
+            status.contains("alarmTegangan") ||
+            status.contains("alarmSuhuTinggi") ||
+            status.contains("alarmSuhuRendah") ||
+            status.contains("alarmPhTinggi") ||
+            status.contains("alarmPhRendah") ||
+            status == "alarm") {
+          if (status == "alarm") {
+            showMsg(
+                "Terjadi masalah pada sel ${data["tangki"]} - ${data["node"]}");
+          } else {
+            showMsg(
+                "${status.contains("Rendah") ? "Minimum" : "Maksimum"} ${status.replaceAll("alarm", "").replaceAll("Tinggi", "").replaceAll("Rendah", "")} telah di lewati pada sel ${data["tangki"]} - ${data["node"]}");
+          }
+
+          //   if (status.contains("Arus")) {
+          //     final Map<String, dynamic> a =
+          //         alarm.firstWhere((element) => element["title"] == "Alarm Arus");
+          //     a["isActive"] = true;
+          //     (a["list"] as List<dynamic>).add([data["tangki"], data["node"]]);
+          //   } else if (status.contains("Tegangan")) {
+          //     final Map<String, dynamic> a = alarm
+          //         .firstWhere((element) => element["title"] == "Alarm Tegangan");
+          //     a["isActive"] = true;
+          //     (a["list"] as List<dynamic>).add([data["tangki"], data["node"]]);
+          //   }
+          // } else if (status.contains("active") || status.contains("inactive")) {
+          //   final Map<String, dynamic> aT = alarm
+          //       .firstWhere((element) => element["title"] == "Alarm Tegangan");
+          //   final Map<String, dynamic> aA =
+          //       alarm.firstWhere((element) => element["title"] == "Alarm Arus");
+
+          //   if (aT["isActive"]) {
+          //     final List<dynamic> aTl = (aT["list"] as List<dynamic>);
+          //     final dynamic aTn = aTl.firstWhere((element) =>
+          //         element[0] == data["tangki"] && element[1] == data["node"]);
+          //     aTl.remove(aTn);
+          //     if (aTl.isEmpty) {
+          //       aT["isActive"] = false;
+          //     }
+          //   }
+
+          //   if (aA["isActive"]) {
+          //     final List<dynamic> aTl = (aA["list"] as List<dynamic>);
+          //     final dynamic aTn = aTl.firstWhere((element) =>
+          //         element[0] == data["tangki"] && element[1] == data["node"]);
+          //     aTl.remove(aTn);
+          //     if (aTl.isEmpty) {
+          //       aA["isActive"] = false;
+          //     }
+          //   }
+        }
+
+        // account_alarm.setState!();
       } else if (topic == "antam/device/node") {
         final int tangki = data["tangki"] as int;
 

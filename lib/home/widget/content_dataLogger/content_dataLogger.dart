@@ -1214,6 +1214,7 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    changeIsAlarm: (bool isAlarm) {},
                                     loadmore: () async {
                                       await Future.delayed(
                                           Duration(seconds: 1));
