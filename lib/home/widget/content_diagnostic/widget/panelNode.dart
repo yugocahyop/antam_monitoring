@@ -99,9 +99,12 @@ class _PanelNodeState extends State<PanelNode> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.status,
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        widget.status,
+                        style: MyTextStyle.defaultFontCustom(Colors.black, 10),
+                      ),
                     ),
                     SizedBox(
                       width: widget.width,

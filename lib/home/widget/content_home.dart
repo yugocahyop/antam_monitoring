@@ -4,6 +4,7 @@ class Content_home extends StatefulWidget {
   Content_home(
       {super.key,
       // required this.email,
+      required this.changePage,
       required this.isAdmin,
       required this.scSel,
       required this.selData,
@@ -18,6 +19,8 @@ class Content_home extends StatefulWidget {
   // final String email;
 
   final bool isAdmin;
+
+  Function(int index, {int? dari, int? hingga}) changePage;
 
   @override
   State<Content_home> createState() => _Content_homeState();
@@ -144,20 +147,31 @@ class _Content_homeState extends State<Content_home> {
 
   final double wide = 16 / 9;
 
-  final filterTglHingga = FilterTgl(
-    title: "Hingga",
-  );
+  late FilterTgl filterTglHingga;
 
-  final filterTglDari = FilterTgl(
-    title: "Dari",
-  );
+  late FilterTgl filterTglDari;
+
+  filterChange() {
+    if (kDebugMode) {
+      print("dari: ${filterTglDari.today} hingga: ${filterTglHingga.today}");
+    }
+    widget.changePage(1,
+        dari: filterTglDari.today, hingga: filterTglHingga.today);
+  }
 
   showMsg(String msg) {
     warningMsg = msg;
 
     setState(() {
       isMsgVisible = true;
-      msgOpacity = 1;
+    });
+
+    Future.delayed(Duration(milliseconds: 200), () {
+      if (mounted) {
+        setState(() {
+          msgOpacity = 1;
+        });
+      }
     });
   }
 
@@ -975,6 +989,18 @@ class _Content_homeState extends State<Content_home> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    filterTglHingga = FilterTgl(
+      title: "Hingga",
+      lastValue: true,
+      changePage: () => filterChange(),
+    );
+
+    filterTglDari = FilterTgl(
+      title: "Dari",
+      lastValue: false,
+      changePage: () => filterChange(),
+    );
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 

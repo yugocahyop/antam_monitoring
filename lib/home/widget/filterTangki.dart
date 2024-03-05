@@ -68,7 +68,7 @@ class _FilterTangkiState extends State<FilterTangki> {
                 SizedBox(
                     width: 100,
                     child: Text(
-                      "Tangki",
+                      "Sel",
                       style: MyTextStyle.defaultFontCustom(Colors.black,
                           (lWidth / lheight) < wide && lWidth > 900 ? 24 : 14),
                     )),

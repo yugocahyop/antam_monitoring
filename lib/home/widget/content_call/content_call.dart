@@ -3,6 +3,7 @@ part of home;
 class Content_call extends StatefulWidget {
   Content_call(
       {super.key,
+      required this.changePage,
       required this.isAdmin,
       required this.scSel,
       required this.selData,
@@ -15,6 +16,8 @@ class Content_call extends StatefulWidget {
   MyMqtt mqtt;
 
   ScrollController scSel;
+
+  Function(int index, {int? dari, int? hingga}) changePage;
 
   @override
   State<Content_call> createState() => _Content_callState();
@@ -107,13 +110,14 @@ class _Content_callState extends State<Content_call> {
 
   final double wide = 16 / 9;
 
-  final filterTglHingga = FilterTgl(
-    title: "Hingga",
-  );
+  late FilterTgl filterTglHingga;
 
-  final filterTglDari = FilterTgl(
-    title: "Dari",
-  );
+  late FilterTgl filterTglDari;
+
+  filterChange() {
+    widget.changePage(1,
+        dari: filterTglDari.today, hingga: filterTglHingga.today);
+  }
 
   getTotal(int tangki) {
     // final d = selData[tangki];
@@ -871,6 +875,18 @@ class _Content_callState extends State<Content_call> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    filterTglHingga = FilterTgl(
+      title: "Hingga",
+      lastValue: true,
+      changePage: () => filterChange(),
+    );
+
+    filterTglDari = FilterTgl(
+      title: "Dari",
+      lastValue: false,
+      changePage: () => filterChange(),
+    );
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 

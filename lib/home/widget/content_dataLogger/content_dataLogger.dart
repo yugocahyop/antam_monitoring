@@ -3,6 +3,7 @@ part of home;
 class Content_dataLogger extends StatefulWidget {
   Content_dataLogger(
       {super.key,
+      required this.changePage,
       required this.isAdmin,
       required this.scSel,
       required this.selData,
@@ -15,6 +16,8 @@ class Content_dataLogger extends StatefulWidget {
   MyMqtt mqtt;
 
   ScrollController scSel;
+
+  Function(int index, {int? dari, int? hingga}) changePage;
 
   @override
   State<Content_dataLogger> createState() => _Content_dataLoggerState();
@@ -398,13 +401,14 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
 
   final double wide = 16 / 9;
 
-  final filterTglHingga = FilterTgl(
-    title: "Hingga",
-  );
+  late FilterTgl filterTglHingga;
 
-  final filterTglDari = FilterTgl(
-    title: "Dari",
-  );
+  late FilterTgl filterTglDari;
+
+  filterChange() {
+    widget.changePage(1,
+        dari: filterTglDari.today, hingga: filterTglHingga.today);
+  }
 
   getTotal(int tangki) {
     // final d = selData[tangki];
@@ -1060,6 +1064,18 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
     // TODO: implement initState
     super.initState();
 
+    filterTglHingga = FilterTgl(
+      title: "Hingga",
+      lastValue: true,
+      changePage: () => filterChange(),
+    );
+
+    filterTglDari = FilterTgl(
+      title: "Dari",
+      lastValue: false,
+      changePage: () => filterChange(),
+    );
+
     mqtt = widget.mqtt;
 
     selData = widget.selData;
@@ -1214,6 +1230,7 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    isLoading: false,
                                     changeIsAlarm: (bool isAlarm) {},
                                     loadmore: () async {
                                       await Future.delayed(

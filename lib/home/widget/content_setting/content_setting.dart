@@ -3,6 +3,7 @@ part of home;
 class Content_setting extends StatefulWidget {
   Content_setting(
       {super.key,
+      required this.changePage,
       required this.email,
       required this.isAdmin,
       required this.scSel,
@@ -14,6 +15,8 @@ class Content_setting extends StatefulWidget {
   final String email;
 
   List<dynamic> selData;
+
+  Function(int index, {int? dari, int? hingga}) changePage;
 
   MyMqtt mqtt;
 
@@ -110,13 +113,14 @@ class _Content_settingState extends State<Content_setting> {
 
   final double wide = 16 / 9;
 
-  final filterTglHingga = FilterTgl(
-    title: "Hingga",
-  );
+  late FilterTgl filterTglHingga;
 
-  final filterTglDari = FilterTgl(
-    title: "Dari",
-  );
+  late FilterTgl filterTglDari;
+
+  filterChange() {
+    widget.changePage(1,
+        dari: filterTglDari.today, hingga: filterTglHingga.today);
+  }
 
   getTotal(int tangki) {
     // final d = selData[tangki];
@@ -838,6 +842,18 @@ class _Content_settingState extends State<Content_setting> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    filterTglHingga = FilterTgl(
+      title: "Hingga",
+      lastValue: true,
+      changePage: () => filterChange(),
+    );
+
+    filterTglDari = FilterTgl(
+      title: "Dari",
+      lastValue: false,
+      changePage: () => filterChange(),
+    );
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 

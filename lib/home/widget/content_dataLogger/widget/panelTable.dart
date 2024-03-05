@@ -11,6 +11,7 @@ import 'package:loadmore/loadmore.dart';
 class PanelTable extends StatefulWidget {
   PanelTable(
       {super.key,
+      required this.isLoading,
       required this.changeIsAlarm,
       required this.loadmore,
       required this.dataLog,
@@ -20,6 +21,8 @@ class PanelTable extends StatefulWidget {
   List<Map<String, dynamic>> dataLog;
 
   int max;
+
+  bool isLoading;
 
   Function(int index) onTap;
 
@@ -158,44 +161,56 @@ class _PanelTableState extends State<PanelTable> {
                         blurRadius: 20,
                         spreadRadius: 0),
                   ]),
-              child: LoadMore(
-                textBuilder: (LoadMoreStatus) {
-                  return "Loading Data";
-                },
-                // delegate: DelegateBuilder(context),
-                isFinish: dataLog.length > widget.max,
-                onLoadMore: widget.loadmore,
-                // delegate: ,
-                child: ListView.builder(
-                    itemCount: dataLog.length,
-                    itemBuilder: ((context, index) => InkWell(
-                        onTap: () {
-                          try {
-                            dataLog.firstWhere((element) =>
-                                    element["isClicked"] == true)["isClicked"] =
-                                false;
-                          } catch (e) {}
+              child: dataLog.isEmpty && !widget.isLoading
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.info_rounded,
+                          color: MainStyle.primaryColor,
+                        ),
+                        MainStyle.sizedBoxW10,
+                        Text("No data")
+                      ],
+                    )
+                  : LoadMore(
+                      textBuilder: (LoadMoreStatus) {
+                        return "Loading Data";
+                      },
+                      // delegate: DelegateBuilder(context),
+                      isFinish: dataLog.length > widget.max,
+                      onLoadMore: widget.loadmore,
+                      // delegate: ,
+                      child: ListView.builder(
+                          itemCount: dataLog.length,
+                          itemBuilder: ((context, index) => InkWell(
+                              onTap: () {
+                                try {
+                                  dataLog.firstWhere((element) =>
+                                      element["isClicked"] ==
+                                      true)["isClicked"] = false;
+                                } catch (e) {}
 
-                          dataLog[index]["isClicked"] =
-                              !dataLog[index]["isClicked"];
+                                dataLog[index]["isClicked"] =
+                                    !dataLog[index]["isClicked"];
 
-                          widget.onTap(index);
-                        },
-                        onHover: (value) => setState(() {
-                              // print("hovered $value");
-                              dataLog[index]["isHover"] = value;
-                            }),
-                        child: PanelItem(
-                            primaryColor: dataLog[index]["isClicked"]
-                                ? MainStyle.thirdColor.withAlpha(150)
-                                : dataLog[index]["isHover"]
-                                    ? MainStyle.thirdColor.withAlpha(150)
-                                    : Colors.transparent,
-                            date: dataLog[index]["timeStamp_server"],
-                            title: isAlarm
-                                ? dataLog[index]["msg"]
-                                : "Data ${index + 1}")))),
-              ),
+                                if (!isAlarm) widget.onTap(index);
+                              },
+                              onHover: (value) => setState(() {
+                                    // print("hovered $value");
+                                    dataLog[index]["isHover"] = value;
+                                  }),
+                              child: PanelItem(
+                                  primaryColor: dataLog[index]["isClicked"]
+                                      ? MainStyle.thirdColor.withAlpha(150)
+                                      : dataLog[index]["isHover"]
+                                          ? MainStyle.thirdColor.withAlpha(150)
+                                          : Colors.transparent,
+                                  date: dataLog[index]["timeStamp_server"],
+                                  title: isAlarm
+                                      ? dataLog[index]["msg"]
+                                      : "Data ${index + 1}")))),
+                    ),
             ),
           ),
           SizedBox(
@@ -216,7 +231,7 @@ class _PanelTableState extends State<PanelTable> {
                               e["shown"] = true;
                               isAlarm = e["title"] == "Alarm";
 
-                              print("is alarm : $isAlarm");
+                              // print("is alarm : $isAlarm");
                               setState(() {});
 
                               dataLog.clear();

@@ -3,6 +3,9 @@ part of home;
 class Content_dataLogger2 extends StatefulWidget {
   Content_dataLogger2(
       {super.key,
+      this.dari,
+      this.hingga,
+      required this.changePage,
       required this.isAdmin,
       required this.scSel,
       required this.selData,
@@ -15,6 +18,10 @@ class Content_dataLogger2 extends StatefulWidget {
   MyMqtt mqtt;
 
   ScrollController scSel;
+
+  Function(int index, {int? dari, int? hingga}) changePage;
+
+  int? dari, hingga;
 
   @override
   State<Content_dataLogger2> createState() => _Content_dataLogger2State();
@@ -147,13 +154,15 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   final double wide = 16 / 9;
 
-  final filterTglHingga = FilterTgl(
-    title: "Hingga",
-  );
+  late FilterTgl filterTglHingga;
 
-  final filterTglDari = FilterTgl(
-    title: "Dari",
-  );
+  late FilterTgl filterTglDari;
+
+  filterChange() {
+    // widget.changePage(1,
+    //     dari: filterTglDari.today, hingga: filterTglHingga.today);
+    getDataLog(0);
+  }
 
   getTotal(int tangki) {
     // final d = selData[tangki];
@@ -871,13 +880,13 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   }
 
   List<Map<String, dynamic>> dataLog = [
-    {
-      "isClicked": false,
-      "isHover": false,
-      "msg": "",
-      "timeStamp_server": 1706561733680,
-      "tangkiData": [[]]
-    }
+    // {
+    //   "isClicked": false,
+    //   "isHover": false,
+    //   "msg": "",
+    //   "timeStamp_server": 1706561733680,
+    //   "tangkiData": [[]]
+    // }
   ];
 
   // List<dynamic> tempSelData = [
@@ -888,8 +897,22 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   int indexData = -1;
 
-  changeData(int index) {
+  bool isTapped = false;
+
+  changeData(int index) async {
     if (index == indexData) return;
+
+    if (isTapped) {
+      setState(() {
+        isTapped = false;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+
+    setState(() {
+      isTapped = true;
+    });
     resetSelDataSort();
 
     indexData = index;
@@ -947,7 +970,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       },
     ]);
 
-    final df = DateFormat("dd/MM/yyy hh:mm");
+    final df = DateFormat("dd/MM/yyy HH:mm:ss");
 
     dataDate = df.format(DateTime.fromMillisecondsSinceEpoch(
         dataLog[index]["timeStamp_server"]));
@@ -977,28 +1000,35 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   changeIsAlarm(bool isAlarm2) async {
     isAlarm = isAlarm2;
 
-    print("change isAlarm");
+    // print("change isAlarm");
 
     dataLog.clear();
 
     await getDataLog(0);
 
-    setState(() {});
+    setState(() {
+      isTapped = false;
+    });
   }
 
+  bool isLoading = false;
+
   Future<void> getDataLog(int offsetNum) async {
+    setState(() {
+      isLoading = true;
+    });
     final api = ApiHelper();
 
     // while (ApiHelper.tokenMain == null) {
     //   await Future.delayed(const Duration(seconds: 1));
     // }
 
-    print("is alarm: $isAlarm");
+    // print("is alarm: $isAlarm");
 
     final r = await api.callAPI(
         "/${isAlarm ? "alarm" : "monitoring"}/find?limit=$dataNum&offset=$offsetNum",
         "POST",
-        jsonEncode({"from": 0}),
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today}),
         true);
 
     if (r["error"] == null) {
@@ -1010,6 +1040,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       List<dynamic> data = r['data'] as List<dynamic>;
 
       maxDataNum = r["count"];
+      if (mounted) setState(() {});
 
       if (kDebugMode) {
         print("backend data2:  $data");
@@ -1048,6 +1079,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
         print("error : ${r["error"]}");
       }
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   late Account_alarm account_alarm;
@@ -1056,6 +1091,24 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    if (kDebugMode) {
+      print("dari: ${widget.dari} hingga: ${widget.hingga}");
+    }
+
+    filterTglHingga = FilterTgl(
+      title: "Hingga",
+      lastValue: true,
+      today: widget.hingga ?? 0,
+      changePage: () => filterChange(),
+    );
+
+    filterTglDari = FilterTgl(
+      title: "Dari",
+      lastValue: false,
+      today: widget.dari ?? 0,
+      changePage: () => filterChange(),
+    );
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 
@@ -1257,6 +1310,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    isLoading: isLoading,
                                     changeIsAlarm: changeIsAlarm,
                                     max: maxDataNum,
                                     loadmore: loadMore,
@@ -1280,255 +1334,280 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                         : 0),
                                 child: Column(
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      width: 650,
-                                      height: 320,
-                                      decoration: BoxDecoration(
-                                          color: MainStyle.secondaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                offset: const Offset(4, 4),
-                                                color: MainStyle.primaryColor
-                                                    .withAlpha(
-                                                        (255 * 0.05).toInt()),
-                                                blurRadius: 10,
-                                                spreadRadius: 0),
-                                            BoxShadow(
-                                                offset: const Offset(-4, -4),
-                                                color: Colors.white.withAlpha(
-                                                    (255 * 0.5).toInt()),
-                                                blurRadius: 13,
-                                                spreadRadius: 0),
-                                            BoxShadow(
-                                                offset: const Offset(6, 6),
-                                                color: MainStyle.primaryColor
-                                                    .withAlpha(
-                                                        (255 * 0.10).toInt()),
-                                                blurRadius: 20,
-                                                spreadRadius: 0),
-                                          ]),
-                                      child: Column(children: [
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "assets/dataNyata.svg",
-                                              width: 30,
-                                              color: MainStyle.primaryColor,
-                                            ),
-                                            // const SizedBox(
-                                            //   width: 10,
-                                            // ),
-                                            MainStyle.sizedBoxW10,
-                                            Text(
-                                              "Data Nyata $dataDate",
-                                              style: MainStyle
-                                                  .textStyleDefault20Primary,
-                                            )
-                                          ],
-                                        ),
-                                        // const SizedBox(
-                                        //   height: 20,
-                                        // ),
-                                        MainStyle.sizedBoxH20,
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: MainStyle
-                                                        .primaryColor
-                                                        .withAlpha((255 * 0.15)
-                                                            .toInt()),
-                                                    offset: const Offset(0, 3),
-                                                    blurRadius: 5,
-                                                    spreadRadius: 0),
-                                                BoxShadow(
-                                                    color: MainStyle
-                                                        .primaryColor
-                                                        .withAlpha((255 * 0.15)
-                                                            .toInt()),
-                                                    offset: const Offset(0, 3),
-                                                    blurRadius: 30,
-                                                    spreadRadius: 0)
-                                              ]),
-                                          child: Column(
+                                    AnimatedOpacity(
+                                      duration:
+                                          const Duration(milliseconds: 200),
+                                      opacity: isTapped ? 1 : 0.4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        width: 650,
+                                        height: 320,
+                                        decoration: BoxDecoration(
+                                            color: MainStyle.secondaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  offset: const Offset(4, 4),
+                                                  color: MainStyle.primaryColor
+                                                      .withAlpha(
+                                                          (255 * 0.05).toInt()),
+                                                  blurRadius: 10,
+                                                  spreadRadius: 0),
+                                              BoxShadow(
+                                                  offset: const Offset(-4, -4),
+                                                  color: Colors.white.withAlpha(
+                                                      (255 * 0.5).toInt()),
+                                                  blurRadius: 13,
+                                                  spreadRadius: 0),
+                                              BoxShadow(
+                                                  offset: const Offset(6, 6),
+                                                  color: MainStyle.primaryColor
+                                                      .withAlpha(
+                                                          (255 * 0.10).toInt()),
+                                                  blurRadius: 20,
+                                                  spreadRadius: 0),
+                                            ]),
+                                        child: Column(children: [
+                                          Row(
                                             children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                width: 600,
-                                                decoration: const BoxDecoration(
-                                                    color:
-                                                        MainStyle.primaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    4),
-                                                            topRight: Radius
-                                                                .circular(4))),
-                                                child: Row(
-                                                  children: titleData
-                                                      .map((e) => Visibility(
-                                                            visible: e !=
-                                                                    "Sel" ||
-                                                                (e == "Sel" &&
-                                                                    currTangki ==
-                                                                        0),
-                                                            child: InkWell(
-                                                              onTap: () {
-                                                                if (dataNyataSortOrder
-                                                                    .containsKey(
-                                                                        e)) {
-                                                                  if (dataNyataSortOrder[
-                                                                      e]!) {
-                                                                    dataNyataSortOrder[
-                                                                            e] =
-                                                                        !dataNyataSortOrder[
-                                                                            e]!;
-                                                                  } else {
-                                                                    dataNyataSortOrder
-                                                                        .remove(
-                                                                            e);
-                                                                    dataNyataSortOrderList
-                                                                        .remove(
-                                                                            e);
-
-                                                                    if (dataNyataSortOrder
-                                                                        .isEmpty) {
-                                                                      resetSelDataSort();
-
-                                                                      if (mounted) {
-                                                                        setState(
-                                                                            () {});
-                                                                      }
-
-                                                                      return;
-                                                                    } else {
-                                                                      sortSelData();
-                                                                    }
-                                                                  }
-                                                                } else {
-                                                                  dataNyataSortOrderList
-                                                                      .add(e);
-                                                                  dataNyataSortOrder
-                                                                      .putIfAbsent(
-                                                                          e,
-                                                                          () =>
-                                                                              true);
-                                                                }
-
-                                                                sortSelData();
-                                                                // setState(() {});
-                                                              },
-                                                              child: SizedBox(
-                                                                width:
-                                                                    currTangki ==
-                                                                            0
-                                                                        ? 82
-                                                                        : 90,
-                                                                child: Center(
-                                                                  child: Row(
-                                                                    // crossAxisAlignment:
-                                                                    //     CrossAxisAlignment
-                                                                    //         .center,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      Text(
-                                                                        e,
-                                                                        style: MainStyle
-                                                                            .textStyleDefault15White,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        width:
-                                                                            3,
-                                                                      ),
-                                                                      Stack(
-                                                                        children: [
-                                                                          Center(
-                                                                            child:
-                                                                                Visibility(
-                                                                              visible: dataNyataSortOrder.containsKey(e) ? !dataNyataSortOrder[e]! : false,
-                                                                              child: Transform.translate(
-                                                                                offset: const Offset(0, -2),
-                                                                                child: const Icon(Icons.arrow_drop_up, size: 13, color: Colors.white),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                          Center(
-                                                                            child:
-                                                                                Visibility(
-                                                                              visible: dataNyataSortOrder.containsKey(e) ? dataNyataSortOrder[e]! : false,
-                                                                              child: Transform.translate(
-                                                                                offset: const Offset(0, 2),
-                                                                                child: const Icon(Icons.arrow_drop_down, size: 13, color: Colors.white),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ))
-                                                      .toList(),
-                                                ),
+                                              SvgPicture.asset(
+                                                "assets/dataNyata.svg",
+                                                width: 30,
+                                                color: MainStyle.primaryColor,
                                               ),
-                                              Container(
+                                              // const SizedBox(
+                                              //   width: 10,
+                                              // ),
+                                              MainStyle.sizedBoxW10,
+                                              Text(
+                                                "Data Nyata $dataDate",
+                                                style: MainStyle
+                                                    .textStyleDefault20Primary,
+                                              )
+                                            ],
+                                          ),
+                                          // const SizedBox(
+                                          //   height: 20,
+                                          // ),
+                                          MainStyle.sizedBoxH20,
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      color: MainStyle
+                                                          .primaryColor
+                                                          .withAlpha(
+                                                              (255 * 0.15)
+                                                                  .toInt()),
+                                                      offset:
+                                                          const Offset(0, 3),
+                                                      blurRadius: 5,
+                                                      spreadRadius: 0),
+                                                  BoxShadow(
+                                                      color: MainStyle
+                                                          .primaryColor
+                                                          .withAlpha(
+                                                              (255 * 0.15)
+                                                                  .toInt()),
+                                                      offset:
+                                                          const Offset(0, 3),
+                                                      blurRadius: 30,
+                                                      spreadRadius: 0)
+                                                ]),
+                                            child: Column(
+                                              children: [
+                                                Container(
                                                   padding:
                                                       const EdgeInsets.all(8),
                                                   width: 600,
-                                                  height: 200,
                                                   decoration: const BoxDecoration(
-                                                      color:
-                                                          MainStyle.thirdColor,
+                                                      color: MainStyle
+                                                          .primaryColor,
                                                       borderRadius:
                                                           BorderRadius.only(
-                                                              bottomLeft: Radius
+                                                              topLeft: Radius
                                                                   .circular(4),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          4))),
-                                                  child: Scrollbar(
-                                                    thumbVisibility: true,
-                                                    controller: widget.scSel,
-                                                    child: ListView.builder(
-                                                        controller:
-                                                            widget.scSel,
-                                                        itemCount: selData[int.tryParse(
-                                                                    filterTangki
-                                                                        .tangkiValue) ??
-                                                                0]
-                                                            .length,
-                                                        itemBuilder:
-                                                            (context, i) {
-                                                          final val = selData[
-                                                              int.tryParse(
-                                                                      filterTangki
-                                                                          .tangkiValue) ??
-                                                                  0][i];
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      4))),
+                                                  child: Row(
+                                                    children: titleData
+                                                        .map((e) => Visibility(
+                                                              visible: e !=
+                                                                      "Sel" ||
+                                                                  (e == "Sel" &&
+                                                                      currTangki ==
+                                                                          0),
+                                                              child: InkWell(
+                                                                onTap: () {
+                                                                  if (dataNyataSortOrder
+                                                                      .containsKey(
+                                                                          e)) {
+                                                                    if (dataNyataSortOrder[
+                                                                        e]!) {
+                                                                      dataNyataSortOrder[
+                                                                              e] =
+                                                                          !dataNyataSortOrder[
+                                                                              e]!;
+                                                                    } else {
+                                                                      dataNyataSortOrder
+                                                                          .remove(
+                                                                              e);
+                                                                      dataNyataSortOrderList
+                                                                          .remove(
+                                                                              e);
 
-                                                          List<Widget> listSel =
-                                                              [];
-                                                          // List<Widget>
-                                                          //     listTangki = [];
-                                                          val.forEach((key, value) => key ==
-                                                                  "sel"
-                                                              ? listSel.insert(
-                                                                  currTangki ==
-                                                                          0
-                                                                      ? 1
-                                                                      : 0,
-                                                                  SizedBox(
+                                                                      if (dataNyataSortOrder
+                                                                          .isEmpty) {
+                                                                        resetSelDataSort();
+
+                                                                        if (mounted) {
+                                                                          setState(
+                                                                              () {});
+                                                                        }
+
+                                                                        return;
+                                                                      } else {
+                                                                        sortSelData();
+                                                                      }
+                                                                    }
+                                                                  } else {
+                                                                    dataNyataSortOrderList
+                                                                        .add(e);
+                                                                    dataNyataSortOrder
+                                                                        .putIfAbsent(
+                                                                            e,
+                                                                            () =>
+                                                                                true);
+                                                                  }
+
+                                                                  sortSelData();
+                                                                  // setState(() {});
+                                                                },
+                                                                child: SizedBox(
+                                                                  width:
+                                                                      currTangki ==
+                                                                              0
+                                                                          ? 82
+                                                                          : 90,
+                                                                  child: Center(
+                                                                    child: Row(
+                                                                      // crossAxisAlignment:
+                                                                      //     CrossAxisAlignment
+                                                                      //         .center,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                          e,
+                                                                          style:
+                                                                              MainStyle.textStyleDefault15White,
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          width:
+                                                                              3,
+                                                                        ),
+                                                                        Stack(
+                                                                          children: [
+                                                                            Center(
+                                                                              child: Visibility(
+                                                                                visible: dataNyataSortOrder.containsKey(e) ? !dataNyataSortOrder[e]! : false,
+                                                                                child: Transform.translate(
+                                                                                  offset: const Offset(0, -2),
+                                                                                  child: const Icon(Icons.arrow_drop_up, size: 13, color: Colors.white),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            Center(
+                                                                              child: Visibility(
+                                                                                visible: dataNyataSortOrder.containsKey(e) ? dataNyataSortOrder[e]! : false,
+                                                                                child: Transform.translate(
+                                                                                  offset: const Offset(0, 2),
+                                                                                  child: const Icon(Icons.arrow_drop_down, size: 13, color: Colors.white),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ))
+                                                        .toList(),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    width: 600,
+                                                    height: 200,
+                                                    decoration: const BoxDecoration(
+                                                        color: MainStyle
+                                                            .thirdColor,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        4),
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            4))),
+                                                    child: Scrollbar(
+                                                      thumbVisibility: true,
+                                                      controller: widget.scSel,
+                                                      child: ListView.builder(
+                                                          controller:
+                                                              widget.scSel,
+                                                          itemCount: selData[
+                                                                  int.tryParse(
+                                                                          filterTangki
+                                                                              .tangkiValue) ??
+                                                                      0]
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, i) {
+                                                            final val = selData[
+                                                                int.tryParse(
+                                                                        filterTangki
+                                                                            .tangkiValue) ??
+                                                                    0][i];
+
+                                                            List<Widget>
+                                                                listSel = [];
+                                                            // List<Widget>
+                                                            //     listTangki = [];
+                                                            val.forEach((key, value) => key ==
+                                                                    "sel"
+                                                                ? listSel
+                                                                    .insert(
+                                                                        currTangki ==
+                                                                                0
+                                                                            ? 1
+                                                                            : 0,
+                                                                        SizedBox(
+                                                                          width: currTangki == 0
+                                                                              ? 82
+                                                                              : 90,
+                                                                          height:
+                                                                              35,
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Text(
+                                                                              (value as double).toStringAsFixed((key == "sel") ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
+                                                                              style: MainStyle.textStyleDefault16Black,
+                                                                            ),
+                                                                          ),
+                                                                        ))
+                                                                : listSel.add(
+                                                                    SizedBox(
                                                                     width:
                                                                         currTangki ==
                                                                                 0
@@ -1539,7 +1618,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                         Center(
                                                                       child:
                                                                           Text(
-                                                                        (value as double).toStringAsFixed((key == "sel")
+                                                                        (value as double).toStringAsFixed(key == "tangki"
                                                                                 ? 0
                                                                                 : 2) +
                                                                             (key == "suhu" || key == "celcius"
@@ -1549,103 +1628,83 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                             .textStyleDefault16Black,
                                                                       ),
                                                                     ),
-                                                                  ))
-                                                              : listSel
-                                                                  .add(SizedBox(
-                                                                  width:
-                                                                      currTangki ==
-                                                                              0
-                                                                          ? 82
-                                                                          : 90,
-                                                                  height: 35,
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      (value as double).toStringAsFixed(key == "tangki"
-                                                                              ? 0
-                                                                              : 2) +
-                                                                          (key == "suhu" || key == "celcius"
-                                                                              ? "\u00B0"
-                                                                              : ""),
-                                                                      style: MainStyle
-                                                                          .textStyleDefault16Black,
-                                                                    ),
+                                                                  )));
+
+                                                            // tangkiMaxData[i]
+                                                            //     .forEach((key,
+                                                            //             value) =>
+                                                            //         listTangki.add(
+                                                            //             SizedBox(
+                                                            //           width: 90,
+                                                            //           // height: 35,
+                                                            //           child:
+                                                            //               Center(
+                                                            //             child:
+                                                            //                 Visibility(
+                                                            //               visible:
+                                                            //                   key !=
+                                                            //                       "sel",
+                                                            //               child:
+                                                            //                   Container(
+                                                            //                 width:
+                                                            //                     80,
+                                                            //                 padding:
+                                                            //                     EdgeInsets.all(2),
+                                                            //                 decoration: BoxDecoration(
+                                                            //                     color: MainStyle.secondaryColor,
+                                                            //                     borderRadius: BorderRadius.circular(5)),
+                                                            //                 child:
+                                                            //                     Text(
+                                                            //                   "tangki " +
+                                                            //                       (value as int).toString(),
+                                                            //                   style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
+                                                            //                       12,
+                                                            //                       weight: FontWeight.w600),
+                                                            //                   textAlign:
+                                                            //                       TextAlign.center,
+                                                            //                 ),
+                                                            //               ),
+                                                            //             ),
+                                                            //           ),
+                                                            //         )));
+
+                                                            // listSel.add();
+
+                                                            return Column(
+                                                              children: [
+                                                                Row(
+                                                                    children:
+                                                                        listSel),
+                                                                const SizedBox(
+                                                                  width: 600,
+                                                                  child: Stack(
+                                                                    children: [
+                                                                      Divider(
+                                                                        color: Color(
+                                                                            0xff9ACBC7),
+                                                                      ),
+                                                                      // Visibility(
+                                                                      //   visible:
+                                                                      //       currTangki ==
+                                                                      //           0,
+                                                                      //   child:
+                                                                      //       Row(
+                                                                      //     children:
+                                                                      //         listTangki,
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
                                                                   ),
-                                                                )));
-
-                                                          // tangkiMaxData[i]
-                                                          //     .forEach((key,
-                                                          //             value) =>
-                                                          //         listTangki.add(
-                                                          //             SizedBox(
-                                                          //           width: 90,
-                                                          //           // height: 35,
-                                                          //           child:
-                                                          //               Center(
-                                                          //             child:
-                                                          //                 Visibility(
-                                                          //               visible:
-                                                          //                   key !=
-                                                          //                       "sel",
-                                                          //               child:
-                                                          //                   Container(
-                                                          //                 width:
-                                                          //                     80,
-                                                          //                 padding:
-                                                          //                     EdgeInsets.all(2),
-                                                          //                 decoration: BoxDecoration(
-                                                          //                     color: MainStyle.secondaryColor,
-                                                          //                     borderRadius: BorderRadius.circular(5)),
-                                                          //                 child:
-                                                          //                     Text(
-                                                          //                   "tangki " +
-                                                          //                       (value as int).toString(),
-                                                          //                   style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor,
-                                                          //                       12,
-                                                          //                       weight: FontWeight.w600),
-                                                          //                   textAlign:
-                                                          //                       TextAlign.center,
-                                                          //                 ),
-                                                          //               ),
-                                                          //             ),
-                                                          //           ),
-                                                          //         )));
-
-                                                          // listSel.add();
-
-                                                          return Column(
-                                                            children: [
-                                                              Row(
-                                                                  children:
-                                                                      listSel),
-                                                              const SizedBox(
-                                                                width: 600,
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Divider(
-                                                                      color: Color(
-                                                                          0xff9ACBC7),
-                                                                    ),
-                                                                    // Visibility(
-                                                                    //   visible:
-                                                                    //       currTangki ==
-                                                                    //           0,
-                                                                    //   child:
-                                                                    //       Row(
-                                                                    //     children:
-                                                                    //         listTangki,
-                                                                    //   ),
-                                                                    // ),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            ],
-                                                          );
-                                                        }),
-                                                  )),
-                                            ],
+                                                                )
+                                                              ],
+                                                            );
+                                                          }),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ]),
+                                        ]),
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 13,

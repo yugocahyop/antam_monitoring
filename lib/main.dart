@@ -8,10 +8,14 @@ import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/certHttpOveride.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   HttpOverrides.global = DevHttpOverrides();
   GoogleFonts.config.allowRuntimeFetching = false;
+
+  initializeDateFormatting('id_ID', null).then((_) => runApp(MyApp()));
+
   runApp(const MyApp());
 }
 

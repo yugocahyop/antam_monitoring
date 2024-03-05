@@ -3,6 +3,7 @@ part of home;
 class Content_home_mobile extends StatefulWidget {
   Content_home_mobile(
       {super.key,
+      required this.changePage,
       required this.isAdmin,
       required this.mqtt,
       required this.selData,
@@ -14,6 +15,8 @@ class Content_home_mobile extends StatefulWidget {
   List<dynamic> selData;
 
   MyMqtt mqtt;
+
+  Function(int index, {int? dari, int? hingga}) changePage;
 
   ScrollController scSel;
   List<Map<String, dynamic>> menuItem;
@@ -147,13 +150,14 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
   late FilterTangki filterTangki;
 
-  final filterTglHingga = FilterTgl(
-    title: "Hingga",
-  );
+  late FilterTgl filterTglHingga;
 
-  final filterTglDari = FilterTgl(
-    title: "Dari",
-  );
+  late FilterTgl filterTglDari;
+
+  filterChange() {
+    widget.changePage(1,
+        dari: filterTglDari.today, hingga: filterTglHingga.today);
+  }
 
   getTotal(int value, int tangki) {
     // currPage = value;
@@ -714,6 +718,19 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    filterTglHingga = FilterTgl(
+      title: "Hingga",
+      lastValue: true,
+      changePage: () => filterChange(),
+    );
+
+    filterTglDari = FilterTgl(
+      title: "Dari",
+      lastValue: false,
+      changePage: () => filterChange(),
+    );
+
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 
     mqtt = widget.mqtt;

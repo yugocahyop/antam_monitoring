@@ -34,7 +34,7 @@ class _Account_alarmState extends State<Account_alarm> {
     // TODO: implement initState
     super.initState();
 
-    widget.setState = () => setState(() {});
+    widget.setState = () => mounted ? setState(() {}) : () {};
 
     DateTime dateTime = DateTime.now();
 

@@ -561,85 +561,103 @@ class _CallSettingState extends State<CallSetting> {
                                       Text("Loading Data")
                                     ],
                                   )
-                                : ListView.builder(
-                                    itemCount: userData.length,
-                                    itemBuilder: ((context, index) {
-                                      final Color color = (index % 2) == 0
-                                          ? const Color(0xfff2f2f2)
-                                          : const Color(0xffd9d9d9);
-                                      return Row(
+                                : userData.isEmpty
+                                    ? Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Container(
-                                            width: titleData.firstWhere(
-                                                (element) =>
-                                                    element["title"] ==
-                                                    "Role")["width"],
-                                            height: 50,
-                                            color: color,
-                                            child: Center(
-                                              child:
-                                                  Text(userData[index]["role"]),
-                                            ),
+                                          Icon(
+                                            Icons.info_rounded,
+                                            color: MainStyle.primaryColor,
                                           ),
-                                          Container(
-                                            width: titleData.firstWhere(
-                                                (element) =>
-                                                    element["title"] ==
-                                                    "Name")["width"],
-                                            height: 50,
-                                            color: color,
-                                            child: Center(
-                                              child: Column(
-                                                children: [
-                                                  Text(userData[index]["name"]),
-                                                  Text(
-                                                      userData[index]["phone"]),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: titleData.firstWhere(
-                                                (element) =>
-                                                    element["title"] ==
-                                                    "Action")["width"],
-                                            height: 50,
-                                            color: color,
-                                            child: Center(
-                                              child: MyDropDownGreen(
-                                                  width: 60,
-                                                  items: [
-                                                    "Pilih",
-                                                    "Edit",
-                                                    "Hapus"
-                                                  ],
-                                                  value: "Pilih",
-                                                  onChange: (val) {
-                                                    if (val!.contains("Edit")) {
-                                                      editData(
-                                                          userData[index]
-                                                              ["_id"],
-                                                          userData[index]
-                                                              ["name"],
-                                                          userData[index]
-                                                              ["role"],
-                                                          userData[index]
-                                                              ["phone"]);
-                                                    } else if (val!
-                                                        .contains("Hapus")) {
-                                                      deleteData(
-                                                        userData[index]["_id"],
-                                                        userData[index]["name"],
-                                                      );
-                                                    }
-                                                  }),
-                                            ),
-                                          ),
+                                          MainStyle.sizedBoxW10,
+                                          Text("No data")
                                         ],
-                                      );
-                                    })),
+                                      )
+                                    : ListView.builder(
+                                        itemCount: userData.length,
+                                        itemBuilder: ((context, index) {
+                                          final Color color = (index % 2) == 0
+                                              ? const Color(0xfff2f2f2)
+                                              : const Color(0xffd9d9d9);
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: titleData.firstWhere(
+                                                    (element) =>
+                                                        element["title"] ==
+                                                        "Role")["width"],
+                                                height: 50,
+                                                color: color,
+                                                child: Center(
+                                                  child: Text(
+                                                      userData[index]["role"]),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: titleData.firstWhere(
+                                                    (element) =>
+                                                        element["title"] ==
+                                                        "Name")["width"],
+                                                height: 50,
+                                                color: color,
+                                                child: Center(
+                                                  child: Column(
+                                                    children: [
+                                                      Text(userData[index]
+                                                          ["name"]),
+                                                      Text(userData[index]
+                                                          ["phone"]),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: titleData.firstWhere(
+                                                    (element) =>
+                                                        element["title"] ==
+                                                        "Action")["width"],
+                                                height: 50,
+                                                color: color,
+                                                child: Center(
+                                                  child: MyDropDownGreen(
+                                                      width: 60,
+                                                      items: [
+                                                        "Pilih",
+                                                        "Edit",
+                                                        "Hapus"
+                                                      ],
+                                                      value: "Pilih",
+                                                      onChange: (val) {
+                                                        if (val!
+                                                            .contains("Edit")) {
+                                                          editData(
+                                                              userData[index]
+                                                                  ["_id"],
+                                                              userData[index]
+                                                                  ["name"],
+                                                              userData[index]
+                                                                  ["role"],
+                                                              userData[index]
+                                                                  ["phone"]);
+                                                        } else if (val!
+                                                            .contains(
+                                                                "Hapus")) {
+                                                          deleteData(
+                                                            userData[index]
+                                                                ["_id"],
+                                                            userData[index]
+                                                                ["name"],
+                                                          );
+                                                        }
+                                                      }),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        })),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(5),

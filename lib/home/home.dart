@@ -378,7 +378,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   int curr_page = 0;
 
-  changePage(int p) {
+  changePage(int p, {int? dari, int? hingga}) {
     final c = Controller();
     final encrypt = MyEncrtypt();
     curr_page = p;
@@ -388,12 +388,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         c.saveSharedPref("antam.access", encrypt.encrypt("home"));
         setState(() {
           page = Content_home(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
@@ -404,14 +406,22 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         break;
       case 1:
         c.saveSharedPref("antam.access", encrypt.encrypt("datalog"));
+        if (dari != null) {
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[1]["isActive"] = true;
+        }
         setState(() {
           page = Content_dataLogger2(
-            isAdmin: isAdmin,
-            mqtt: mqtt,
-            scSel: scSel,
-            selData: selData,
-          );
+              changePage: changePage,
+              isAdmin: isAdmin,
+              mqtt: mqtt,
+              scSel: scSel,
+              selData: selData,
+              dari: dari,
+              hingga: hingga);
           pageMobile = Content_home_mobile(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
@@ -424,12 +434,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         c.saveSharedPref("antam.access", encrypt.encrypt("diagnostic"));
         setState(() {
           page = Content_diagnostic(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
@@ -443,12 +455,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         c.saveSharedPref("antam.access", encrypt.encrypt("call"));
         setState(() {
           page = Content_call(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             scSel: scSel,
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
@@ -462,6 +476,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         c.saveSharedPref("antam.access", encrypt.encrypt("setting"));
         setState(() {
           page = Content_setting(
+            changePage: changePage,
             email: email,
             isAdmin: isAdmin,
             mqtt: mqtt,
@@ -469,6 +484,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
             selData: selData,
@@ -591,6 +607,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     }
   }
 
+  late StreamSubscription listenUnload;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -609,6 +627,16 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       window.addEventListener('focus', onFocus);
       window.addEventListener('blur', onBlur);
       window.addEventListener('visibilitychange', onFocus);
+      listenUnload = window.onBeforeUnload.listen((event) {
+        if (kDebugMode) {
+          print("before unload");
+        }
+        // scSel.dispose();
+        timer.cancel();
+        mqtt.disconnect();
+        mqtt.dispose();
+        listenUnload.cancel();
+      });
 
       // window.onPageShow.listen((event) {
       //   try {
@@ -726,6 +754,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     ];
 
     page = Content_home(
+      changePage: changePage,
       isAdmin: isAdmin,
       mqtt: mqtt,
       scSel: scSel,
@@ -733,6 +762,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     );
 
     pageMobile = Content_home_mobile(
+      changePage: changePage,
       isAdmin: isAdmin,
       mqtt: mqtt,
       selData: selData,
@@ -899,6 +929,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       }
 
       page = Content_home(
+        changePage: changePage,
         isAdmin: isAdmin,
         mqtt: mqtt,
         scSel: scSel,
@@ -906,6 +937,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       );
 
       pageMobile = Content_home_mobile(
+        changePage: changePage,
         isAdmin: isAdmin,
         mqtt: mqtt,
         selData: selData,

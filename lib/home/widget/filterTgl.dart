@@ -1,13 +1,24 @@
 part of home;
 
 class FilterTgl extends StatefulWidget {
-  FilterTgl({super.key, required this.title});
+  FilterTgl(
+      {super.key,
+      this.today = 0,
+      required this.title,
+      required this.lastValue,
+      required this.changePage});
 
   String title;
 
   String jamValue = "00:00";
 
-  String hariValue = "Minggu";
+  String hariValue = "Pilih";
+
+  bool lastValue;
+
+  int today;
+
+  Function() changePage;
 
   @override
   State<FilterTgl> createState() => _FilterTglState();
@@ -26,6 +37,8 @@ class _FilterTglState extends State<FilterTgl> {
 
   List<String> jam = ["00:00"];
 
+  // int today = -1;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -35,7 +48,48 @@ class _FilterTglState extends State<FilterTgl> {
       if (i != 0) {
         jam.add("${i.toString().length > 1 ? "" : "0"}$i:00");
       }
+      // if(i == 24){
+      //   jam.add()
+      // }
     }
+
+    hari.clear();
+
+    DateTime now = DateTime.now();
+    DateFormat df = DateFormat("EEEE", 'id_ID');
+
+    // today = now.day;
+
+    for (var i = 0; i < 7; i++) {
+      hari.insert(
+          0,
+          df.format(DateTime.fromMillisecondsSinceEpoch(
+              now.millisecondsSinceEpoch - (i * 86400000))));
+    }
+
+    // hari.insert(0, "Pilih");
+
+    if (widget.today > 0) {
+      DateTime d = DateTime.fromMillisecondsSinceEpoch(widget.today);
+
+      widget.hariValue = df.format(d);
+      widget.jamValue =
+          "${d.hour.toString().length > 1 ? "" : "0"}${d.hour + (d.minute > 0 ? 1 : 0)}:00";
+      if (kDebugMode) {
+        print("jam value ${widget.jamValue}");
+      }
+    } else {
+      widget.hariValue = widget.lastValue ? hari.last : hari[0];
+
+      widget.jamValue = widget.lastValue ? jam.last : jam.first;
+    }
+
+    widget.today =
+        DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
+            ((hari.reversed.toList().indexOf(widget.hariValue)) * 86400000);
+    widget.today += (jam.indexOf(widget.jamValue)) *
+        (3600000 -
+            (jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
 
     setState(() {});
   }
@@ -91,9 +145,27 @@ class _FilterTglState extends State<FilterTgl> {
                           items: hari,
                           value: widget.hariValue,
                           onChange: (value) {
+                            DateTime now = DateTime.now();
+
+                            widget.today =
+                                DateTime(now.year, now.month, now.day)
+                                        .millisecondsSinceEpoch -
+                                    ((hari.reversed.toList().indexOf(value!)) *
+                                        86400000);
+                            if (kDebugMode) {
+                              print("jam value ${widget.jamValue}");
+                            }
+                            widget.today += jam.indexOf(widget.jamValue) *
+                                (3600000 -
+                                    (jam.indexOf(widget.jamValue) ==
+                                            (jam.length - 1)
+                                        ? 60000
+                                        : 0));
                             setState(() {
                               widget.hariValue = value ?? "";
                             });
+
+                            widget.changePage();
                           }),
                       // const SizedBox(
                       //   width: 10,
@@ -103,9 +175,24 @@ class _FilterTglState extends State<FilterTgl> {
                           items: jam,
                           value: widget.jamValue,
                           onChange: (value) {
+                            DateTime now = DateTime.now();
+
+                            widget.today =
+                                DateTime(now.year, now.month, now.day)
+                                        .millisecondsSinceEpoch -
+                                    ((hari.reversed
+                                            .toList()
+                                            .indexOf(widget.hariValue)) *
+                                        86400000);
+                            widget.today += jam.indexOf(value!) *
+                                (3600000 -
+                                    (jam.indexOf(value!) == (jam.length - 1)
+                                        ? 60000
+                                        : 0));
                             setState(() {
                               widget.jamValue = value ?? "";
                             });
+                            widget.changePage();
                           }),
                     ],
                   ),
