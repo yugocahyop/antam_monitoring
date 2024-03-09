@@ -62,6 +62,7 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final lwidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
       height: 540,
@@ -80,10 +81,13 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
                   MainStyle.sizedBoxH10,
                   Row(
                     children: [
-                      Text(
-                        "Merupakan menu untuk mengganti parameter monnitoring ",
-                        style: MyTextStyle.defaultFontCustom(
-                            const Color(0xff919798), 14),
+                      SizedBox(
+                        width: lwidth <= 500 ? 250 : 380,
+                        child: Text(
+                          "Merupakan menu untuk mengganti parameter monnitoring ",
+                          style: MyTextStyle.defaultFontCustom(
+                              const Color(0xff919798), 14),
+                        ),
                       ),
                     ],
                   )
@@ -131,82 +135,89 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
             ),
           ),
           MainStyle.sizedBoxH10,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SvgPicture.asset(
-                "assets/database.svg",
-                color: MainStyle.primaryColor,
-                width: 60,
-              ),
-              SizedBox(
-                width: 200,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          SizedBox(
+            width: 500,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    "assets/database.svg",
+                    color: MainStyle.primaryColor,
+                    width: 60,
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Node ",
-                            style: MyTextStyle.defaultFontCustom(
-                                Colors.black, 22,
-                                weight: FontWeight.w700)),
-                        Text("Synchronization",
-                            style: MyTextStyle.defaultFontCustom(
-                                Colors.black, 22,
-                                weight: FontWeight.w700)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Node ",
+                                style: MyTextStyle.defaultFontCustom(
+                                    Colors.black, 22,
+                                    weight: FontWeight.w700)),
+                            Text("Synchronization",
+                                style: MyTextStyle.defaultFontCustom(
+                                    Colors.black, 22,
+                                    weight: FontWeight.w700)),
+                          ],
+                        ),
+                        MainStyle.sizedBoxH10,
+                        SizedBox(
+                          width: 200,
+                          child: Wrap(
+                            children: [
+                              Text(
+                                "Singkronisasi timer pada sensor Node dengan Web Server ",
+                                style: MyTextStyle.defaultFontCustom(
+                                    const Color(0xff919798), 14),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                    MainStyle.sizedBoxH10,
-                    SizedBox(
-                      width: 200,
-                      child: Wrap(
-                        children: [
-                          Text(
-                            "Singkronisasi timer pada sensor Node dengan Web Server ",
-                            style: MyTextStyle.defaultFontCustom(
-                                const Color(0xff919798), 14),
+                  ),
+                  Container(
+                    width: 200,
+                    height: 135,
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        // color: const Color(0xff9ACAC8),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Last Synchronization: 12/12/2023 10:00",
+                          style:
+                              MyTextStyle.defaultFontCustom(Colors.black, 14),
+                        ),
+                        MainStyle.sizedBoxH10,
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: SizedBox(
+                            width: 200,
+                            child: MyButton(
+                                color: MainStyle.primaryColor,
+                                text: "Synchronize Now",
+                                onPressed: () {},
+                                textColor: Colors.white),
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                width: 200,
-                height: 135,
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    // color: const Color(0xff9ACAC8),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Last Synchronization: 12/12/2023 10:00",
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 14),
+                        )
+                      ],
                     ),
-                    MainStyle.sizedBoxH10,
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: SizedBox(
-                        width: 200,
-                        child: MyButton(
-                            color: MainStyle.primaryColor,
-                            text: "Synchronize Now",
-                            onPressed: () {},
-                            textColor: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           ),
         ],
       ),

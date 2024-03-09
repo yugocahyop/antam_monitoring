@@ -212,6 +212,7 @@ class _UserRoleState extends State<UserRole> {
 
   @override
   Widget build(BuildContext context) {
+    final lwidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
       height: 540,
@@ -373,7 +374,7 @@ class _UserRoleState extends State<UserRole> {
                             ],
                           ),
                           Container(
-                            width: 500,
+                            width: lwidth <= 500 ? 300 : 500,
                             clipBehavior: Clip.antiAlias,
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -384,7 +385,15 @@ class _UserRoleState extends State<UserRole> {
                                       ? titleDataUserLog
                                       : titleData)
                                   .map((e) => Container(
-                                        width: e["width"],
+                                        width: lwidth <= 500
+                                            ? ((e["title"] == "Email" ||
+                                                    e["title"] == "Log")
+                                                ? (isUserLog ? 235 : 165)
+                                                : (e["title"] == "Role" ||
+                                                        e["title"] == "Date")
+                                                    ? (isUserLog ? 65 : 50)
+                                                    : e["width"])
+                                            : e["width"],
                                         padding: const EdgeInsets.all(5),
                                         decoration: const BoxDecoration(
                                             color: Color(0xff6CABA7)),
@@ -401,7 +410,7 @@ class _UserRoleState extends State<UserRole> {
                             ),
                           ),
                           Container(
-                            width: 500,
+                            width: lwidth <= 500 ? 300 : 500,
                             height: 150,
                             clipBehavior: Clip.antiAlias,
                             decoration: const BoxDecoration(
@@ -446,50 +455,69 @@ class _UserRoleState extends State<UserRole> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
-                                                width: (isUserLog
-                                                        ? titleDataUserLog
-                                                        : titleData)
-                                                    .firstWhere((element) =>
-                                                        element["title"] ==
-                                                        (isUserLog
-                                                            ? "Date"
-                                                            : "Role"))["width"],
+                                                width: lwidth <= 500
+                                                    ? (isUserLog ? 65 : 50)
+                                                    : (isUserLog
+                                                            ? titleDataUserLog
+                                                            : titleData)
+                                                        .firstWhere((element) =>
+                                                            element["title"] ==
+                                                            (isUserLog
+                                                                ? "Date"
+                                                                : "Role"))["width"],
                                                 height: isUserLog ? 100 : 50,
                                                 color: color,
                                                 child: Center(
-                                                  child: Text(isUserLog
-                                                      ? df.format(DateTime
-                                                          .fromMillisecondsSinceEpoch(
-                                                              userData[index]
-                                                                  ["datetime"]))
-                                                      : userData[index]
-                                                                  ["isAdmin"] ??
-                                                              false
-                                                          ? "Admin"
-                                                          : "User"),
+                                                  child: Text(
+                                                    isUserLog
+                                                        ? df.format(DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                userData[index][
+                                                                    "datetime"]))
+                                                        : userData[index][
+                                                                    "isAdmin"] ??
+                                                                false
+                                                            ? "Admin"
+                                                            : "User",
+                                                    style: MyTextStyle
+                                                        .defaultFontCustom(
+                                                            Colors.black,
+                                                            lwidth <= 500
+                                                                ? 10
+                                                                : 12),
+                                                  ),
                                                 ),
                                               ),
                                               Container(
-                                                width: (isUserLog
+                                                width: lwidth <= 500
+                                                    ? (isUserLog ? 235 : 165)
+                                                    : (isUserLog
                                                             ? titleDataUserLog
                                                             : titleData)
                                                         .firstWhere((element) =>
                                                             element["title"] ==
                                                             (isUserLog
                                                                 ? "Log"
-                                                                : "Email"))[
-                                                    "width"],
+                                                                : "Email"))["width"],
                                                 height: isUserLog ? 100 : 50,
                                                 padding: isUserLog
                                                     ? EdgeInsets.all(8)
                                                     : null,
                                                 color: color,
                                                 child: Center(
-                                                  child: Text(isUserLog
-                                                      ? userData[index]
-                                                          ["data_name"]
-                                                      : userData[index]
-                                                          ["email"]),
+                                                  child: Text(
+                                                    isUserLog
+                                                        ? userData[index]
+                                                            ["data_name"]
+                                                        : userData[index]
+                                                            ["email"],
+                                                    style: MyTextStyle
+                                                        .defaultFontCustom(
+                                                            Colors.black,
+                                                            lwidth <= 500
+                                                                ? 10
+                                                                : 12),
+                                                  ),
                                                 ),
                                               ),
                                               isUserLog

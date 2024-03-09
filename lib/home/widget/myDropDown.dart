@@ -1,4 +1,6 @@
-part of home;
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/material.dart';
 
 class MyDropDown extends StatelessWidget {
   MyDropDown(

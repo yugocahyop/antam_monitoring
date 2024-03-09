@@ -14,9 +14,9 @@ void main() {
   HttpOverrides.global = DevHttpOverrides();
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  initializeDateFormatting('id_ID', null).then((_) => runApp(MyApp()));
+  initializeDateFormatting('id_ID', null).then((_) => runApp(const MyApp()));
 
-  runApp(const MyApp());
+  // runApp(const MyApp());
 }
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {

@@ -1,4 +1,18 @@
-part of home;
+import 'dart:math';
+
+import 'package:antam_monitoring/home/widget/account_alarm.dart';
+import 'package:antam_monitoring/home/widget/filterTangki.dart';
+import 'package:antam_monitoring/home/widget/filterTgl.dart';
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
+import 'package:antam_monitoring/widget/barChart.dart';
+import 'package:antam_monitoring/widget/linechart.dart';
+import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Content_home extends StatefulWidget {
   Content_home(
@@ -160,19 +174,21 @@ class _Content_homeState extends State<Content_home> {
   }
 
   showMsg(String msg) {
-    warningMsg = msg;
+    if (mounted) {
+      warningMsg = msg;
 
-    setState(() {
-      isMsgVisible = true;
-    });
+      setState(() {
+        isMsgVisible = true;
+      });
 
-    Future.delayed(Duration(milliseconds: 200), () {
-      if (mounted) {
-        setState(() {
-          msgOpacity = 1;
-        });
-      }
-    });
+      Future.delayed(Duration(milliseconds: 200), () {
+        if (mounted) {
+          setState(() {
+            msgOpacity = 1;
+          });
+        }
+      });
+    }
   }
 
   getTotal(int tangki) {

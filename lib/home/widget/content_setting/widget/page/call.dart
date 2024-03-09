@@ -380,6 +380,7 @@ class _CallSettingState extends State<CallSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final lwidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
       height: 540,
@@ -516,7 +517,7 @@ class _CallSettingState extends State<CallSetting> {
                             ],
                           ),
                           Container(
-                            width: 500,
+                            width: lwidth <= 500 ? 300 : 425,
                             clipBehavior: Clip.antiAlias,
                             decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
@@ -525,7 +526,13 @@ class _CallSettingState extends State<CallSetting> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: titleData
                                   .map((e) => Container(
-                                        width: e["width"],
+                                        width: lwidth <= 500
+                                            ? ((e["title"] == "Role")
+                                                ? (90)
+                                                : (e["title"] == "Name")
+                                                    ? (120)
+                                                    : e["width"])
+                                            : e["width"],
                                         padding: const EdgeInsets.all(5),
                                         decoration: const BoxDecoration(
                                             color: Color(0xff6CABA7)),
@@ -542,7 +549,7 @@ class _CallSettingState extends State<CallSetting> {
                             ),
                           ),
                           Container(
-                            width: 500,
+                            width: lwidth <= 500 ? 300 : 425,
                             height: 150,
                             clipBehavior: Clip.antiAlias,
                             decoration: const BoxDecoration(
@@ -585,31 +592,55 @@ class _CallSettingState extends State<CallSetting> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
-                                                width: titleData.firstWhere(
-                                                    (element) =>
-                                                        element["title"] ==
-                                                        "Role")["width"],
+                                                width: lwidth <= 500
+                                                    ? 90
+                                                    : titleData.firstWhere(
+                                                        (element) =>
+                                                            element["title"] ==
+                                                            "Role")["width"],
                                                 height: 50,
                                                 color: color,
                                                 child: Center(
                                                   child: Text(
-                                                      userData[index]["role"]),
+                                                      userData[index]["role"],
+                                                      style: MyTextStyle
+                                                          .defaultFontCustom(
+                                                              Colors.black,
+                                                              lwidth <= 500
+                                                                  ? 10
+                                                                  : 12)),
                                                 ),
                                               ),
                                               Container(
-                                                width: titleData.firstWhere(
-                                                    (element) =>
-                                                        element["title"] ==
-                                                        "Name")["width"],
+                                                width: lwidth <= 500
+                                                    ? 120
+                                                    : titleData.firstWhere(
+                                                        (element) =>
+                                                            element["title"] ==
+                                                            "Name")["width"],
                                                 height: 50,
                                                 color: color,
                                                 child: Center(
                                                   child: Column(
                                                     children: [
-                                                      Text(userData[index]
-                                                          ["name"]),
-                                                      Text(userData[index]
-                                                          ["phone"]),
+                                                      Text(
+                                                          userData[index]
+                                                              ["name"],
+                                                          style: MyTextStyle
+                                                              .defaultFontCustom(
+                                                                  Colors.black,
+                                                                  lwidth <= 500
+                                                                      ? 10
+                                                                      : 12)),
+                                                      Text(
+                                                          userData[index]
+                                                              ["phone"],
+                                                          style: MyTextStyle
+                                                              .defaultFontCustom(
+                                                                  Colors.black,
+                                                                  lwidth <= 500
+                                                                      ? 10
+                                                                      : 12)),
                                                     ],
                                                   ),
                                                 ),

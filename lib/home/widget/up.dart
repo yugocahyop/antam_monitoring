@@ -1,4 +1,5 @@
-part of home;
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:flutter/material.dart';
 
 class Up extends StatelessWidget {
   Up({super.key});

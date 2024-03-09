@@ -1,4 +1,17 @@
-part of home;
+import 'dart:math';
+
+import 'package:antam_monitoring/home/widget/account_alarm.dart';
+import 'package:antam_monitoring/home/widget/content_setting/widget/panelTableSetting.dart';
+import 'package:antam_monitoring/home/widget/filterTangki.dart';
+import 'package:antam_monitoring/home/widget/filterTgl.dart';
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
+import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Content_setting extends StatefulWidget {
   Content_setting(

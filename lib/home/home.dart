@@ -9,11 +9,18 @@ import 'dart:math';
 // import 'dart:ui_web';
 
 import 'package:antam_monitoring/home/model/homeArgument.dart';
+import 'package:antam_monitoring/home/widget/content_call/content_call.dart';
 import 'package:antam_monitoring/home/widget/content_call/widget/phonePanel.dart'
     if (dart.library.html) 'package:antam_monitoring/home/widget/content_call/widget/phonePanelWeb.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/content_dataLogger2.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
+import 'package:antam_monitoring/home/widget/content_diagnostic/content_diagnostic.dart';
 import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
+import 'package:antam_monitoring/home/widget/content_home.dart';
+import 'package:antam_monitoring/home/widget/content_home_mobile.dart';
+import 'package:antam_monitoring/home/widget/content_setting/content_setting.dart';
 import 'package:antam_monitoring/home/widget/content_setting/widget/panelTableSetting.dart';
+import 'package:antam_monitoring/home/widget/menu.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
@@ -33,19 +40,19 @@ import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
 import '../controller/controller.dart';
 
-part 'widget/menu.dart';
-part 'widget/content_home.dart';
-part 'widget/account_alarm.dart';
-part 'widget/filterTgl.dart';
-part 'widget/myDropDown.dart';
-part 'widget/filterTangki.dart';
-part 'widget/content_home_mobile.dart';
-part 'widget/up.dart';
-part 'widget/content_diagnostic/content_diagnostic.dart';
-part 'widget/content_call/content_call.dart';
-part 'widget/content_setting/content_setting.dart';
-part 'widget/content_dataLogger/content_dataLogger.dart';
-part 'widget/content_dataLogger/content_dataLogger2.dart';
+// part 'widget/menu.dart';
+// part 'widget/content_home.dart';
+// part 'widget/account_alarm.dart';
+// part 'widget/filterTgl.dart';
+// part 'widget/myDropDown.dart';
+// part 'widget/filterTangki.dart';
+// part 'widget/content_home_mobile.dart';
+// part 'widget/up.dart';
+// part 'widget/content_diagnostic/content_diagnostic.dart';
+// part 'widget/content_call/content_call.dart';
+// part 'widget/content_setting/content_setting.dart';
+// part 'widget/content_dataLogger/content_dataLogger.dart';
+// part 'widget/content_dataLogger/content_dataLogger2.dart';
 
 class Home extends StatefulWidget {
   Home({super.key, this.page = ""});
@@ -395,6 +402,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            email: email,
+            page: 0,
             changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
@@ -421,6 +430,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               dari: dari,
               hingga: hingga);
           pageMobile = Content_home_mobile(
+            email: email,
+            page: 1,
             changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
@@ -441,6 +452,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            email: email,
+            page: 2,
             changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
@@ -462,6 +475,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            email: email,
+            page: 3,
             changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
@@ -484,6 +499,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             selData: selData,
           );
           pageMobile = Content_home_mobile(
+            email: email,
+            page: 4,
             changePage: changePage,
             isAdmin: isAdmin,
             mqtt: mqtt,
@@ -762,6 +779,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     );
 
     pageMobile = Content_home_mobile(
+      email: email,
+      page: 0,
       changePage: changePage,
       isAdmin: isAdmin,
       mqtt: mqtt,
@@ -937,6 +956,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       );
 
       pageMobile = Content_home_mobile(
+        email: email,
+        page: 0,
         changePage: changePage,
         isAdmin: isAdmin,
         mqtt: mqtt,

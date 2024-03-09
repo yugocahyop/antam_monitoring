@@ -1,4 +1,19 @@
-part of home;
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:antam_monitoring/home/widget/account_alarm.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
+import 'package:antam_monitoring/home/widget/filterTangki.dart';
+import 'package:antam_monitoring/home/widget/filterTgl.dart';
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
+import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class Content_dataLogger2 extends StatefulWidget {
   Content_dataLogger2(
@@ -1098,9 +1113,11 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   Future<void> getDataLog(int offsetNum, {bool setFilter = false}) async {
     // if (!setFilter) {
-    setState(() {
-      isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     // }
 
     // await Future.delayed(const Duration(milliseconds: 1000));
@@ -1168,9 +1185,11 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       }
     }
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   late Account_alarm account_alarm;

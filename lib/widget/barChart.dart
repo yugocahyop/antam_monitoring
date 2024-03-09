@@ -47,6 +47,7 @@ class MyBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lWidth = MediaQuery.of(context).size.width;
     return BarChart(
       BarChartData(
         minY: 0,
@@ -135,7 +136,8 @@ class MyBarChart extends StatelessWidget {
                       offset: Offset(tangkiMaxData.isEmpty ? 0 : 0, 0),
                       child: Text(
                         "Anoda ${value.toInt()}",
-                        style: MyTextStyle.defaultFontCustom(Colors.black, 14),
+                        style: MyTextStyle.defaultFontCustom(
+                            Colors.black, lWidth <= 500 ? 8 : 14),
                       ),
                     ),
                     Transform.translate(
@@ -151,8 +153,9 @@ class MyBarChart extends StatelessWidget {
                             tangkiMaxData.isEmpty
                                 ? ""
                                 : "Sel ${tangkiMaxData[value.toInt() - 1][title!.toLowerCase()]}",
-                            style:
-                                MyTextStyle.defaultFontCustom(Colors.white, 12),
+                            style: MyTextStyle.defaultFontCustom(
+                                Colors.white, 12,
+                                weight: FontWeight.w700),
                           ),
                         ),
                       ),

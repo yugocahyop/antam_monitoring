@@ -1,4 +1,10 @@
-part of home;
+import 'dart:async';
+
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class Account_alarm extends StatefulWidget {
   Account_alarm({super.key, required this.alarm, required this.isAdmin});

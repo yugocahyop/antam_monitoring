@@ -1,4 +1,8 @@
-part of home;
+import 'package:antam_monitoring/controller/controller.dart';
+import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Menu extends StatefulWidget {
   Menu({super.key, required this.menuItem});
@@ -85,14 +89,16 @@ class _MenuState extends State<Menu> {
                           e["isActive"] = true;
                         });
 
-                        await Future.delayed(const Duration(milliseconds: 150));
+                        await Future.delayed(const Duration(milliseconds: 200));
 
                         widget.menuItem[widget.menuItem.indexOf(e)]
                             ["function"]();
                       },
                       child: AnimatedContainer(
                         clipBehavior: Clip.none,
-                        duration: const Duration(milliseconds: 150),
+                        duration: e["isActive"]
+                            ? const Duration(milliseconds: 120)
+                            : const Duration(milliseconds: 0),
                         margin: const EdgeInsets.only(bottom: 20),
                         width: (lWidth / lheight) < wide ? 406 : 206,
                         padding: const EdgeInsets.all(8),
@@ -179,7 +185,7 @@ class _MenuState extends State<Menu> {
                               decoration: const BoxDecoration(),
                               child: AnimatedAlign(
                                 // curve: Curves.elasticInOut,
-                                duration: Duration(milliseconds: 200),
+                                duration: Duration(milliseconds: 120),
                                 alignment: !isHovers[widget.menuItem.indexOf(e)]
                                     ? Alignment.centerLeft
                                     : Alignment.centerRight,

@@ -92,6 +92,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final lwidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
       height: 620,
@@ -106,7 +107,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
                   .map((e) => InkWell(
                         onTap: () {},
                         child: Container(
-                          width: 120,
+                          width: lwidth <= 500 ? 90 : 120,
                           padding: EdgeInsets.all(3),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -150,7 +151,8 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
                                   Text(
                                     e["title"],
                                     style: MyTextStyle.defaultFontCustom(
-                                        MainStyle.primaryColor, 18),
+                                        MainStyle.primaryColor,
+                                        lwidth <= 500 ? 12 : 18),
                                   ),
                                 ],
                               ),
@@ -216,7 +218,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
                             changeMain(e["widget"]);
                           },
                           child: Container(
-                            width: 120,
+                            width: lwidth <= 500 ? 90 : 120,
                             padding: EdgeInsets.all(3),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -251,7 +253,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
                                 Text(
                                   e["title"],
                                   style: MyTextStyle.defaultFontCustom(
-                                      Colors.white, 18),
+                                      Colors.white, lwidth <= 500 ? 12 : 18),
                                 ),
                               ],
                             ),
