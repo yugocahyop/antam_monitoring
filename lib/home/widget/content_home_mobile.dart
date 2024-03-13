@@ -67,7 +67,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
     setState(() {});
 
-    pc.animateToPage(2,
+    pc.animateToPage(1,
         duration: const Duration(milliseconds: 200), curve: Curves.ease);
   }
 

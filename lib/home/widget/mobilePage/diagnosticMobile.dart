@@ -89,6 +89,44 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     super.dispose();
 
     mqtt.disconnect();
+    initStatus();
+    initMqtt();
+  }
+
+  initStatus() async {
+    final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    final r = await api.callAPI("/diagnostic/find/last", "POST", "", true);
+
+    if (kDebugMode) {
+      print("backend data: $r");
+    }
+
+    if (r["error"] == null) {
+      final data = r["data"][0] as Map<String, dynamic>;
+
+      final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
+      final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+
+      if (listAlarmArus.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Arus")["isActive"] = true;
+      }
+
+      if (listAlarmTegangan.isNotEmpty) {
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            true;
+      }
+
+      account_alarm.setState!();
+    }
+
+    if (mounted) setState(() {});
   }
 
   initMqtt() {
@@ -128,39 +166,63 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
       } else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
-        var temp = [
-          {
-            "title": "Status",
-            "isActive": (data["status"] == null
+        alarm.firstWhere(
+                (element) => element["title"] == "Status")["isActive"] =
+            (data["status"] == null
                 ? alarm
                     .where((element) => element["title"] == "Status")
                     .first["isActive"]!
-                : (data["status"] as bool)),
-          },
-          {
-            "title": "Alarm Arus",
-            "isActive": data["alarmArus"] == null
+                : (data["status"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Arus")["isActive"] =
+            (data["alarmArus"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Arus")
                     .first["isActive"]!
-                : data["alarmArus"] as bool,
-          },
-          {
-            "title": "Alarm Tegangan",
-            "isActive": data["alarmTegangan"] == null
+                : (data["alarmArus"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            (data["alarmTegangan"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Tegangan")
                     .first["isActive"]!
-                : data["alarmTegangan"] as bool,
-          }
-        ];
+                : (data["alarmTegangan"] as bool));
+
+        // var temp = [
+        //   {
+        //     "title": "Status",
+        //     "isActive": (data["status"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Status")
+        //             .first["isActive"]!
+        //         : (data["status"] as bool)),
+        //   },
+        //   {
+        //     "title": "Alarm Arus",
+        //     "isActive": data["alarmArus"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Arus")
+        //             .first["isActive"]!
+        //         : data["alarmArus"] as bool,
+        //   },
+        //   {
+        //     "title": "Alarm Tegangan",
+        //     "isActive": data["alarmTegangan"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Tegangan")
+        //             .first["isActive"]!
+        //         : data["alarmTegangan"] as bool,
+        //   }
+        // ];
 
         account_alarm.setState!();
 
-        alarm.clear();
-        alarm.addAll(temp);
+        // alarm.clear();
+        // alarm.addAll(temp);
 
-        temp.clear();
+        // temp.clear();
       } else if (topic == "antam/statistic") {
         // totalData.firstWhere(
         //         (element) => element["title"] == "Total Waktu")["value"] =

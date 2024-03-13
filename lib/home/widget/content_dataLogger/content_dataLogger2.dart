@@ -539,8 +539,45 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
   }
 
+  initStatus() async {
+    final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    final r = await api.callAPI("/diagnostic/find/last", "POST", "", true);
+
+    if (kDebugMode) {
+      print("backend data: $r");
+    }
+
+    if (r["error"] == null) {
+      final data = r["data"][0] as Map<String, dynamic>;
+
+      final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
+      final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+
+      if (listAlarmArus.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Arus")["isActive"] = true;
+      }
+
+      if (listAlarmTegangan.isNotEmpty) {
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            true;
+      }
+
+      account_alarm.setState!();
+    }
+
+    if (mounted) setState(() {});
+  }
+
   initMqtt() {
     mqtt!.onUpdate = (data, topic) {
+      bool refresh = false;
       if (kDebugMode) {
         print("mqtt topic $topic");
       }
@@ -658,40 +695,81 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
-        var temp = [
-          {
-            "title": "Status",
-            "isActive": (data["status"] == null
+        alarm.firstWhere(
+                (element) => element["title"] == "Status")["isActive"] =
+            (data["status"] == null
                 ? alarm
                     .where((element) => element["title"] == "Status")
                     .first["isActive"]!
-                : (data["status"] as bool)),
-          },
-          {
-            "title": "Alarm Arus",
-            "isActive": data["alarmArus"] == null
+                : (data["status"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Arus")["isActive"] =
+            (data["alarmArus"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Arus")
                     .first["isActive"]!
-                : data["alarmArus"] as bool,
-          },
-          {
-            "title": "Alarm Tegangan",
-            "isActive": data["alarmTegangan"] == null
+                : (data["alarmArus"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            (data["alarmTegangan"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Tegangan")
                     .first["isActive"]!
-                : data["alarmTegangan"] as bool,
-          }
-        ];
+                : (data["alarmTegangan"] as bool));
 
-        alarm.clear();
-        alarm.addAll(temp);
+        // var temp = [
+        //   {
+        //     "title": "Status",
+        //     "isActive": (data["status"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Status")
+        //             .first["isActive"]!
+        //         : (data["status"] as bool)),
+        //   },
+        //   {
+        //     "title": "Alarm Arus",
+        //     "isActive": data["alarmArus"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Arus")
+        //             .first["isActive"]!
+        //         : data["alarmArus"] as bool,
+        //   },
+        //   {
+        //     "title": "Alarm Tegangan",
+        //     "isActive": data["alarmTegangan"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Tegangan")
+        //             .first["isActive"]!
+        //         : data["alarmTegangan"] as bool,
+        //   }
+        // ];
+
+        // alarm.clear();
+        // alarm.addAll(temp);
 
         account_alarm.setState!();
 
-        temp.clear();
+        // temp.clear();
       } else if (topic == "antam/statistic") {
+        if (totalData.firstWhere(
+                    (element) => element["title"] == "Total Waktu")["value"] !=
+                (data["totalWaktu"] ?? 0.0) ||
+            totalData.firstWhere((element) =>
+                    element["title"] == "Tegangan Total")["value"] !=
+                (data["teganganTotal"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Arus Total")["value"] !=
+                (data["arusTotal"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Power")["value"] !=
+                (data["power"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Energi")["value"] !=
+                (data["energi"] ?? 0.0)) {
+          refresh = true;
+        }
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =
             data["totalWaktu"] == null
@@ -808,7 +886,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
       // getTotal(currTangki);
 
-      if (mounted) {
+      if (mounted && refresh) {
         setState(() {});
       }
     };
@@ -1235,6 +1313,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
     // getMax();
 
+    initStatus();
     initSelData();
     initTotalDataStatistic();
 

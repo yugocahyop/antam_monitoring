@@ -501,7 +501,7 @@ class _UserRoleState extends State<UserRole> {
                                                                 : "Email"))["width"],
                                                 height: isUserLog ? 100 : 50,
                                                 padding: isUserLog
-                                                    ? EdgeInsets.all(8)
+                                                    ? EdgeInsets.all(20)
                                                     : null,
                                                 color: color,
                                                 child: Center(

@@ -331,7 +331,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   //   final max = [];
   // }
 
-  getData(int tangki) {
+  getData(int tangki, {bool isSetState = true}) {
     // if (tangki == 0) {
     //   return;
     // }
@@ -365,7 +365,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     // getTotal(tangki);
 
-    if (mounted) setState(() {});
+    if (mounted && isSetState) setState(() {});
   }
 
   late FilterTangki filterTangki;
@@ -386,51 +386,60 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     if (mounted) setState(() {});
   }
 
-  getMax() {
-    selData[0].clear();
+  getMax({bool isSetState = true}) {
+    // selData[0].clear();
 
-    selData[0] = ([
-      {
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ]);
+    // selData[0] = ([
+    //   {
+    //     "sel": 1,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "sel": 2,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "sel": 3,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "sel": 4,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "sel": 5,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    // ]);
+
+    for (var x = 0; x < selData[0].length; x++) {
+      for (var i = 2; i < titleData.length; i++) {
+        final title = titleData[i].toLowerCase();
+
+        selData[0][x][title] = 0;
+      }
+    }
+
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
@@ -524,7 +533,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     });
   }
 
-  sortSelData() {
+  sortSelData({bool isSetState = true}) {
     if (dataNyataSortOrderList.isEmpty || dataNyataSortOrder.isEmpty) return;
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
@@ -567,7 +576,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
       return r;
     });
-    if (mounted) setState(() {});
+    if (mounted && isSetState) setState(() {});
   }
 
   @override
@@ -695,6 +704,24 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       diagnosticData.clear();
 
       diagnosticData.addAll(r["data"][0]["diagnosticData"] ?? []);
+
+      final data = r["data"][0] as Map<String, dynamic>;
+
+      final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
+      final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+
+      if (listAlarmArus.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Arus")["isActive"] = true;
+      }
+
+      if (listAlarmTegangan.isNotEmpty) {
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            true;
+      }
+
+      account_alarm.setState!();
     }
 
     if (mounted) setState(() {});
@@ -702,6 +729,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
   initMqtt() {
     mqtt!.onUpdate = (data, topic) {
+      bool refresh = false;
+
       if (kDebugMode) {
         print("mqtt topic $topic");
       }
@@ -716,8 +745,12 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
         // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
-        diagnosticData[tangki - 1][sel - 1]["status"] = status;
-        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+        if (diagnosticData[tangki - 1][sel - 1]["status"] != status &&
+            diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp) {
+          refresh = true;
+          diagnosticData[tangki - 1][sel - 1]["status"] = status;
+          diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+        }
       } else if (topic == "antam/device") {
         selData.clear();
         selData.add([
@@ -800,50 +833,98 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         for (var i = 2; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
-          selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+          if (selData[tangki][(data["sel"] as int) - 1][title] !=
+              sData[title]) {
+            refresh = true;
+            selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+          }
+
+          // selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
         }
 
-        getMax();
+        getMax(isSetState: false);
 
-        getData(currTangki);
-        sortSelData();
+        getData(currTangki, isSetState: false);
+        sortSelData(isSetState: false);
       } else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
-        var temp = [
-          {
-            "title": "Status",
-            "isActive": (data["status"] == null
+        alarm.firstWhere(
+                (element) => element["title"] == "Status")["isActive"] =
+            (data["status"] == null
                 ? alarm
                     .where((element) => element["title"] == "Status")
                     .first["isActive"]!
-                : (data["status"] as bool)),
-          },
-          {
-            "title": "Alarm Arus",
-            "isActive": data["alarmArus"] == null
+                : (data["status"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Arus")["isActive"] =
+            (data["alarmArus"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Arus")
                     .first["isActive"]!
-                : data["alarmArus"] as bool,
-          },
-          {
-            "title": "Alarm Tegangan",
-            "isActive": data["alarmTegangan"] == null
+                : (data["alarmArus"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            (data["alarmTegangan"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Tegangan")
                     .first["isActive"]!
-                : data["alarmTegangan"] as bool,
-          }
-        ];
+                : (data["alarmTegangan"] as bool));
 
-        alarm.clear();
-        alarm.addAll(temp);
+        // var temp = [
+        //   {
+        //     "title": "Status",
+        //     "isActive": (data["status"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Status")
+        //             .first["isActive"]!
+        //         : (data["status"] as bool)),
+        //   },
+        //   {
+        //     "title": "Alarm Arus",
+        //     "isActive": data["alarmArus"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Arus")
+        //             .first["isActive"]!
+        //         : data["alarmArus"] as bool,
+        //   },
+        //   {
+        //     "title": "Alarm Tegangan",
+        //     "isActive": data["alarmTegangan"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Tegangan")
+        //             .first["isActive"]!
+        //         : data["alarmTegangan"] as bool,
+        //   }
+        // ];
+
+        // alarm.clear();
+        // alarm.addAll(temp);
 
         account_alarm.setState!();
 
-        temp.clear();
+        // temp.clear();
       } else if (topic == "antam/statistic") {
+        if (totalData.firstWhere(
+                    (element) => element["title"] == "Total Waktu")["value"] !=
+                (data["totalWaktu"] ?? 0.0) ||
+            totalData.firstWhere((element) =>
+                    element["title"] == "Tegangan Total")["value"] !=
+                (data["teganganTotal"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Arus Total")["value"] !=
+                (data["arusTotal"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Power")["value"] !=
+                (data["power"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Energi")["value"] !=
+                (data["energi"] ?? 0.0)) {
+          refresh = true;
+        }
+
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =
             data["totalWaktu"] == null
@@ -960,7 +1041,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
       // getTotal(currTangki);
 
-      if (mounted) {
+      if (mounted && refresh) {
         setState(() {});
       }
     };

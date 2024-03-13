@@ -14,6 +14,8 @@ void main() {
   HttpOverrides.global = DevHttpOverrides();
   GoogleFonts.config.allowRuntimeFetching = false;
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   initializeDateFormatting('id_ID', null).then((_) => runApp(const MyApp()));
 
   // runApp(const MyApp());

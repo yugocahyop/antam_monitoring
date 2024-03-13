@@ -137,11 +137,13 @@ class MyBarChart extends StatelessWidget {
                       child: Text(
                         "Anoda ${value.toInt()}",
                         style: MyTextStyle.defaultFontCustom(
-                            Colors.black, lWidth <= 500 ? 8 : 14),
+                            Colors.black, lWidth <= 500 ? 10 : 14),
                       ),
                     ),
                     Transform.translate(
-                      offset: const Offset(10, 20),
+                      offset: lWidth <= 500
+                          ? const Offset(3, 20)
+                          : const Offset(10, 20),
                       child: Visibility(
                         visible: tangkiMaxData.isNotEmpty,
                         child: Container(

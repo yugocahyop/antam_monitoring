@@ -211,7 +211,7 @@ class _HomeMobileState extends State<HomeMobile> {
     setState(() {});
   }
 
-  getData(int tangki) {
+  getData(int tangki, {bool isSetState = true}) {
     currTangki = tangki;
     pc.jumpToPage(0);
     teganganData = [];
@@ -238,7 +238,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
     sortSelData();
 
-    if (mounted) setState(() {});
+    if (mounted && isSetState) setState(() {});
   }
 
   setSetting(String data, double value) {
@@ -257,8 +257,16 @@ class _HomeMobileState extends State<HomeMobile> {
     if (mounted) setState(() {});
   }
 
-  getMax2() {
-    selData[0].clear();
+  getMax2({bool isSetState = true}) {
+    // selData[0].clear();
+    for (var x = 0; x < maxData.length; x++) {
+      for (var i = 2; i < titleData.length; i++) {
+        final title = titleData[i].toLowerCase();
+
+        maxData[x][title] = 0;
+      }
+    }
+
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
@@ -271,15 +279,37 @@ class _HomeMobileState extends State<HomeMobile> {
         final w = (e["daya"] ?? e["watt"] ?? 0) as double;
         final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
 
-        selData[0].add({
-          "tangki": i.toDouble(),
-          "sel": e["sel"] as double,
-          "suhu": c,
-          "tegangan": vv,
-          "arus": a,
-          "daya": w,
-          "energi": en,
-        });
+        // selData[0].add({
+        //   "tangki": i.toDouble(),
+        //   "sel": e["sel"] as double,
+        //   "suhu": c,
+        //   "tegangan": vv,
+        //   "arus": a,
+        //   "daya": w,
+        //   "energi": en,
+        // });
+
+        final sel = (selData[0] as List<dynamic>);
+
+        (sel).firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] == (e["sel"] as double))["suhu"] = c;
+        // }
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] == (e["sel"] as double))["tegangan"] = vv;
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] == (e["sel"] as double))["arus"] = a;
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] == (e["sel"] as double))["daya"] = w;
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] == (e["sel"] as double))["energi"] = en;
 
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
@@ -337,7 +367,7 @@ class _HomeMobileState extends State<HomeMobile> {
       // }
     }
 
-    if (mounted) setState(() {});
+    if (mounted && isSetState) setState(() {});
   }
 
   getMax() {
@@ -432,48 +462,23 @@ class _HomeMobileState extends State<HomeMobile> {
     if (r["error"] == null) {
       selData.clear();
 
-      selData.add([
-        {
-          "sel": 1,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 2,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 3,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 4,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 5,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-      ]);
+      List<dynamic> listTangkiZero = [];
+
+      for (var x = 1; x < 8; x++) {
+        for (var i = 1; i < 6; i++) {
+          listTangkiZero.add({
+            "tangki": x,
+            "sel": i,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          });
+        }
+      }
+
+      selData.add(listTangkiZero);
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
@@ -497,6 +502,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
   initMqtt() {
     mqtt.onUpdate = (data, topic) {
+      bool refresh = true;
       if (topic == "antam/device") {
         selData.clear();
         // final firstData = List.of(maxDdata);
@@ -575,51 +581,99 @@ class _HomeMobileState extends State<HomeMobile> {
         for (var i = 2; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
-          selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+          if (selData[tangki][(data["sel"] as int) - 1][title] !=
+              sData[title]) {
+            refresh = true;
+            selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+          }
+
+          // selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
         }
 
-        getMax2();
+        getMax2(isSetState: false);
 
-        getData(currTangki);
+        getData(currTangki, isSetState: false);
 
-        sortSelData();
+        sortSelData(isSetState: false);
       } else if (topic == "antam/status") {
         // print(data["alarmTegangang"]);
 
-        var temp = [
-          {
-            "title": "Status",
-            "isActive": (data["status"] == null
+        alarm.firstWhere(
+                (element) => element["title"] == "Status")["isActive"] =
+            (data["status"] == null
                 ? alarm
                     .where((element) => element["title"] == "Status")
                     .first["isActive"]!
-                : (data["status"] as bool)),
-          },
-          {
-            "title": "Alarm Arus",
-            "isActive": data["alarmArus"] == null
+                : (data["status"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Arus")["isActive"] =
+            (data["alarmArus"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Arus")
                     .first["isActive"]!
-                : data["alarmArus"] as bool,
-          },
-          {
-            "title": "Alarm Tegangan",
-            "isActive": data["alarmTegangan"] == null
+                : (data["alarmArus"] as bool));
+
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            (data["alarmTegangan"] == null
                 ? alarm
                     .where((element) => element["title"] == "Alarm Tegangan")
                     .first["isActive"]!
-                : data["alarmTegangan"] as bool,
-          }
-        ];
+                : (data["alarmTegangan"] as bool));
+
+        // var temp = [
+        //   {
+        //     "title": "Status",
+        //     "isActive": (data["status"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Status")
+        //             .first["isActive"]!
+        //         : (data["status"] as bool)),
+        //   },
+        //   {
+        //     "title": "Alarm Arus",
+        //     "isActive": data["alarmArus"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Arus")
+        //             .first["isActive"]!
+        //         : data["alarmArus"] as bool,
+        //   },
+        //   {
+        //     "title": "Alarm Tegangan",
+        //     "isActive": data["alarmTegangan"] == null
+        //         ? alarm
+        //             .where((element) => element["title"] == "Alarm Tegangan")
+        //             .first["isActive"]!
+        //         : data["alarmTegangan"] as bool,
+        //   }
+        // ];
 
         account_alarm.setState!();
 
-        alarm.clear();
-        alarm.addAll(temp);
+        // alarm.clear();
+        // alarm.addAll(temp);
 
-        temp.clear();
+        // temp.clear();
       } else if (topic == "antam/statistic") {
+        if (totalData.firstWhere(
+                    (element) => element["title"] == "Total Waktu")["value"] !=
+                (data["totalWaktu"] ?? 0.0) ||
+            totalData.firstWhere((element) =>
+                    element["title"] == "Tegangan Total")["value"] !=
+                (data["teganganTotal"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Arus Total")["value"] !=
+                (data["arusTotal"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Power")["value"] !=
+                (data["power"] ?? 0.0) ||
+            totalData.firstWhere(
+                    (element) => element["title"] == "Energi")["value"] !=
+                (data["energi"] ?? 0.0)) {
+          refresh = true;
+        }
+
         totalData.firstWhere(
                 (element) => element["title"] == "Total Waktu")["value"] =
             data["totalWaktu"] == null
@@ -734,7 +788,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
       data.clear();
 
-      if (mounted) {
+      if (mounted && refresh) {
         setState(() {});
       }
 
@@ -827,6 +881,42 @@ class _HomeMobileState extends State<HomeMobile> {
     }
   }
 
+  initStatus() async {
+    final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    final r = await api.callAPI("/diagnostic/find/last", "POST", "", true);
+
+    if (kDebugMode) {
+      print("backend data: $r");
+    }
+
+    if (r["error"] == null) {
+      final data = r["data"][0] as Map<String, dynamic>;
+
+      final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
+      final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+
+      if (listAlarmArus.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Arus")["isActive"] = true;
+      }
+
+      if (listAlarmTegangan.isNotEmpty) {
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            true;
+      }
+
+      account_alarm.setState!();
+    }
+
+    if (mounted) setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -850,6 +940,21 @@ class _HomeMobileState extends State<HomeMobile> {
 
     selData = widget.selData;
 
+    selData[0].clear();
+    for (var x = 1; x < 8; x++) {
+      for (var i = 1; i < 6; i++) {
+        selData[0].add({
+          "tangki": x,
+          "sel": i,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        });
+      }
+    }
+
     // getData(0);
 
     filterTangki = FilterTangki(
@@ -864,8 +969,10 @@ class _HomeMobileState extends State<HomeMobile> {
 
     mqtt = MyMqtt(onUpdate: (data, topic) {});
 
+    initStatus();
     initSelData();
     initTotalDataStatistic();
+
     // getMax2();
   }
 
@@ -889,7 +996,7 @@ class _HomeMobileState extends State<HomeMobile> {
     });
   }
 
-  sortSelData() {
+  sortSelData({bool isSetState = true}) {
     if (sortBy == "Pilih") return;
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
@@ -903,7 +1010,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
       return r;
     });
-    if (mounted) setState(() {});
+    if (mounted && isSetState) setState(() {});
   }
 
   @override
@@ -1076,7 +1183,7 @@ class _HomeMobileState extends State<HomeMobile> {
                   Container(
                     // padding: EdgeInsets.all(10),
                     width: 1200,
-                    height: 210,
+                    height: 230,
                     clipBehavior: Clip.none,
                     decoration: BoxDecoration(
                       // color: MainStyle.secondaryColor,
@@ -1103,7 +1210,7 @@ class _HomeMobileState extends State<HomeMobile> {
                       // ]
                     ),
                     child: Column(children: [
-                      Row(
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
@@ -1125,6 +1232,7 @@ class _HomeMobileState extends State<HomeMobile> {
                             ],
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text("Sort by: "),
                               MyDropDown(
@@ -1167,7 +1275,7 @@ class _HomeMobileState extends State<HomeMobile> {
                       MainStyle.sizedBoxH20,
                       SizedBox(
                           width: lWidth,
-                          height: 120,
+                          height: 118,
                           child: PageView(
                             clipBehavior: Clip.none,
                             controller: pc,

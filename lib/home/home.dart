@@ -636,6 +636,20 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     final encrypt = MyEncrtypt();
     final c = Controller();
 
+    for (var x = 2; x < 8; x++) {
+      for (var i = 1; i < 6; i++) {
+        selData[0].add({
+          "tangki": x,
+          "sel": i,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        });
+      }
+    }
+
     // c.saveSharedPref("antam.access", encrypt.encrypt("home"));
 
     // WidgetsBinding.instance!.addObserver(this);
