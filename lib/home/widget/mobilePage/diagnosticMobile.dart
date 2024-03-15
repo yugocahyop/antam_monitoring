@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
 import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
@@ -9,6 +10,7 @@ import 'package:antam_monitoring/home/widget/myDropDown.dart';
 import 'package:antam_monitoring/home/widget/up.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
+import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -367,13 +369,13 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     ],
     [
       {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
-      {"sel": 2, "status": "active", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
       {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
       {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
       {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
     ],
     [
-      {"sel": 1, "status": "active", "lastUpdated": 1706561733680},
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
       {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
       {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
       {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
@@ -480,7 +482,41 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     } catch (e) {}
   }
 
-  List<Widget> getDiagnostiWidget(double width) {
+  promptToggle(int tangki, int sel, bool isActive) {
+    final c = Controller();
+    c.goToDialog(
+        context,
+        AlertDialog(
+          title:
+              Text("${isActive ? "Matikan" : "Aktifkan"} sel $tangki - $sel ?"),
+          actions: [
+            SizedBox(
+              width: 80,
+              child: MyButton(
+                  color: MainStyle.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: "No"),
+            ),
+            MainStyle.sizedBoxW10,
+            SizedBox(
+              width: 80,
+              child: MyButton(
+                  color: MainStyle.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    togglePanelMqtt(tangki, sel, isActive);
+                  },
+                  text: ("Yes")),
+            ),
+          ],
+        ));
+  }
+
+  List<Widget> getDiagnostiWidget(double width, double lwidth) {
     List<Widget> rows = [];
 
     DateFormat df = DateFormat("dd MMM yyyy HH:mm");
@@ -529,7 +565,7 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
           lastUpdated = "${now.year - date.year} tahun lalu";
         }
         pn.add(PanelNode(
-          tapFunction: () => togglePanelMqtt(i + 1, ii + 1,
+          tapFunction: () => promptToggle(i + 1, ii + 1,
               status == "active" || status.contains("alarm") ? true : false),
           isSensor: i == 6,
           width: width,
@@ -548,9 +584,9 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
             Center(
               child: Visibility(
                 visible: (i != 6),
-                child: const SizedBox(
-                  width: 400,
-                  child: Divider(
+                child: SizedBox(
+                  width: lwidth * 0.7,
+                  child: const Divider(
                     thickness: 2,
                     color: MainStyle.thirdColor,
                   ),
@@ -645,7 +681,8 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                         // ]
                       ),
                       child: Column(
-                        children: getDiagnostiWidget(lWidth <= 400 ? 60 : 70),
+                        children:
+                            getDiagnostiWidget(lWidth <= 400 ? 60 : 70, lWidth),
                       )),
                   const SizedBox(
                     height: 100,

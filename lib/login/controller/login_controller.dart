@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/home/home.dart';
@@ -7,6 +8,7 @@ import 'package:antam_monitoring/login/login.dart';
 import 'package:antam_monitoring/sign-up/sign-up.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/encrypt.dart';
+import 'package:antam_monitoring/widget/form.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +23,156 @@ class Login_controller extends Controller {
     if (r as bool) {
       done();
     }
+  }
+
+  Future<bool> requestOTP(String email, BuildContext context) async {
+    final api = ApiHelper();
+
+    final c = Controller();
+
+    final r = await api.callAPI(
+        "/account/forgetpassword",
+        "POST",
+        jsonEncode({
+          "email": email,
+        }),
+        true);
+
+    if (r["error"] == null) {
+      c.showSnackBar(context, " Kode OTP telah dikirim ke alamat email anda.");
+
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+
+      c.showSnackBar(context, " ${r["error"]}");
+
+      return false;
+    }
+  }
+
+  forgetPasswordChange(BuildContext context, String email) {
+    final c = Controller();
+    c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Lupa Password",
+            height: 420,
+            onSubmit: (mapTextField) async {
+              // print("object ${mapTextField["Nama"]}");
+
+              if (mapTextField["Kode OTP"]!.con.text.isEmpty) {
+                mapTextField["Kode OTP"]!.startShake();
+                return;
+              } else if (mapTextField["Password baru"]!.con.text.isEmpty) {
+                mapTextField["Password baru"]!.startShake();
+                return;
+              } else if (mapTextField["Konfirmasi password"]!
+                  .con
+                  .text
+                  .isEmpty) {
+                mapTextField["Konfirmasi password"]!.startShake();
+                return;
+              } else if (mapTextField["Password baru"]!.con.text !=
+                  mapTextField["Konfirmasi password"]!.con.text) {
+                mapTextField["Konfirmasi password"]!.startShake();
+                return;
+              } else {
+                final rr = await updatePasword(
+                    email,
+                    mapTextField["Kode OTP"]!.con.text,
+                    mapTextField["Password baru"]!.con.text,
+                    mapTextField["Konfirmasi password"]!.con.text,
+                    context);
+
+                if (rr) {
+                  Navigator.pop(context);
+                }
+              }
+            },
+            listTextParam: [
+              {
+                "label": "Kode OTP",
+                "hint":
+                    "Kode OTP yang di kirim ke alamat email anda (habis 5 menit)",
+              },
+              {
+                "label": "Password baru",
+                "hint": "Password baru anda",
+                "obscure": true
+              },
+              {
+                "label": "Konfirmasi password",
+                "hint": "Konfirmasi password baru anda",
+                "obscure": true
+              }
+            ]));
+  }
+
+  Future<bool> updatePasword(String email, String otp, String nPassword,
+      String nPassword2, BuildContext context) async {
+    final api = ApiHelper();
+
+    final r = await api.callAPI(
+        "/account/changepassword",
+        "POST",
+        jsonEncode({
+          "email": email,
+          "otp": base64.encode(utf8.encode(otp)),
+          "nPassword": base64.encode(utf8.encode(nPassword)),
+          "nPasswordCon": base64.encode(utf8.encode(nPassword2))
+        }),
+        true);
+
+    if (r["error"] == null) {
+      final c = Controller();
+      c.showSnackBar(context, "Password telah di reset");
+
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(r["error"]);
+      }
+      final c = Controller();
+      c.showSnackBar(context, "Password gagal di reset - ${r["error"]}");
+
+      return false;
+    }
+  }
+
+  forgetPassword(BuildContext context) {
+    final c = Controller();
+    c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Lupa Password",
+            height: 420,
+            onSubmit: (mapTextField) async {
+              // print("object ${mapTextField["Nama"]}");
+
+              if (mapTextField["Email"]!.con.text.isEmpty) {
+                mapTextField["Email"]!.startShake();
+                return;
+              } else {
+                final rr =
+                    await requestOTP(mapTextField["Email"]!.con.text, context);
+
+                if (rr) {
+                  Navigator.pop(context);
+
+                  forgetPasswordChange(
+                      context, mapTextField["Email"]!.con.text);
+                }
+              }
+            },
+            listTextParam: [
+              {
+                "label": "Email",
+                "hint": "Email anda",
+              },
+            ]));
   }
 
   Future<void> login(List<Mytextfield> inputs, BuildContext context,

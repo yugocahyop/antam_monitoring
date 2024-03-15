@@ -466,6 +466,7 @@ class _CallMobileState extends State<CallMobile> {
 
     initStatus();
     initMqtt();
+    getUserData(0);
 
     // getMax2();
   }
@@ -577,9 +578,21 @@ class _CallMobileState extends State<CallMobile> {
                         //       spreadRadius: 0),
                         // ]
                       ),
-                      child: Column(
-                        children: createPhonePanels(500),
-                      )),
+                      child: isLoading
+                          ? const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  color: Colors.blue,
+                                ),
+                                MainStyle.sizedBoxW10,
+                                Text("Loading Data")
+                              ],
+                            )
+                          : Column(
+                              children: createPhonePanels(500),
+                            )),
                   const SizedBox(
                     height: 100,
                   )

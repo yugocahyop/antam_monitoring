@@ -91,8 +91,8 @@ class _SettingMobileState extends State<SettingMobile> {
 
     mqtt.disconnect();
 
-    initState();
-    initMqtt();
+    // initState();
+    // initMqtt();
   }
 
   initStatus() async {
@@ -436,6 +436,9 @@ class _SettingMobileState extends State<SettingMobile> {
     mqtt = MyMqtt(onUpdate: (data, topic) {});
 
     // getMax2();
+
+    initStatus();
+    initMqtt();
   }
 
   @override

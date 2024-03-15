@@ -622,6 +622,9 @@ class _CallSettingState extends State<CallSetting> {
                                                 color: color,
                                                 child: Center(
                                                   child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
                                                       Text(
                                                           userData[index]

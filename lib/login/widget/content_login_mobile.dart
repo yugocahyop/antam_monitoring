@@ -194,7 +194,8 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                                     ),
                                   ),
                                   TextButton(
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          cc.forgetPassword(context),
                                       child: Text(
                                         "Forget Password ?",
                                         style: MyTextStyle.defaultFontCustom(

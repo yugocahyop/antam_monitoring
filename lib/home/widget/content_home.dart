@@ -181,7 +181,7 @@ class _Content_homeState extends State<Content_home> {
         isMsgVisible = true;
       });
 
-      Future.delayed(Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         if (mounted) {
           setState(() {
             msgOpacity = 1;
@@ -1894,7 +1894,7 @@ class _Content_homeState extends State<Content_home> {
                                                           gradient: LinearGradient(
                                                               colors:
                                                                   grad_colors,
-                                                              stops: [
+                                                              stops: const [
                                                                 0,
                                                                 0.6,
                                                                 1
@@ -2007,8 +2007,8 @@ class _Content_homeState extends State<Content_home> {
                     decoration: BoxDecoration(
                         color: const Color(0xffFEF7F1),
                         borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          const BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                               blurRadius: 30,
                               color: Colors.black26,
                               offset: Offset(0, 20))

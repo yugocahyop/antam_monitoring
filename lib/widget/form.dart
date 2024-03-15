@@ -34,7 +34,7 @@ class _MyFormState extends State<MyForm> {
       Mytextfield_label tf = Mytextfield_label(
         isBorder: true,
         width: 400,
-        obscure: false,
+        obscure: val["obscure"] ?? false,
         hintText: val["hint"] ?? "",
         suffixText: val["unit"] ?? "",
       );
