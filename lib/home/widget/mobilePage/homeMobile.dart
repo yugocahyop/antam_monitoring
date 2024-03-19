@@ -263,7 +263,7 @@ class _HomeMobileState extends State<HomeMobile> {
       for (var i = 2; i < titleData.length; i++) {
         final title = titleData[i].toLowerCase();
 
-        maxData[x][title] = 0;
+        maxData[x][title] = 0.0;
       }
     }
 
@@ -273,11 +273,21 @@ class _HomeMobileState extends State<HomeMobile> {
       // int count = 1;
 
       for (Map<String, dynamic> e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+        final c = (e["suhu"] ?? e["celcius"]) is int
+            ? ((e["suhu"] ?? e["celcius"]) as int).toDouble()
+            : (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) is int
+            ? ((e["tegangan"] ?? e["volt"]) as int).toDouble()
+            : (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) is int
+            ? ((e["arus"] ?? e["ampere"]) as int).toDouble()
+            : (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) is int
+            ? ((e["daya"] ?? e["watt"] ?? 0) as int).toDouble()
+            : (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) is int
+            ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
+            : (e["energi"] ?? e["kwh"] ?? 0) as double;
 
         // selData[0].add({
         //   "tangki": i.toDouble(),
@@ -293,23 +303,38 @@ class _HomeMobileState extends State<HomeMobile> {
 
         (sel).firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["suhu"] = c;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["suhu"] = c;
         // }
 
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["tegangan"] = vv;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["tegangan"] = vv;
 
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["arus"] = a;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["arus"] = a;
 
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["daya"] = w;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["daya"] = w;
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["energi"] = en;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["energi"] = en;
 
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
@@ -442,6 +467,8 @@ class _HomeMobileState extends State<HomeMobile> {
     super.dispose();
 
     mqtt.disconnect();
+
+    widget.scSel.dispose();
   }
 
   int currTangki = 0;
@@ -979,10 +1006,14 @@ class _HomeMobileState extends State<HomeMobile> {
   resetSelDataSort() {
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
-      final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
-      final aVal2 = a["sel"] as double;
-      final bVal2 = b["sel"] as double;
+      final aVal = currTangki == 0
+          ? (a["tangki"] is int ? a["tangki"] as int : a["tangki"] as double)
+          : (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal = currTangki == 0
+          ? (b["tangki"] is int ? b["tangki"] as int : b["tangki"] as double)
+          : (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
+      final aVal2 = (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal2 = (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
 
       // print(
       //     "sel");
@@ -1001,10 +1032,14 @@ class _HomeMobileState extends State<HomeMobile> {
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = (a[sortBy.toLowerCase()] ?? 0) as double;
-      final bVal = (b[sortBy.toLowerCase()] ?? 0) as double;
+      final aVal = (a[sortBy.toLowerCase()] ?? 0) is int
+          ? (a[sortBy.toLowerCase()] ?? 0) as int
+          : (a[sortBy.toLowerCase()] ?? 0) as double;
+      final bVal = (b[sortBy.toLowerCase()] ?? 0) is int
+          ? (b[sortBy.toLowerCase()] ?? 0) as int
+          : (b[sortBy.toLowerCase()] ?? 0) as double;
 
-      print("aVal: $aVal bBal: $bVal");
+      // print("aVal: $aVal bBal: $bVal");
 
       int r = ascDesc == "Desc" ? bVal.compareTo(aVal) : aVal.compareTo(bVal);
 

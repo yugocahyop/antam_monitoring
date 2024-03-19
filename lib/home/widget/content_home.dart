@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
+import 'package:antam_monitoring/home/widget/alarm_msg.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
@@ -153,12 +154,6 @@ class _Content_homeState extends State<Content_home> {
     MainStyle.primaryColor.withAlpha(((255 * 0.1) * 0.3).toInt()),
   ];
 
-  String warningMsg = "Message";
-
-  double msgOpacity = 0;
-
-  bool isMsgVisible = false;
-
   final double wide = 16 / 9;
 
   late FilterTgl filterTglHingga;
@@ -171,24 +166,6 @@ class _Content_homeState extends State<Content_home> {
     }
     widget.changePage(1,
         dari: filterTglDari.today, hingga: filterTglHingga.today);
-  }
-
-  showMsg(String msg) {
-    if (mounted) {
-      warningMsg = msg;
-
-      setState(() {
-        isMsgVisible = true;
-      });
-
-      Future.delayed(const Duration(milliseconds: 200), () {
-        if (mounted) {
-          setState(() {
-            msgOpacity = 1;
-          });
-        }
-      });
-    }
   }
 
   getTotal(int tangki) {
@@ -410,11 +387,21 @@ class _Content_homeState extends State<Content_home> {
       // int count = 1;
 
       for (Map<String, dynamic> e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+        final c = (e["suhu"] ?? e["celcius"]) is int
+            ? ((e["suhu"] ?? e["celcius"]) as int).toDouble()
+            : (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) is int
+            ? ((e["tegangan"] ?? e["volt"]) as int).toDouble()
+            : (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) is int
+            ? ((e["arus"] ?? e["ampere"]) as int).toDouble()
+            : (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) is int
+            ? ((e["daya"] ?? e["watt"] ?? 0) as int).toDouble()
+            : (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) is int
+            ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
+            : (e["energi"] ?? e["kwh"] ?? 0) as double;
 
         // selData[0].add({
         //   "tangki": i.toDouble(),
@@ -435,23 +422,38 @@ class _Content_homeState extends State<Content_home> {
 
         (sel).firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["suhu"] = c;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["suhu"] = c;
         // }
 
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["tegangan"] = vv;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["tegangan"] = vv;
 
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["arus"] = a;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["arus"] = a;
 
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["daya"] = w;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["daya"] = w;
         sel.firstWhere((element) =>
             element["tangki"] == i.toDouble() &&
-            element["sel"] == (e["sel"] as double))["energi"] = en;
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["energi"] = en;
 
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
@@ -514,10 +516,14 @@ class _Content_homeState extends State<Content_home> {
 
   MyMqtt? mqtt;
 
+  late AlarmMsg alarmMsg;
+
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
+    widget.scSel.dispose();
 
     // mqtt!.onUpdate = (json, topic) {};
 
@@ -670,61 +676,61 @@ class _Content_homeState extends State<Content_home> {
         //   onChange: (value) => getData(int.tryParse(value) ?? 0),
         // );
       } else if (topic == "antam/statusNode") {
-        final String status = data["status"] as String;
+        // final String status = data["status"] as String;
 
-        if (status.contains("alarmArusTinggi") ||
-            status.contains("alarmArusRendah") ||
-            status.contains("alarmTegangan") ||
-            status.contains("alarmSuhuTinggi") ||
-            status.contains("alarmSuhuRendah") ||
-            status.contains("alarmPhTinggi") ||
-            status.contains("alarmPhRendah") ||
-            status == "alarm") {
-          if (status == "alarm") {
-            showMsg(
-                "Terjadi masalah pada sel ${data["tangki"]} - ${data["node"]}");
-          } else {
-            showMsg(
-                "${status.contains("Rendah") ? "Minimum" : "Maksimum"} ${status.replaceAll("alarm", "").replaceAll("Tinggi", "").replaceAll("Rendah", "")} telah di lewati pada sel ${data["tangki"]} - ${data["node"]}");
-          }
+        // if (status.contains("alarmArusTinggi") ||
+        //     status.contains("alarmArusRendah") ||
+        //     status.contains("alarmTegangan") ||
+        //     status.contains("alarmSuhuTinggi") ||
+        //     status.contains("alarmSuhuRendah") ||
+        //     status.contains("alarmPhTinggi") ||
+        //     status.contains("alarmPhRendah") ||
+        //     status == "alarm") {
+        //   if (status == "alarm") {
+        //     showMsg(
+        //         "Terjadi masalah pada sel ${data["tangki"]} - ${data["node"]}");
+        //   } else {
+        //     showMsg(
+        //         "${status.contains("Rendah") ? "Minimum" : "Maksimum"} ${status.replaceAll("alarm", "").replaceAll("Tinggi", "").replaceAll("Rendah", "")} telah di lewati pada sel ${data["tangki"]} - ${data["node"]}");
+        //   }
 
-          //   if (status.contains("Arus")) {
-          //     final Map<String, dynamic> a =
-          //         alarm.firstWhere((element) => element["title"] == "Alarm Arus");
-          //     a["isActive"] = true;
-          //     (a["list"] as List<dynamic>).add([data["tangki"], data["node"]]);
-          //   } else if (status.contains("Tegangan")) {
-          //     final Map<String, dynamic> a = alarm
-          //         .firstWhere((element) => element["title"] == "Alarm Tegangan");
-          //     a["isActive"] = true;
-          //     (a["list"] as List<dynamic>).add([data["tangki"], data["node"]]);
-          //   }
-          // } else if (status.contains("active") || status.contains("inactive")) {
-          //   final Map<String, dynamic> aT = alarm
-          //       .firstWhere((element) => element["title"] == "Alarm Tegangan");
-          //   final Map<String, dynamic> aA =
-          //       alarm.firstWhere((element) => element["title"] == "Alarm Arus");
+        //   //   if (status.contains("Arus")) {
+        //   //     final Map<String, dynamic> a =
+        //   //         alarm.firstWhere((element) => element["title"] == "Alarm Arus");
+        //   //     a["isActive"] = true;
+        //   //     (a["list"] as List<dynamic>).add([data["tangki"], data["node"]]);
+        //   //   } else if (status.contains("Tegangan")) {
+        //   //     final Map<String, dynamic> a = alarm
+        //   //         .firstWhere((element) => element["title"] == "Alarm Tegangan");
+        //   //     a["isActive"] = true;
+        //   //     (a["list"] as List<dynamic>).add([data["tangki"], data["node"]]);
+        //   //   }
+        //   // } else if (status.contains("active") || status.contains("inactive")) {
+        //   //   final Map<String, dynamic> aT = alarm
+        //   //       .firstWhere((element) => element["title"] == "Alarm Tegangan");
+        //   //   final Map<String, dynamic> aA =
+        //   //       alarm.firstWhere((element) => element["title"] == "Alarm Arus");
 
-          //   if (aT["isActive"]) {
-          //     final List<dynamic> aTl = (aT["list"] as List<dynamic>);
-          //     final dynamic aTn = aTl.firstWhere((element) =>
-          //         element[0] == data["tangki"] && element[1] == data["node"]);
-          //     aTl.remove(aTn);
-          //     if (aTl.isEmpty) {
-          //       aT["isActive"] = false;
-          //     }
-          //   }
+        //   //   if (aT["isActive"]) {
+        //   //     final List<dynamic> aTl = (aT["list"] as List<dynamic>);
+        //   //     final dynamic aTn = aTl.firstWhere((element) =>
+        //   //         element[0] == data["tangki"] && element[1] == data["node"]);
+        //   //     aTl.remove(aTn);
+        //   //     if (aTl.isEmpty) {
+        //   //       aT["isActive"] = false;
+        //   //     }
+        //   //   }
 
-          //   if (aA["isActive"]) {
-          //     final List<dynamic> aTl = (aA["list"] as List<dynamic>);
-          //     final dynamic aTn = aTl.firstWhere((element) =>
-          //         element[0] == data["tangki"] && element[1] == data["node"]);
-          //     aTl.remove(aTn);
-          //     if (aTl.isEmpty) {
-          //       aA["isActive"] = false;
-          //     }
-          //   }
-        }
+        //   //   if (aA["isActive"]) {
+        //   //     final List<dynamic> aTl = (aA["list"] as List<dynamic>);
+        //   //     final dynamic aTn = aTl.firstWhere((element) =>
+        //   //         element[0] == data["tangki"] && element[1] == data["node"]);
+        //   //     aTl.remove(aTn);
+        //   //     if (aTl.isEmpty) {
+        //   //       aA["isActive"] = false;
+        //   //     }
+        //   //   }
+        // }
 
         // account_alarm.setState!();
       } else if (topic == "antam/device/node") {
@@ -1078,6 +1084,8 @@ class _Content_homeState extends State<Content_home> {
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 
+    alarmMsg = AlarmMsg(mqtt: widget.mqtt);
+
     mqtt = widget.mqtt;
 
     selData = widget.selData;
@@ -1150,10 +1158,19 @@ class _Content_homeState extends State<Content_home> {
   resetSelDataSort() {
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
-      final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
-      final aVal2 = a["sel"] as double;
-      final bVal2 = b["sel"] as double;
+      // final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
+      // final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
+      // final aVal2 = a["sel"] as double;
+      // final bVal2 = b["sel"] as double;
+
+      final aVal = currTangki == 0
+          ? (a["tangki"] is int ? a["tangki"] as int : a["tangki"] as double)
+          : (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal = currTangki == 0
+          ? (b["tangki"] is int ? b["tangki"] as int : b["tangki"] as double)
+          : (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
+      final aVal2 = (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal2 = (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
 
       // print(
       //     "sel");
@@ -1172,18 +1189,42 @@ class _Content_homeState extends State<Content_home> {
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = a[dataNyataSortOrderList[0]
-              .toLowerCase()
-              .replaceAll("#", "")
-              .replaceAll("sel", "tangki")
-              .replaceAll("anoda", "sel")] ??
-          0 as double;
-      final bVal = b[dataNyataSortOrderList[0]
-              .toLowerCase()
-              .replaceAll("#", "")
-              .replaceAll("sel", "tangki")
-              .replaceAll("anoda", "sel")] ??
-          0 as double;
+      final aVal = (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) is int
+          ? (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as int
+          : (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as double;
+      final bVal = (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) is int
+          ? (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as int
+          : (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as double;
 
       // print("aVal: $aVal");
 
@@ -1197,18 +1238,55 @@ class _Content_homeState extends State<Content_home> {
           dataNyataSortOrderList.length > 1 &&
           i < dataNyataSortOrderList.length) {
         if (i < dataNyataSortOrderList.length) {
-          final aVal = a[dataNyataSortOrderList[i]
-                  .toLowerCase()
-                  .replaceAll("#", "")
-                  .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
-              0 as double;
-          final bVal = b[dataNyataSortOrderList[i]
-                  .toLowerCase()
-                  .replaceAll("#", "")
-                  .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
-              0 as double;
+          // final aVal = a[dataNyataSortOrderList[i]
+          //         .toLowerCase()
+          //         .replaceAll("#", "")
+          //         .replaceAll("sel", "tangki")
+          //         .replaceAll("anoda", "sel")] ??
+          //     0 as double;
+          // final bVal = b[dataNyataSortOrderList[i]
+          //         .toLowerCase()
+          //         .replaceAll("#", "")
+          //         .replaceAll("sel", "tangki")
+          //         .replaceAll("anoda", "sel")] ??
+          //     0 as double;
+
+          final aVal = (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) is int
+              ? (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as int
+              : (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as double;
+          final bVal = (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) is int
+              ? (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as int
+              : (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as double;
 
           // print("aVal: $aVal");
 
@@ -1985,110 +2063,111 @@ class _Content_homeState extends State<Content_home> {
               )),
           Center(
             //warning
-            child: Transform.scale(
-              scale: (lWidth / lheight) < wide ? 1.4 : 1,
-              origin: Offset((lWidth / lheight) < wide ? 700 : 0, 0),
-              child: Visibility(
-                visible: isMsgVisible,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: msgOpacity,
-                  onEnd: () {
-                    if (msgOpacity == 0 && mounted) {
-                      setState(() {
-                        isMsgVisible = false;
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 30),
-                    width: 700,
-                    height: 500,
-                    decoration: BoxDecoration(
-                        color: const Color(0xffFEF7F1),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: const [
-                          BoxShadow(
-                              blurRadius: 30,
-                              color: Colors.black26,
-                              offset: Offset(0, 20))
-                        ]),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 20,
-                            height: 400,
-                            decoration: const BoxDecoration(
-                              color: Color(0xffDF7B00),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  bottomRight: Radius.circular(50)),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 20,
-                          left: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Icon(
-                                    Icons.info_rounded,
-                                    color: Color(0xffDF7B00),
-                                    size: 50,
-                                  ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  Text(
-                                    "Warning Message",
-                                    style:
-                                        MainStyle.textStyleDefault20BlackBold,
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 300,
-                                width: 600,
-                                child: Center(
-                                  child: Text(
-                                    warningMsg,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        MainStyle.textStyleDefault40BlackBold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 600,
-                                child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: MyButton(
-                                      width: 100,
-                                      color: const Color(0xffFCECDA),
-                                      text: "Dismiss",
-                                      onPressed: () {
-                                        setState(() {
-                                          msgOpacity = 0;
-                                        });
-                                      },
-                                      textColor: const Color(0xffDF7B00)),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            child: alarmMsg,
+            // child: Transform.scale(
+            //   scale: (lWidth / lheight) < wide ? 1.4 : 1,
+            //   origin: Offset((lWidth / lheight) < wide ? 700 : 0, 0),
+            //   child: Visibility(
+            //     visible: isMsgVisible,
+            //     child: AnimatedOpacity(
+            //       duration: const Duration(milliseconds: 200),
+            //       opacity: msgOpacity,
+            //       onEnd: () {
+            //         if (msgOpacity == 0 && mounted) {
+            //           setState(() {
+            //             isMsgVisible = false;
+            //           });
+            //         }
+            //       },
+            //       child: Container(
+            //         padding: const EdgeInsets.only(top: 30),
+            //         width: 700,
+            //         height: 500,
+            //         decoration: BoxDecoration(
+            //             color: const Color(0xffFEF7F1),
+            //             borderRadius: BorderRadius.circular(50),
+            //             boxShadow: const [
+            //               BoxShadow(
+            //                   blurRadius: 30,
+            //                   color: Colors.black26,
+            //                   offset: Offset(0, 20))
+            //             ]),
+            //         child: Stack(
+            //           children: [
+            //             Align(
+            //               alignment: Alignment.centerLeft,
+            //               child: Container(
+            //                 width: 20,
+            //                 height: 400,
+            //                 decoration: const BoxDecoration(
+            //                   color: Color(0xffDF7B00),
+            //                   borderRadius: BorderRadius.only(
+            //                       topRight: Radius.circular(50),
+            //                       bottomRight: Radius.circular(50)),
+            //                 ),
+            //               ),
+            //             ),
+            //             Positioned(
+            //               top: 20,
+            //               left: 50,
+            //               child: Column(
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 children: [
+            //                   Row(
+            //                     mainAxisAlignment: MainAxisAlignment.start,
+            //                     children: [
+            //                       const Icon(
+            //                         Icons.info_rounded,
+            //                         color: Color(0xffDF7B00),
+            //                         size: 50,
+            //                       ),
+            //                       const SizedBox(
+            //                         width: 20,
+            //                       ),
+            //                       Text(
+            //                         "Warning Message",
+            //                         style:
+            //                             MainStyle.textStyleDefault20BlackBold,
+            //                       )
+            //                     ],
+            //                   ),
+            //                   SizedBox(
+            //                     height: 300,
+            //                     width: 600,
+            //                     child: Center(
+            //                       child: Text(
+            //                         warningMsg,
+            //                         textAlign: TextAlign.center,
+            //                         style:
+            //                             MainStyle.textStyleDefault40BlackBold,
+            //                       ),
+            //                     ),
+            //                   ),
+            //                   SizedBox(
+            //                     width: 600,
+            //                     child: Align(
+            //                       alignment: Alignment.bottomRight,
+            //                       child: MyButton(
+            //                           width: 100,
+            //                           color: const Color(0xffFCECDA),
+            //                           text: "Dismiss",
+            //                           onPressed: () {
+            //                             setState(() {
+            //                               msgOpacity = 0;
+            //                             });
+            //                           },
+            //                           textColor: const Color(0xffDF7B00)),
+            //                     ),
+            //                   )
+            //                 ],
+            //               ),
+            //             )
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           )
         ],
       ),

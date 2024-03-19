@@ -1,20 +1,14 @@
 library signUp;
 
-import 'dart:io';
 import 'dart:math';
 
-import 'package:antam_monitoring/controller/controller.dart';
-import 'package:antam_monitoring/home/home.dart';
+// import 'package:antam_monitoring/home/home.dart';
 import 'package:antam_monitoring/sign-up/controller/sign-up-controller.dart';
 import 'package:antam_monitoring/sign-up/widget/content_SignUp.dart';
 import 'package:antam_monitoring/sign-up/widget/content_SignUp_mobile.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
-import 'package:antam_monitoring/style/textStyle.dart';
-import 'package:antam_monitoring/widget/myButton.dart';
-import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:antam_monitoring/widget/overlay.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 part 'widget/side.dart';
 // part 'widget/content_SignUp.dart';

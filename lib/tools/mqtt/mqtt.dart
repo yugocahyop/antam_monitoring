@@ -18,6 +18,7 @@ class MyMqtt {
   MqttClient client = mqttsetup.setup('ws://202.148.1.57',
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
   Function(Map<String, dynamic> json, String topic) onUpdate;
+  Function(Map<String, dynamic> json)? onUpdateAlarm;
 
   bool isConnected = false;
 
@@ -261,8 +262,14 @@ class MyMqtt {
         print(json);
       }
 
+      if (onUpdateAlarm != null && c[0].topic == "antam/statusNode") {
+        final json2 = jsonDecode(pt);
+        onUpdateAlarm!(json2);
+      }
+
       // if (json["tangkiData"] != null) {
       onUpdate(json, c[0].topic);
+
       // }
     });
 

@@ -61,10 +61,11 @@ class _PhonePanelState extends State<PhonePanel> {
                     Text(
                       widget.name.substring(0, 1).toUpperCase() +
                           widget.name.substring(1, widget.name.length),
+                      textAlign: TextAlign.start,
                       style: MyTextStyle.defaultFontCustom(Colors.white, 16),
                     ),
                     Text(
-                      widget.phone,
+                      widget.phone.trim(),
                       style: MyTextStyle.defaultFontCustom(Colors.white, 14),
                     ),
                   ],

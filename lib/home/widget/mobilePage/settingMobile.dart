@@ -91,6 +91,8 @@ class _SettingMobileState extends State<SettingMobile> {
 
     mqtt.disconnect();
 
+    widget.scSel.dispose();
+
     // initState();
     // initMqtt();
   }

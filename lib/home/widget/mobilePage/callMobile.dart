@@ -464,9 +464,15 @@ class _CallMobileState extends State<CallMobile> {
 
     mqtt = MyMqtt(onUpdate: (data, topic) {});
 
-    initStatus();
-    initMqtt();
-    getUserData(0);
+    isLoading = true;
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        initStatus();
+        initMqtt();
+        getUserData(0);
+      }
+    });
 
     // getMax2();
   }

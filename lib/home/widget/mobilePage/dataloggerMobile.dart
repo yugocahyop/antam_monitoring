@@ -265,28 +265,73 @@ class _HomeMobileState extends State<DataLogger> {
   }
 
   getMax2() {
-    selData[0].clear();
+    // selData[0].clear();
+    for (var x = 0; x < maxData.length; x++) {
+      for (var i = 2; i < titleData.length; i++) {
+        final title = titleData[i].toLowerCase();
+
+        maxData[x][title] = 0.0;
+      }
+    }
+
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
       // int count = 1;
 
       for (Map<String, dynamic> e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+        final c = (e["suhu"] ?? e["celcius"]) is int
+            ? ((e["suhu"] ?? e["celcius"]) as int).toDouble()
+            : (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) is int
+            ? ((e["tegangan"] ?? e["volt"]) as int).toDouble()
+            : (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) is int
+            ? ((e["arus"] ?? e["ampere"]) as int).toDouble()
+            : (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) is int
+            ? ((e["daya"] ?? e["watt"] ?? 0) as int).toDouble()
+            : (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) is int
+            ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
+            : (e["energi"] ?? e["kwh"] ?? 0) as double;
 
-        selData[0].add({
-          "tangki": i.toDouble(),
-          "sel": e["sel"] as double,
-          "suhu": c,
-          "tegangan": vv,
-          "arus": a,
-          "daya": w,
-          "energi": en,
-        });
+        final sel = (selData[0] as List<dynamic>);
+
+        (sel).firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["suhu"] = c;
+        // }
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["tegangan"] = vv;
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["arus"] = a;
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["daya"] = w;
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["energi"] = en;
 
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
@@ -419,6 +464,8 @@ class _HomeMobileState extends State<DataLogger> {
     super.dispose();
 
     mqtt.disconnect();
+
+    widget.scSel.dispose();
   }
 
   int currTangki = 0;
@@ -439,48 +486,23 @@ class _HomeMobileState extends State<DataLogger> {
     if (r["error"] == null) {
       selData.clear();
 
-      selData.add([
-        {
-          "sel": 1,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 2,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 3,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 4,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "sel": 5,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-      ]);
+      List<dynamic> listTangkiZero = [];
+
+      for (var x = 1; x < 8; x++) {
+        for (var i = 1; i < 6; i++) {
+          listTangkiZero.add({
+            "tangki": x,
+            "sel": i,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          });
+        }
+      }
+
+      selData.add(listTangkiZero);
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
@@ -898,11 +920,18 @@ class _HomeMobileState extends State<DataLogger> {
 
     mqtt = MyMqtt(onUpdate: (data, topic) {});
 
-    initStatus();
-    initSelData();
+    isLoading = true;
 
-    initTotalDataStatistic();
-    getDataLog(0);
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        initStatus();
+        initSelData();
+
+        initTotalDataStatistic();
+        getDataLog(0);
+      }
+    });
+
     // getMax2();
   }
 
@@ -945,10 +974,14 @@ class _HomeMobileState extends State<DataLogger> {
   resetSelDataSort() {
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
-      final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
-      final aVal2 = a["sel"] as double;
-      final bVal2 = b["sel"] as double;
+      final aVal = currTangki == 0
+          ? (a["tangki"] is int ? a["tangki"] as int : a["tangki"] as double)
+          : (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal = currTangki == 0
+          ? (b["tangki"] is int ? b["tangki"] as int : b["tangki"] as double)
+          : (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
+      final aVal2 = (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal2 = (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
 
       // print(
       //     "sel");
@@ -962,21 +995,25 @@ class _HomeMobileState extends State<DataLogger> {
     });
   }
 
-  sortSelData() {
+  sortSelData({bool isSetState = true}) {
     if (sortBy == "Pilih") return;
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = (a[sortBy.toLowerCase()] ?? 0) as double;
-      final bVal = (b[sortBy.toLowerCase()] ?? 0) as double;
+      final aVal = (a[sortBy.toLowerCase()] ?? 0) is int
+          ? (a[sortBy.toLowerCase()] ?? 0) as int
+          : (a[sortBy.toLowerCase()] ?? 0) as double;
+      final bVal = (b[sortBy.toLowerCase()] ?? 0) is int
+          ? (b[sortBy.toLowerCase()] ?? 0) as int
+          : (b[sortBy.toLowerCase()] ?? 0) as double;
 
-      print("aVal: $aVal bBal: $bVal");
+      // print("aVal: $aVal bBal: $bVal");
 
       int r = ascDesc == "Desc" ? bVal.compareTo(aVal) : aVal.compareTo(bVal);
 
       return r;
     });
-    if (mounted) setState(() {});
+    if (mounted && isSetState) setState(() {});
   }
 
   List<Map<String, dynamic>> dataLog = [
@@ -1123,55 +1160,25 @@ class _HomeMobileState extends State<DataLogger> {
     selData.clear();
     // selData.add([[]]);
     // selData = dataLog[index]["tangkiData"];
-    selData.addAll(dataLog[index]["tangkiData"] as List<dynamic>);
 
-    selData.insert(0, [
-      {
-        "tangki": 1,
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ]);
+    List<dynamic> listTangkiZero = [];
+
+    for (var x = 1; x < 8; x++) {
+      for (var i = 1; i < 6; i++) {
+        listTangkiZero.add({
+          "tangki": x,
+          "sel": i,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        });
+      }
+    }
+
+    selData.add(listTangkiZero);
+    selData.addAll(dataLog[index]["tangkiData"] as List<dynamic>);
 
     final df = DateFormat("dd/MM/yyy HH:mm:ss");
 

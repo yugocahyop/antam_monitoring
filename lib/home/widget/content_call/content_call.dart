@@ -323,11 +323,21 @@ class _Content_callState extends State<Content_call> {
 
       // int count = 1;
       for (var e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+        final c = (e["suhu"] ?? e["celcius"]) is int
+            ? ((e["suhu"] ?? e["celcius"]) as int).toDouble()
+            : (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) is int
+            ? ((e["tegangan"] ?? e["volt"]) as int).toDouble()
+            : (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) is int
+            ? ((e["arus"] ?? e["ampere"]) as int).toDouble()
+            : (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) is int
+            ? ((e["daya"] ?? e["watt"] ?? 0) as int).toDouble()
+            : (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) is int
+            ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
+            : (e["energi"] ?? e["kwh"] ?? 0) as double;
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
 
@@ -395,16 +405,25 @@ class _Content_callState extends State<Content_call> {
         .sort((dynamic a, dynamic b) {
       // final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
       // final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
-      final aVal = a["sel"] as double;
-      final bVal = b["sel"] as double;
+      // final aVal2 = a["sel"] as double;
+      // final bVal2 = b["sel"] as double;
+
+      final aVal = currTangki == 0
+          ? (a["tangki"] is int ? a["tangki"] as int : a["tangki"] as double)
+          : (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal = currTangki == 0
+          ? (b["tangki"] is int ? b["tangki"] as int : b["tangki"] as double)
+          : (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
+      final aVal2 = (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal2 = (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
 
       // print(
       //     "sel");
       int r = aVal.compareTo(bVal);
 
-      // if (r == 0) {
-      //   r = aVal2.compareTo(bVal2);
-      // }
+      if (r == 0) {
+        r = aVal2.compareTo(bVal2);
+      }
 
       return r;
     });
@@ -415,12 +434,42 @@ class _Content_callState extends State<Content_call> {
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal =
-          a[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
-      final bVal =
-          b[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
+      final aVal = (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) is int
+          ? (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as int
+          : (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as double;
+      final bVal = (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) is int
+          ? (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as int
+          : (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as double;
 
       // print("aVal: $aVal");
 
@@ -434,12 +483,55 @@ class _Content_callState extends State<Content_call> {
           dataNyataSortOrderList.length > 1 &&
           i < dataNyataSortOrderList.length) {
         if (i < dataNyataSortOrderList.length) {
-          final aVal =
-              a[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
-          final bVal =
-              b[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
+          // final aVal = a[dataNyataSortOrderList[i]
+          //         .toLowerCase()
+          //         .replaceAll("#", "")
+          //         .replaceAll("sel", "tangki")
+          //         .replaceAll("anoda", "sel")] ??
+          //     0 as double;
+          // final bVal = b[dataNyataSortOrderList[i]
+          //         .toLowerCase()
+          //         .replaceAll("#", "")
+          //         .replaceAll("sel", "tangki")
+          //         .replaceAll("anoda", "sel")] ??
+          //     0 as double;
+
+          final aVal = (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) is int
+              ? (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as int
+              : (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as double;
+          final bVal = (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) is int
+              ? (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as int
+              : (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as double;
 
           // print("aVal: $aVal");
 
@@ -464,6 +556,8 @@ class _Content_callState extends State<Content_call> {
 
     tangkiMaxData.clear();
     maxDdata.clear();
+
+    widget.scSel.dispose();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();

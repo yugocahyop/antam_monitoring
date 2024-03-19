@@ -1,17 +1,12 @@
 library login;
 
-import 'dart:io';
 import 'dart:math';
 
-import 'package:antam_monitoring/controller/controller.dart';
-import 'package:antam_monitoring/home/home.dart';
 import 'package:antam_monitoring/login/controller/login_controller.dart';
 import 'package:antam_monitoring/login/widget/message.dart';
 import 'package:antam_monitoring/login/widget/message_mobile.dart';
-import 'package:antam_monitoring/sign-up/sign-up.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
-import 'package:antam_monitoring/tools/encrypt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:flare_flutter/flare_cache.dart';
@@ -19,7 +14,6 @@ import 'package:flare_flutter/provider/asset_flare.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flare_flutter/flare_actor.dart';
 
 import '../widget/overlay.dart';
 

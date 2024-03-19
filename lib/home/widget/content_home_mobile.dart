@@ -71,14 +71,71 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
         duration: const Duration(milliseconds: 200), curve: Curves.ease);
   }
 
+  changePage2(int i, {int? dari, int? hingga}) {
+    this.dari = dari ?? 0;
+    this.hingga = hingga ?? 0;
+
+    widget.menuItem
+        .where((element) => element["isActive"] as bool)
+        .first["isActive"] = false;
+
+    // setState(() {
+
+    switch (i) {
+      case 0:
+        widget.menuItem.firstWhere(
+            (element) => element["title"] == "Home")["isActive"] = true;
+        break;
+      case 1:
+        widget.menuItem.firstWhere(
+            (element) => element["title"] == "Data Logger")["isActive"] = true;
+        break;
+      case 2:
+        widget.menuItem.firstWhere(
+            (element) => element["title"] == "Diagnostic")["isActive"] = true;
+        break;
+      case 3:
+        widget.menuItem.firstWhere(
+                (element) => element["title"] == "Emergency Call")["isActive"] =
+            true;
+        break;
+      case 4:
+        widget.menuItem.firstWhere(
+            (element) => element["title"] == "Settings")["isActive"] = true;
+        break;
+      default:
+    }
+
+    // });
+
+    setState(() {});
+
+    pc.animateToPage(i,
+        duration: const Duration(milliseconds: 200), curve: Curves.ease);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    pc = PageController(initialPage: widget.page);
+    pc = PageController(
+      initialPage: widget.page,
+    );
 
     // pc.jumpToPage(widget.page);
+
+    Future.delayed(const Duration(seconds: 1), () {
+      changePage2(widget.page);
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    widget.scSel.dispose();
   }
 
   @override
@@ -104,7 +161,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                       isAdmin: widget.isAdmin,
                       mqtt: widget.mqtt,
                       selData: widget.selData,
-                      scSel: widget.scSel,
+                      scSel: ScrollController(),
                       menuItem: widget.menuItem),
                   DataLogger(
                       dari: dari,
@@ -113,21 +170,21 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                       isAdmin: widget.isAdmin,
                       mqtt: widget.mqtt,
                       selData: widget.selData,
-                      scSel: widget.scSel,
+                      scSel: ScrollController(),
                       menuItem: widget.menuItem),
                   DiagnosticMobile(
                       changePage: changePage,
                       isAdmin: widget.isAdmin,
                       mqtt: widget.mqtt,
                       selData: widget.selData,
-                      scSel: widget.scSel,
+                      scSel: ScrollController(),
                       menuItem: widget.menuItem),
                   CallMobile(
                       changePage: changePage,
                       isAdmin: widget.isAdmin,
                       mqtt: widget.mqtt,
                       selData: widget.selData,
-                      scSel: widget.scSel,
+                      scSel: ScrollController(),
                       menuItem: widget.menuItem),
                   SettingMobile(
                       email: widget.email,
@@ -135,7 +192,7 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                       isAdmin: widget.isAdmin,
                       mqtt: widget.mqtt,
                       selData: widget.selData,
-                      scSel: widget.scSel,
+                      scSel: ScrollController(),
                       menuItem: widget.menuItem),
                 ],
               )),

@@ -281,11 +281,21 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
       // int count = 1;
       for (var e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+        final c = (e["suhu"] ?? e["celcius"]) is int
+            ? ((e["suhu"] ?? e["celcius"]) as int).toDouble()
+            : (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) is int
+            ? ((e["tegangan"] ?? e["volt"]) as int).toDouble()
+            : (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) is int
+            ? ((e["arus"] ?? e["ampere"]) as int).toDouble()
+            : (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) is int
+            ? ((e["daya"] ?? e["watt"] ?? 0) as int).toDouble()
+            : (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) is int
+            ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
+            : (e["energi"] ?? e["kwh"] ?? 0) as double;
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
 
@@ -344,18 +354,37 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   }
 
   getMax2() {
-    selData[0].clear();
+    // selData[0].clear();
+
+    for (var x = 0; x < maxData.length; x++) {
+      for (var i = 2; i < titleData.length; i++) {
+        final title = titleData[i].toLowerCase();
+
+        maxData[x][title] = 0;
+      }
+    }
+
     for (var i = 1; i < selData.length; i++) {
       final v = selData[i];
 
       // int count = 1;
 
       for (Map<String, dynamic> e in v) {
-        final c = (e["suhu"] ?? e["celcius"]) as double;
-        final vv = (e["tegangan"] ?? e["volt"]) as double;
-        final a = (e["arus"] ?? e["ampere"]) as double;
-        final w = (e["daya"] ?? e["watt"] ?? 0) as double;
-        final en = (e["energi"] ?? e["kwh"] ?? 0) as double;
+        final c = (e["suhu"] ?? e["celcius"]) is int
+            ? ((e["suhu"] ?? e["celcius"]) as int).toDouble()
+            : (e["suhu"] ?? e["celcius"]) as double;
+        final vv = (e["tegangan"] ?? e["volt"]) is int
+            ? ((e["tegangan"] ?? e["volt"]) as int).toDouble()
+            : (e["tegangan"] ?? e["volt"]) as double;
+        final a = (e["arus"] ?? e["ampere"]) is int
+            ? ((e["arus"] ?? e["ampere"]) as int).toDouble()
+            : (e["arus"] ?? e["ampere"]) as double;
+        final w = (e["daya"] ?? e["watt"] ?? 0) is int
+            ? ((e["daya"] ?? e["watt"] ?? 0) as int).toDouble()
+            : (e["daya"] ?? e["watt"] ?? 0) as double;
+        final en = (e["energi"] ?? e["kwh"] ?? 0) is int
+            ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
+            : (e["energi"] ?? e["kwh"] ?? 0) as double;
 
         selData[0].add({
           "tangki": i.toDouble(),
@@ -439,6 +468,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
     maxData.clear();
     tangkiMaxData.clear();
+
+    widget.scSel.dispose();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();
@@ -1323,10 +1354,19 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   resetSelDataSort() {
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
-      final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
-      final aVal2 = a["sel"] as double;
-      final bVal2 = b["sel"] as double;
+      // final aVal = currTangki == 0 ? a["tangki"] as double : a["sel"] as double;
+      // final bVal = currTangki == 0 ? b["tangki"] as double : b["sel"] as double;
+      // final aVal2 = a["sel"] as double;
+      // final bVal2 = b["sel"] as double;
+
+      final aVal = currTangki == 0
+          ? (a["tangki"] is int ? a["tangki"] as int : a["tangki"] as double)
+          : (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal = currTangki == 0
+          ? (b["tangki"] is int ? b["tangki"] as int : b["tangki"] as double)
+          : (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
+      final aVal2 = (a["sel"] is int ? a["sel"] as int : a["sel"] as double);
+      final bVal2 = (b["sel"] is int ? b["sel"] as int : b["sel"] as double);
 
       // print(
       //     "sel");
@@ -1340,17 +1380,47 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     });
   }
 
-  sortSelData() {
+  sortSelData({bool isSetState = true}) {
     if (dataNyataSortOrderList.isEmpty || dataNyataSortOrder.isEmpty) return;
     resetSelDataSort();
     (selData[int.tryParse(filterTangki.tangkiValue) ?? 0] as List<dynamic>)
         .sort((dynamic a, dynamic b) {
-      final aVal =
-          a[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
-      final bVal =
-          b[dataNyataSortOrderList[0].toLowerCase().replaceAll("#", "")] ??
-              0 as double;
+      final aVal = (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) is int
+          ? (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as int
+          : (a[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as double;
+      final bVal = (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) is int
+          ? (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as int
+          : (b[dataNyataSortOrderList[0]
+                  .toLowerCase()
+                  .replaceAll("#", "")
+                  .replaceAll("sel", "tangki")
+                  .replaceAll("anoda", "sel")] ??
+              0) as double;
 
       // print("aVal: $aVal");
 
@@ -1364,12 +1434,55 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
           dataNyataSortOrderList.length > 1 &&
           i < dataNyataSortOrderList.length) {
         if (i < dataNyataSortOrderList.length) {
-          final aVal =
-              a[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
-          final bVal =
-              b[dataNyataSortOrderList[i].toLowerCase().replaceAll("#", "")] ??
-                  0 as double;
+          // final aVal = a[dataNyataSortOrderList[i]
+          //         .toLowerCase()
+          //         .replaceAll("#", "")
+          //         .replaceAll("sel", "tangki")
+          //         .replaceAll("anoda", "sel")] ??
+          //     0 as double;
+          // final bVal = b[dataNyataSortOrderList[i]
+          //         .toLowerCase()
+          //         .replaceAll("#", "")
+          //         .replaceAll("sel", "tangki")
+          //         .replaceAll("anoda", "sel")] ??
+          //     0 as double;
+
+          final aVal = (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) is int
+              ? (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as int
+              : (a[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as double;
+          final bVal = (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) is int
+              ? (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as int
+              : (b[dataNyataSortOrderList[i]
+                      .toLowerCase()
+                      .replaceAll("#", "")
+                      .replaceAll("sel", "tangki")
+                      .replaceAll("anoda", "sel")] ??
+                  0) as double;
 
           // print("aVal: $aVal");
 
@@ -1383,10 +1496,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
       return r;
     });
-
-    if (mounted) {
-      setState(() {});
-    }
+    if (mounted && isSetState) setState(() {});
   }
 
   @override

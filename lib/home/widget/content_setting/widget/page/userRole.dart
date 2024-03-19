@@ -26,31 +26,31 @@ class _UserRoleState extends State<UserRole> {
   List<Map<String, dynamic>> titleData = [
     {
       "title": "Role",
-      "width": 84,
+      "width": 84.0,
     },
     {
       "title": "Email",
-      "width": 258,
+      "width": 258.0,
     },
     {
       "title": "Action",
-      "width": 84,
+      "width": 84.0,
     }
   ];
 
   List<Map<String, dynamic>> titleDataUserLog = [
     {
       "title": "Date",
-      "width": 169,
+      "width": 169.0,
     },
     {
       "title": "Log",
-      "width": 253,
+      "width": 253.0,
     },
     {
       "title": "",
       // "width": 84,
-      "width": 0
+      "width": 0.0
     }
   ];
 

@@ -85,6 +85,11 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
       },
     ];
 
+    if (!widget.isAdmin) {
+      tabItems =
+          tabItems.where((element) => element["title"] == "Account").toList();
+    }
+
     dataLog.clear();
 
     dataLog = widget.dataLog;

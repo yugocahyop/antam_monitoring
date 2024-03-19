@@ -91,8 +91,7 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     super.dispose();
 
     mqtt.disconnect();
-    initStatus();
-    initMqtt();
+    widget.scSel.dispose();
   }
 
   initStatus() async {
@@ -143,8 +142,14 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
 
         // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
-        diagnosticData[tangki - 1][sel - 1]["status"] = status;
-        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+        if (diagnosticData[tangki - 1][sel - 1]["status"] != status
+            // &&
+            //     diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp
+            ) {
+          // refresh = true;
+          diagnosticData[tangki - 1][sel - 1]["status"] = status;
+          diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+        }
       } else if (topic == "antam/device/node") {
         // final int tangki = data["tangki"] as int;
 
@@ -453,8 +458,12 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
 
     mqtt = MyMqtt(onUpdate: (data, topic) {});
 
-    initDiagData();
-    initMqtt();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        initDiagData();
+        initMqtt();
+      }
+    });
 
     // getMax2();
   }

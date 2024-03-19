@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:antam_monitoring/home/home.dart';
+import 'package:antam_monitoring/home/homeMobileMaster.dart'
+    if (dart.library.html) 'package:antam_monitoring/home/home.dart';
 // import 'package:antam_monitoring/home_mobile/home_mobile.dart';
 import 'package:antam_monitoring/login/login.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
@@ -65,6 +66,12 @@ class MyApp extends StatelessWidget {
               surface: Colors.white,
               onSurface: Colors.black)),
       // home: Login(),
+      builder: (context, child) {
+        return MediaQuery(
+          child: child!,
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        );
+      },
       initialRoute: "/login",
       routes: {
         "/login": (context) => Login(),

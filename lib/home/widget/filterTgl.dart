@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:antam_monitoring/home/widget/menu.dart';
 import 'package:antam_monitoring/home/widget/myDropDown.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
@@ -45,6 +47,36 @@ class _FilterTglState extends State<FilterTgl> {
 
   // int today = -1;
 
+  late Timer timer;
+
+  int dayNow = -1;
+
+  void setDay() {
+    hari.clear();
+
+    DateTime now = DateTime.now();
+    DateFormat df = DateFormat("EEEE", 'id_ID');
+
+    dayNow = now.day;
+
+    // today = now.day;
+
+    for (var i = 0; i < 7; i++) {
+      hari.insert(
+          0,
+          df.format(DateTime.fromMillisecondsSinceEpoch(
+              now.millisecondsSinceEpoch - (i * 86400000))));
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    timer.cancel();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -59,23 +91,22 @@ class _FilterTglState extends State<FilterTgl> {
       // }
     }
 
-    hari.clear();
+    setDay();
 
-    DateTime now = DateTime.now();
-    DateFormat df = DateFormat("EEEE", 'id_ID');
-
-    // today = now.day;
-
-    for (var i = 0; i < 7; i++) {
-      hari.insert(
-          0,
-          df.format(DateTime.fromMillisecondsSinceEpoch(
-              now.millisecondsSinceEpoch - (i * 86400000))));
-    }
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      DateTime now = DateTime.now();
+      if (dayNow != now.day) {
+        setDay();
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
 
     // hari.insert(0, "Pilih");
 
     if (widget.today > 0) {
+      DateFormat df = DateFormat("EEEE", 'id_ID');
       DateTime d = DateTime.fromMillisecondsSinceEpoch(widget.today);
 
       widget.hariValue = df.format(d);
@@ -90,12 +121,13 @@ class _FilterTglState extends State<FilterTgl> {
       widget.jamValue = widget.lastValue ? jam.last : jam.first;
     }
 
+    DateTime now = DateTime.now();
+
     widget.today =
         DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
             ((hari.reversed.toList().indexOf(widget.hariValue)) * 86400000);
-    widget.today += (jam.indexOf(widget.jamValue)) *
-        (3600000 -
-            (jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
+    widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
+        ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
 
     setState(() {});
   }
@@ -161,9 +193,9 @@ class _FilterTglState extends State<FilterTgl> {
                             if (kDebugMode) {
                               print("jam value ${widget.jamValue}");
                             }
-                            widget.today += jam.indexOf(widget.jamValue) *
-                                (3600000 -
-                                    (jam.indexOf(widget.jamValue) ==
+                            widget.today +=
+                                (jam.indexOf(widget.jamValue) * 3600000) -
+                                    ((jam.indexOf(widget.jamValue) ==
                                             (jam.length - 1)
                                         ? 60000
                                         : 0));

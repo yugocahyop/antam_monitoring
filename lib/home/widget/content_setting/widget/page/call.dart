@@ -26,15 +26,15 @@ class _CallSettingState extends State<CallSetting> {
   List<Map<String, dynamic>> titleData = [
     {
       "title": "Role",
-      "width": 169,
+      "width": 169.0,
     },
     {
       "title": "Name",
-      "width": 169,
+      "width": 169.0,
     },
     {
       "title": "Action",
-      "width": 84,
+      "width": 84.0,
     }
   ];
 
@@ -528,9 +528,9 @@ class _CallSettingState extends State<CallSetting> {
                                   .map((e) => Container(
                                         width: lwidth <= 500
                                             ? ((e["title"] == "Role")
-                                                ? (90)
+                                                ? (90.0)
                                                 : (e["title"] == "Name")
-                                                    ? (120)
+                                                    ? (120.0)
                                                     : e["width"])
                                             : e["width"],
                                         padding: const EdgeInsets.all(5),

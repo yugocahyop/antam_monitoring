@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:antam_monitoring/controller/controller.dart';
-import 'package:antam_monitoring/home/home.dart';
+import 'package:antam_monitoring/home/homeMobileMaster.dart'
+    if (dart.library.html) 'package:antam_monitoring/home/home.dart';
 import 'package:antam_monitoring/home/model/homeArgument.dart';
 import 'package:antam_monitoring/login/login.dart';
 import 'package:antam_monitoring/sign-up/sign-up.dart';

@@ -1,7 +1,7 @@
 // library home;
 
 import 'dart:async';
-import 'dart:html';
+// import 'dart:html';
 // import 'dart:js_interop';
 
 // import 'dart:ui_web';
@@ -375,6 +375,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     final encrypt = MyEncrtypt();
     curr_page = p;
     mqtt.onUpdate = (data, topi) {};
+
     checkAccess();
     switch (p) {
       case 0:
@@ -539,13 +540,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   late Timer timer;
 
-  void onFocus(Event e) {
-    didChangeAppLifecycleState(AppLifecycleState.resumed);
-  }
+  // void onFocus(Event e) {
+  //   didChangeAppLifecycleState(AppLifecycleState.resumed);
+  // }
 
-  void onBlur(Event e) {
-    didChangeAppLifecycleState(AppLifecycleState.paused);
-  }
+  // void onBlur(Event e) {
+  //   didChangeAppLifecycleState(AppLifecycleState.paused);
+  // }
 
   String email = "";
 
@@ -640,39 +641,37 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     // WidgetsBinding.instance!.addObserver(this);
 
-    if (kIsWeb) {
-      window.addEventListener('focus', onFocus);
-      window.addEventListener('blur', onBlur);
-      window.addEventListener('visibilitychange', onFocus);
-      listenUnload = window.onBeforeUnload.listen((event) {
-        if (kDebugMode) {
-          print("before unload");
-        }
-        // scSel.dispose();
-        // scMain.dispose();
-        // timer.cancel();
-        // mqtt.disconnect();
-        // mqtt.dispose();
-        // listenUnload.cancel();
-        dispose();
-      });
+    // if (kIsWeb) {
+    //   window.addEventListener('focus', onFocus);
+    //   window.addEventListener('blur', onBlur);
+    //   window.addEventListener('visibilitychange', onFocus);
+    //   listenUnload = window.onBeforeUnload.listen((event) {
+    //     if (kDebugMode) {
+    //       print("before unload");
+    //     }
+    //     // scSel.dispose();
+    //     timer.cancel();
+    //     mqtt.disconnect();
+    //     mqtt.dispose();
+    //     listenUnload.cancel();
+    //   });
 
-      // window.onPageShow.listen((event) {
-      //   try {
-      //     mqtt.publish({}, "antam/command");
-      //   } catch (e) {
-      //     mqtt.unsubscribeAll();
-      //     mqtt.disconnect();
-      //     mqtt.reconnecting = true;
-      //     mqtt.isConnected = false;
-      //   }
-      //   if (kDebugMode) {
-      //     print("page shown");
-      //   }
-      // });
-    } else {
-      WidgetsBinding.instance!.addObserver(this);
-    }
+    // window.onPageShow.listen((event) {
+    //   try {
+    //     mqtt.publish({}, "antam/command");
+    //   } catch (e) {
+    //     mqtt.unsubscribeAll();
+    //     mqtt.disconnect();
+    //     mqtt.reconnecting = true;
+    //     mqtt.isConnected = false;
+    //   }
+    //   if (kDebugMode) {
+    //     print("page shown");
+    //   }
+    // });
+    // } else {
+    WidgetsBinding.instance!.addObserver(this);
+    // }
     // final r = Random(70);
     initToken();
 
@@ -844,13 +843,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     mqtt.disconnect();
     mqtt.dispose();
 
-    if (kIsWeb) {
-      window.removeEventListener('focus', onFocus);
-      window.removeEventListener('blur', onBlur);
-      window.removeEventListener('visibilitychange', onBlur);
-    } else {
-      WidgetsBinding.instance!.removeObserver(this);
-    }
+    // if (kIsWeb) {
+    //   window.removeEventListener('focus', onFocus);
+    //   window.removeEventListener('blur', onBlur);
+    //   window.removeEventListener('visibilitychange', onBlur);
+    // } else {
+    WidgetsBinding.instance!.removeObserver(this);
+    // }
   }
 
   @override
@@ -998,6 +997,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       textColor: Colors.white,
                       onPressed: () {
                         // dispose();
+
                         Navigator.pop(context);
 
                         Navigator.pushNamedAndRemoveUntil(
