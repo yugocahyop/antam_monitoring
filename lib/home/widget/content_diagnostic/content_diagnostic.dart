@@ -207,15 +207,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         String lastUpdated = "";
 
         // if (kDebugMode) {
-        print("now : ${df.format(now)} date: ${df.format(date)} ");
+        // print("now : ${df.format(now)} date: ${df.format(date)} ");
         // }
 
-        if (now.year == date.year) {
-          if (now.month == date.month) {
-            if (now.day == (date.day)) {
-              if (now.hour == date.hour) {
-                if (now.minute == date.minute) {
-                  if (now.second == date.second) {
+        if (now.year <= date.year) {
+          if (now.month <= date.month) {
+            if (now.day <= (date.day)) {
+              if (now.hour <= date.hour) {
+                if (now.minute <= date.minute) {
+                  if (now.second <= date.second) {
                     lastUpdated = "baru";
                   } else {
                     lastUpdated = "${now.second - date.second} detik lalu";
@@ -475,7 +475,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       }
     }
 
-    for (var i = 1; i < selData.length; i++) {
+    for (var i = 1; i < selData.length - 1; i++) {
       final v = selData[i];
 
       // int count = 1;
@@ -875,7 +875,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
         if (diagnosticData[tangki - 1][sel - 1]["status"] != status
-            // &&
+            // ||
             //     diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp
             ) {
           refresh = true;
@@ -964,13 +964,17 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         for (var i = 2; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
-          if (selData[tangki][(data["sel"] as int) - 1][title] !=
-              sData[title]) {
+          if (sData[title] != null &&
+              selData[tangki][(data["sel"] as int) - 1][title] !=
+                  sData[title]) {
             refresh = true;
             selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
           }
+        }
 
-          // selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+        if (sData["pH"] != null) {
+          selData[tangki][(data["sel"] as int) - 1]["pH"] =
+              (sData["pH"] ?? 0.0);
         }
 
         getMax(isSetState: false);
@@ -1516,20 +1520,56 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                           ]),
                                       child: Column(children: [
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            SvgPicture.asset(
-                                              "assets/dataNyata.svg",
-                                              width: 30,
-                                              color: MainStyle.primaryColor,
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  "assets/dataNyata.svg",
+                                                  width: 30,
+                                                  color: MainStyle.primaryColor,
+                                                ),
+                                                // const SizedBox(
+                                                //   width: 10,
+                                                // ),
+                                                MainStyle.sizedBoxW10,
+                                                Text(
+                                                  "Data Nyata",
+                                                  style: MainStyle
+                                                      .textStyleDefault20Primary,
+                                                )
+                                              ],
                                             ),
-                                            // const SizedBox(
-                                            //   width: 10,
-                                            // ),
-                                            MainStyle.sizedBoxW10,
-                                            Text(
-                                              "Data Nyata",
-                                              style: MainStyle
-                                                  .textStyleDefault20Primary,
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5,
+                                                  bottom: 5,
+                                                  left: 8,
+                                                  right: 8),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: MainStyle.thirdColor,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Sensor Node",
+                                                    style: MainStyle
+                                                        .textStyleDefault15BlackBold,
+                                                  ),
+                                                  Text(
+                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                    style: MainStyle
+                                                        .textStyleDefault14Black,
+                                                  )
+                                                ],
+                                              ),
                                             )
                                           ],
                                         ),

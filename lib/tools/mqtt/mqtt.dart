@@ -19,6 +19,7 @@ class MyMqtt {
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
   Function(Map<String, dynamic> json, String topic) onUpdate;
   Function(Map<String, dynamic> json)? onUpdateAlarm;
+  Function(Map<String, dynamic> json)? onReply;
 
   bool isConnected = false;
 
@@ -104,6 +105,12 @@ class MyMqtt {
 
   void subscribe(String topic) {
     client.subscribe(topic, MqttQos.atLeastOnce);
+
+    // topics.add(topic);
+  }
+
+  void unsubscribe(String topic) {
+    client.unsubscribe(topic);
 
     // topics.add(topic);
   }
@@ -234,6 +241,7 @@ class MyMqtt {
       client.subscribe('antam/statistic', MqttQos.atLeastOnce);
       client.subscribe('antam/statusnode', MqttQos.atLeastOnce);
       client.subscribe('antam/statusNode', MqttQos.atLeastOnce);
+      // client.subscribe('antam/reply', MqttQos.atLeastOnce);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -265,6 +273,11 @@ class MyMqtt {
       if (onUpdateAlarm != null && c[0].topic == "antam/statusNode") {
         final json2 = jsonDecode(pt);
         onUpdateAlarm!(json2);
+      }
+
+      if (onReply != null && c[0].topic == "antam/reply") {
+        final json2 = jsonDecode(pt);
+        onReply!(json2);
       }
 
       // if (json["tangkiData"] != null) {
@@ -343,6 +356,7 @@ class MyMqtt {
       client.unsubscribe('antam/statistic');
       client.unsubscribe('antam/statusnode');
       client.unsubscribe('antam/statusNode');
+      // client.unsubscribe('antam/reply');
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -376,6 +390,7 @@ class MyMqtt {
       client.unsubscribe('antam/statistic');
       client.unsubscribe('antam/statusnode');
       client.unsubscribe('antam/statusNode');
+      // client.unsubscribe('antam/reply');
     } catch (e) {
       if (kDebugMode) {
         print(e);

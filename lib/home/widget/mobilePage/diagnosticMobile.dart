@@ -143,7 +143,7 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
         // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
         if (diagnosticData[tangki - 1][sel - 1]["status"] != status
-            // &&
+            // ||
             //     diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp
             ) {
           // refresh = true;
@@ -548,12 +548,12 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
         print("now : ${df.format(now)} date: ${df.format(date)} ");
         // }
 
-        if (now.year == date.year) {
-          if (now.month == date.month) {
-            if (now.day == (date.day)) {
-              if (now.hour == date.hour) {
-                if (now.minute == date.minute) {
-                  if (now.second == date.second) {
+        if (now.year <= date.year) {
+          if (now.month <= date.month) {
+            if (now.day <= (date.day)) {
+              if (now.hour <= date.hour) {
+                if (now.minute <= date.minute) {
+                  if (now.second <= date.second) {
                     lastUpdated = "baru";
                   } else {
                     lastUpdated = "${now.second - date.second} detik lalu";

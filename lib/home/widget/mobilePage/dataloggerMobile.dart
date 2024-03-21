@@ -274,7 +274,7 @@ class _HomeMobileState extends State<DataLogger> {
       }
     }
 
-    for (var i = 1; i < selData.length; i++) {
+    for (var i = 1; i < selData.length - 1; i++) {
       final v = selData[i];
 
       // int count = 1;
@@ -1028,10 +1028,12 @@ class _HomeMobileState extends State<DataLogger> {
 
   bool isAlarm = false, isTapped = false;
 
-  int maxDataNum = 0, offset = 0;
+  int maxDataNum = 20, offset = 0;
 
   changeIsAlarm(bool isAlarm2) async {
     isAlarm = isAlarm2;
+
+    offset = 0;
 
     // print("change isAlarm");
 
@@ -1301,13 +1303,13 @@ class _HomeMobileState extends State<DataLogger> {
                     // ),
                     AnimatedPositioned(
                       top: isTapped
-                          ? (lheight <= 830 ? 0 : lheight * 0.25)
-                          : lheight * 0.65,
+                          ? (lheight <= 830 ? 0 : lheight * 0.22)
+                          : lheight * 0.67,
                       duration: const Duration(milliseconds: 120),
                       child: Container(
                         // padding: EdgeInsets.all(10),
                         width: lWidth,
-                        height: lheight * 0.65,
+                        height: lheight * 0.67,
                         clipBehavior: Clip.none,
                         decoration: BoxDecoration(
                             color: MainStyle.thirdColor,
@@ -1358,23 +1360,60 @@ class _HomeMobileState extends State<DataLogger> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SvgPicture.asset(
-                                        "assets/dataNyata.svg",
-                                        width: 30,
-                                        color: MainStyle.primaryColor,
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/dataNyata.svg",
+                                            width: 30,
+                                            color: MainStyle.primaryColor,
+                                          ),
+                                          // const SizedBox(
+                                          //   width: 10,
+                                          // ),
+                                          MainStyle.sizedBoxW10,
+                                          Text(
+                                            "Data Nyata",
+                                            style: MainStyle
+                                                .textStyleDefault20Primary,
+                                          )
+                                        ],
                                       ),
-                                      // const SizedBox(
-                                      //   width: 10,
-                                      // ),
-                                      MainStyle.sizedBoxW10,
-                                      Text(
-                                        "Data Nyata",
-                                        style: MyTextStyle.defaultFontCustom(
-                                            MainStyle.primaryColor, 20),
-                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            top: 5,
+                                            bottom: 5,
+                                            left: 8,
+                                            right: 8),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: MainStyle.thirdColor,
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Sensor Node",
+                                              style: MainStyle
+                                                  .textStyleDefault15BlackBold,
+                                            ),
+                                            Text(
+                                              "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                              style: MainStyle
+                                                  .textStyleDefault14Black,
+                                            )
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
+                                  MainStyle.sizedBoxH5,
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
@@ -1433,6 +1472,8 @@ class _HomeMobileState extends State<DataLogger> {
                                         (selData[int.tryParse(
                                                     filterTangki.tangkiValue) ??
                                                 0] as List<dynamic>)
+                                            .getRange(
+                                                0, currTangki == 0 ? 30 : 5)
                                             .map((e) => Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 70),

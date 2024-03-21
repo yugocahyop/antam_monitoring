@@ -8,6 +8,7 @@ import 'package:antam_monitoring/home/widget/content_setting/widget/page/monitor
 import 'package:antam_monitoring/home/widget/content_setting/widget/page/userRole.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 // import 'package:antam_monitoring/tools/apiHelper.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 class PanelTableSetting extends StatefulWidget {
   PanelTableSetting(
       {super.key,
+      required this.mqtt,
       required this.dataLog,
       required this.onTap,
       required this.email,
@@ -23,6 +25,8 @@ class PanelTableSetting extends StatefulWidget {
   List<Map<String, dynamic>> dataLog;
   final String email;
   final bool isAdmin;
+
+  MyMqtt mqtt;
 
   Function(int index) onTap;
 
@@ -75,7 +79,9 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
         "title": "Monitoring",
         "icon": Icons.bar_chart,
         "shown": false,
-        "widget": const MonitoringSetting()
+        "widget": MonitoringSetting(
+          mqtt: widget.mqtt,
+        )
       },
       {
         "title": "Call",

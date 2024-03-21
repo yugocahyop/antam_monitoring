@@ -381,7 +381,7 @@ class _Content_homeState extends State<Content_home> {
 
     final sel = (selData[0] as List<dynamic>);
 
-    for (var i = 1; i < selData.length; i++) {
+    for (var i = 1; i < selData.length - 1; i++) {
       final v = selData[i];
 
       // int count = 1;
@@ -572,6 +572,8 @@ class _Content_homeState extends State<Content_home> {
       selData.add(listTangkiZero);
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
+
+      // selData[7][1] = {"pH": 0.0, "suhu": 0.0};
     }
 
     if (mounted) setState(() {});
@@ -585,14 +587,49 @@ class _Content_homeState extends State<Content_home> {
 
       Future.delayed(const Duration(milliseconds: 300), () {
         if (!mounted) return;
-        setSetting("tegangan", 3);
-        setSetting("arus", 100);
+        // setSetting("tegangan", 3);
+        // setSetting("arus", 100);
 
         initMqtt();
       });
     });
 
     if (mounted) setState(() {});
+  }
+
+  initChartDb() async {
+    final api = ApiHelper();
+
+    while (ApiHelper.tokenMain.isEmpty) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+
+    final r = await api.callAPI("/setting/find/last", "POST", "", true);
+
+    if (kDebugMode) {
+      print("backend chart data: $r");
+    }
+
+    if (r["error"] == null) {
+      try {
+        final data = r["data"][0] as Map<String, dynamic>;
+        arusAtas = data["arusAtas"] / 1;
+        teganganAtas = data["teganganAtas"] / 1;
+
+        Future.delayed(const Duration(seconds: 1), () {
+          setSetting("tegangan", teganganAtas);
+          setSetting("arus", arusAtas);
+
+          initChart();
+        });
+      } catch (e) {
+        initChart();
+      }
+
+      // selData[7][1] = {"pH": 0.0, "suhu": 0.0};
+    }
+
+    // if (mounted) setState(() {});
   }
 
   initMqtt() {
@@ -675,7 +712,12 @@ class _Content_homeState extends State<Content_home> {
         //   items: items,
         //   onChange: (value) => getData(int.tryParse(value) ?? 0),
         // );
-      } else if (topic == "antam/statusNode") {
+      } else if (topic == "antam/setLimit") {
+        if (teganganAtas != data["teganganAtas"] ||
+            arusAtas != data["arusAtas"]) {
+          initChart();
+        }
+
         // final String status = data["status"] as String;
 
         // if (status.contains("alarmArusTinggi") ||
@@ -748,11 +790,17 @@ class _Content_homeState extends State<Content_home> {
         for (var i = 2; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
-          if (selData[tangki][(data["sel"] as int) - 1][title] !=
-              sData[title]) {
+          if (sData[title] != null &&
+              selData[tangki][(data["sel"] as int) - 1][title] !=
+                  sData[title]) {
             refresh = true;
             selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
           }
+        }
+
+        if (sData["pH"] != null) {
+          selData[tangki][(data["sel"] as int) - 1]["pH"] =
+              (sData["pH"] ?? 0.0);
         }
 
         getMax2(isSetState: false);
@@ -1117,6 +1165,7 @@ class _Content_homeState extends State<Content_home> {
     initStatus();
     initSelData();
     initTotalDataStatistic();
+    initChartDb();
   }
 
   initStatus() async {
@@ -1303,6 +1352,36 @@ class _Content_homeState extends State<Content_home> {
     if (mounted && isSetState) setState(() {});
   }
 
+  double teganganAtas = 4.0;
+  double arusAtas = 200.0;
+
+  Future<void> initChart() async {
+    while (!widget.mqtt.isConnected) {
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    widget.mqtt.subscribe("antam/reply");
+    widget.mqtt.subscribe("antam/setLimit");
+    if (mounted) {
+      Future.delayed(const Duration(seconds: 1), () {
+        widget.mqtt.onReply = (json) {
+          // isReplied = true;
+
+          teganganAtas = ((json["teganganAtas"] / 1) as double);
+          arusAtas = ((json["arusAtas"] / 1) as double);
+
+          setSetting("tegangan", teganganAtas);
+          setSetting("arus", arusAtas);
+
+          widget.mqtt.unsubscribe("antam/reply");
+
+          widget.mqtt.onReply = null;
+        };
+
+        widget.mqtt.publish({"query": "batasan"}, "antam/query");
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
@@ -1477,13 +1556,17 @@ class _Content_homeState extends State<Content_home> {
                                         children: [
                                           MyLineChart(
                                             points: teganganSetting,
-                                            maxY: 4,
+                                            maxY: teganganAtas > 4
+                                                ? teganganAtas + 2
+                                                : 4,
                                           ),
                                           MyBarChart(
                                               tangkiMaxData: currTangki == 0
                                                   ? tangkiMaxData
                                                   : [],
-                                              maxY: 4,
+                                              maxY: teganganAtas > 4
+                                                  ? teganganAtas + 2
+                                                  : 4,
                                               max: teganganSetting.last.y,
                                               title: "tegangan",
                                               points: teganganData),
@@ -1508,13 +1591,17 @@ class _Content_homeState extends State<Content_home> {
                                         children: [
                                           MyLineChart(
                                             points: arusSetting,
-                                            maxY: 200,
+                                            maxY: arusAtas <= 200
+                                                ? 200
+                                                : arusAtas + 150,
                                           ),
                                           MyBarChart(
                                               tangkiMaxData: currTangki == 0
                                                   ? tangkiMaxData
                                                   : [],
-                                              maxY: 200,
+                                              maxY: arusAtas <= 200
+                                                  ? 200
+                                                  : arusAtas + 150,
                                               max: teganganSetting.first.y,
                                               title: "Arus",
                                               points: arusData),
@@ -1573,20 +1660,56 @@ class _Content_homeState extends State<Content_home> {
                                           ]),
                                       child: Column(children: [
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            SvgPicture.asset(
-                                              "assets/dataNyata.svg",
-                                              width: 30,
-                                              color: MainStyle.primaryColor,
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  "assets/dataNyata.svg",
+                                                  width: 30,
+                                                  color: MainStyle.primaryColor,
+                                                ),
+                                                // const SizedBox(
+                                                //   width: 10,
+                                                // ),
+                                                MainStyle.sizedBoxW10,
+                                                Text(
+                                                  "Data Nyata",
+                                                  style: MainStyle
+                                                      .textStyleDefault20Primary,
+                                                )
+                                              ],
                                             ),
-                                            // const SizedBox(
-                                            //   width: 10,
-                                            // ),
-                                            MainStyle.sizedBoxW10,
-                                            Text(
-                                              "Data Nyata",
-                                              style: MainStyle
-                                                  .textStyleDefault20Primary,
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5,
+                                                  bottom: 5,
+                                                  left: 8,
+                                                  right: 8),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: MainStyle.thirdColor,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Sensor Node",
+                                                    style: MainStyle
+                                                        .textStyleDefault15BlackBold,
+                                                  ),
+                                                  Text(
+                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                    style: MainStyle
+                                                        .textStyleDefault14Black,
+                                                  )
+                                                ],
+                                              ),
                                             )
                                           ],
                                         ),
@@ -1765,11 +1888,14 @@ class _Content_homeState extends State<Content_home> {
                                                     child: ListView.builder(
                                                         controller:
                                                             widget.scSel,
-                                                        itemCount: selData[int.tryParse(
-                                                                    filterTangki
-                                                                        .tangkiValue) ??
-                                                                0]
-                                                            .length,
+                                                        itemCount: currTangki ==
+                                                                0
+                                                            ? 30
+                                                            : selData[int.tryParse(
+                                                                        filterTangki
+                                                                            .tangkiValue) ??
+                                                                    0]
+                                                                .length,
                                                         itemBuilder:
                                                             (context, i) {
                                                           final val = selData[

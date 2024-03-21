@@ -97,6 +97,10 @@ class _FilterTglState extends State<FilterTgl> {
       DateTime now = DateTime.now();
       if (dayNow != now.day) {
         setDay();
+
+        widget.hariValue = widget.lastValue ? hari.last : hari[0];
+
+        // widget.jamValue = widget.lastValue ? jam.last : jam.first;
         if (mounted) {
           setState(() {});
         }

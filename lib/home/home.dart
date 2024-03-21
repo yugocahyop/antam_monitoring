@@ -366,6 +366,49 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         "energi": 0.0
       },
     ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0,
+        "pH": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ],
   ];
 
   int curr_page = 0;
@@ -646,15 +689,40 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       window.addEventListener('visibilitychange', onFocus);
       listenUnload = window.onBeforeUnload.listen((event) {
         if (kDebugMode) {
-          print("before unload");
+          print("before unload ");
         }
+
         // scSel.dispose();
         // scMain.dispose();
         // timer.cancel();
         // mqtt.disconnect();
         // mqtt.dispose();
         // listenUnload.cancel();
-        dispose();
+        final c = Controller();
+
+        c.saveSharedPref("antam.data", "");
+        c.saveSharedPref("antam.log", "");
+        c.saveSharedPref("antam.public", "");
+        c.saveSharedPref("antam.access", "");
+
+        // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
+
+        c.saveSharedPref("antam.token", "");
+        // TODO: implement dispose
+        // super.dispose();
+        // scSel.dispose();
+        // scMain.dispose();
+        timer.cancel();
+        mqtt.disconnect();
+        mqtt.dispose();
+
+        if (kIsWeb) {
+          window.removeEventListener('focus', onFocus);
+          window.removeEventListener('blur', onBlur);
+          window.removeEventListener('visibilitychange', onBlur);
+        } else {
+          WidgetsBinding.instance!.removeObserver(this);
+        }
       });
 
       // window.onPageShow.listen((event) {

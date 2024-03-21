@@ -515,6 +515,7 @@ class _SettingMobileState extends State<SettingMobile> {
                         // ]
                       ),
                       child: PanelTableSetting(
+                          mqtt: mqtt,
                           email: widget.email,
                           isAdmin: widget.isAdmin,
                           dataLog: [],

@@ -174,11 +174,13 @@ class _PanelTableState extends State<PanelTable> {
                       ],
                     )
                   : LoadMore(
-                      textBuilder: (LoadMoreStatus) {
-                        return "Loading Data";
+                      textBuilder: (loadMoreStatus) {
+                        return loadMoreStatus == LoadMoreStatus.loading
+                            ? "Loading Data"
+                            : "";
                       },
                       // delegate: DelegateBuilder(context),
-                      isFinish: dataLog.length > widget.max,
+                      isFinish: dataLog.length >= widget.max,
                       onLoadMore: widget.loadmore,
                       // delegate: ,
                       child: ListView.builder(
@@ -191,8 +193,7 @@ class _PanelTableState extends State<PanelTable> {
                                       true)["isClicked"] = false;
                                 } catch (e) {}
 
-                                dataLog[index]["isClicked"] =
-                                    !dataLog[index]["isClicked"];
+                                dataLog[index]["isClicked"] = true;
 
                                 if (!isAlarm) widget.onTap(index);
                               },

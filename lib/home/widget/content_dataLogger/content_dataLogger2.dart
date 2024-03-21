@@ -177,6 +177,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     // widget.changePage(1,
     //     dari: filterTglDari.today, hingga: filterTglHingga.today);
     dataLog.clear();
+
+    //  if (offsetNum == 0) {
+    offset = 0;
+    // }
     getDataLog(0);
 
     // if (mounted) {
@@ -364,10 +368,12 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       }
     }
 
-    for (var i = 1; i < selData.length; i++) {
+    for (var i = 1; i < selData.length - 1; i++) {
       final v = selData[i];
 
       // int count = 1;
+
+      final sel = (selData[0] as List<dynamic>);
 
       for (Map<String, dynamic> e in v) {
         final c = (e["suhu"] ?? e["celcius"]) is int
@@ -386,15 +392,50 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
             ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
             : (e["energi"] ?? e["kwh"] ?? 0) as double;
 
-        selData[0].add({
-          "tangki": i.toDouble(),
-          "sel": e["sel"] as double,
-          "suhu": c,
-          "tegangan": vv,
-          "arus": a,
-          "daya": w,
-          "energi": en,
-        });
+        // selData[0].add({
+        //   "tangki": i.toDouble(),
+        //   "sel": e["sel"] as double,
+        //   "suhu": c,
+        //   "tegangan": vv,
+        //   "arus": a,
+        //   "daya": w,
+        //   "energi": en,
+        // });
+
+        (sel).firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["suhu"] = c;
+        // }
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["tegangan"] = vv;
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["arus"] = a;
+
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["daya"] = w;
+        sel.firstWhere((element) =>
+            element["tangki"] == i.toDouble() &&
+            element["sel"] ==
+                (e["sel"] is int
+                    ? e["sel"] as int
+                    : e["sel"] as double))["energi"] = en;
 
         //  e["celcius"] = (e["celcius"] as int) + 1;
         final index = v.indexOf(e);
@@ -494,53 +535,71 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     if (r["error"] == null) {
       selData.clear();
 
-      selData.add([
-        {
-          "tangki": 1,
-          "sel": 1,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "tangki": 1,
-          "sel": 2,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "tangki": 1,
-          "sel": 3,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "tangki": 1,
-          "sel": 4,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-        {
-          "tangki": 1,
-          "sel": 5,
-          "suhu": 0.0,
-          "tegangan": 0.0,
-          "arus": 0.0,
-          "daya": 0.0,
-          "energi": 0.0
-        },
-      ]);
+      // selData.add([
+      //   {
+      //     "tangki": 1,
+      //     "sel": 1,
+      //     "suhu": 0.0,
+      //     "tegangan": 0.0,
+      //     "arus": 0.0,
+      //     "daya": 0.0,
+      //     "energi": 0.0
+      //   },
+      //   {
+      //     "tangki": 1,
+      //     "sel": 2,
+      //     "suhu": 0.0,
+      //     "tegangan": 0.0,
+      //     "arus": 0.0,
+      //     "daya": 0.0,
+      //     "energi": 0.0
+      //   },
+      //   {
+      //     "tangki": 1,
+      //     "sel": 3,
+      //     "suhu": 0.0,
+      //     "tegangan": 0.0,
+      //     "arus": 0.0,
+      //     "daya": 0.0,
+      //     "energi": 0.0
+      //   },
+      //   {
+      //     "tangki": 1,
+      //     "sel": 4,
+      //     "suhu": 0.0,
+      //     "tegangan": 0.0,
+      //     "arus": 0.0,
+      //     "daya": 0.0,
+      //     "energi": 0.0
+      //   },
+      //   {
+      //     "tangki": 1,
+      //     "sel": 5,
+      //     "suhu": 0.0,
+      //     "tegangan": 0.0,
+      //     "arus": 0.0,
+      //     "daya": 0.0,
+      //     "energi": 0.0
+      //   },
+      // ]);
+
+      List<dynamic> listTangkiZero = [];
+
+      for (var x = 1; x < 8; x++) {
+        for (var i = 1; i < 6; i++) {
+          listTangkiZero.add({
+            "tangki": x,
+            "sel": i,
+            "suhu": 0.0,
+            "tegangan": 0.0,
+            "arus": 0.0,
+            "daya": 0.0,
+            "energi": 0.0
+          });
+        }
+      }
+
+      selData.add(listTangkiZero);
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
     }
@@ -1050,55 +1109,74 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     selData.clear();
     // selData.add([[]]);
     // selData = dataLog[index]["tangkiData"];
+
+    List<dynamic> listTangkiZero = [];
+
+    for (var x = 1; x < 8; x++) {
+      for (var i = 1; i < 6; i++) {
+        listTangkiZero.add({
+          "tangki": x,
+          "sel": i,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        });
+      }
+    }
+
+    selData.add(listTangkiZero);
+
     selData.addAll(dataLog[index]["tangkiData"] as List<dynamic>);
 
-    selData.insert(0, [
-      {
-        "tangki": 1,
-        "sel": 1,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 2,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 3,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 4,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-      {
-        "tangki": 1,
-        "sel": 5,
-        "suhu": 0.0,
-        "tegangan": 0.0,
-        "arus": 0.0,
-        "daya": 0.0,
-        "energi": 0.0
-      },
-    ]);
+    // selData.insert(0, [
+    //   {
+    //     "tangki": 1,
+    //     "sel": 1,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "tangki": 1,
+    //     "sel": 2,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "tangki": 1,
+    //     "sel": 3,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "tangki": 1,
+    //     "sel": 4,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    //   {
+    //     "tangki": 1,
+    //     "sel": 5,
+    //     "suhu": 0.0,
+    //     "tegangan": 0.0,
+    //     "arus": 0.0,
+    //     "daya": 0.0,
+    //     "energi": 0.0
+    //   },
+    // ]);
 
     final df = DateFormat("dd/MM/yyy HH:mm:ss");
 
@@ -1114,21 +1192,35 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
   }
 
+  // bool isLoadmore = false;
   Future<bool> loadMore() async {
+    // if (isLoadmore) {
+    //   return false;
+    // }
+
+    // isLoadmore = true;
     offset += dataNum;
 
+    if (offset > maxDataNum) {
+      offset = maxDataNum;
+    }
+
     await getDataLog(offset);
+
+    // isLoadmore = false;
 
     return true;
   }
 
   int offset = 0;
   int dataNum = 20;
-  int maxDataNum = 0;
+  int maxDataNum = 40;
   bool isAlarm = false;
 
   changeIsAlarm(bool isAlarm2) async {
     isAlarm = isAlarm2;
+
+    offset = 0;
 
     // print("change isAlarm");
 
@@ -1227,6 +1319,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
         isLoading = true;
       });
     }
+
     // }
 
     // await Future.delayed(const Duration(milliseconds: 1000));
@@ -1331,6 +1424,21 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     mqtt = widget.mqtt;
 
     selData = widget.selData;
+
+    selData[0].clear();
+    for (var x = 1; x < 8; x++) {
+      for (var i = 1; i < 6; i++) {
+        selData[0].add({
+          "tangki": x,
+          "sel": i,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        });
+      }
+    }
 
     getMax2();
 
@@ -1665,21 +1773,76 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                   spreadRadius: 0),
                                             ]),
                                         child: Column(children: [
+                                          // Row(
+                                          //   children: [
+                                          //     SvgPicture.asset(
+                                          //       "assets/dataNyata.svg",
+                                          //       width: 30,
+                                          //       color: MainStyle.primaryColor,
+                                          //     ),
+                                          //     // const SizedBox(
+                                          //     //   width: 10,
+                                          //     // ),
+                                          //     MainStyle.sizedBoxW10,
+                                          //     Text(
+                                          //       "Data Nyata $dataDate",
+                                          //       style: MainStyle
+                                          //           .textStyleDefault20Primary,
+                                          //     )
+                                          //   ],
+                                          // ),
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              SvgPicture.asset(
-                                                "assets/dataNyata.svg",
-                                                width: 30,
-                                                color: MainStyle.primaryColor,
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/dataNyata.svg",
+                                                    width: 30,
+                                                    color:
+                                                        MainStyle.primaryColor,
+                                                  ),
+                                                  // const SizedBox(
+                                                  //   width: 10,
+                                                  // ),
+                                                  MainStyle.sizedBoxW10,
+                                                  Text(
+                                                    "Data Nyata $dataDate",
+                                                    style: MainStyle
+                                                        .textStyleDefault20Primary,
+                                                  )
+                                                ],
                                               ),
-                                              // const SizedBox(
-                                              //   width: 10,
-                                              // ),
-                                              MainStyle.sizedBoxW10,
-                                              Text(
-                                                "Data Nyata $dataDate",
-                                                style: MainStyle
-                                                    .textStyleDefault20Primary,
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5,
+                                                    bottom: 5,
+                                                    left: 8,
+                                                    right: 8),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  color: MainStyle.thirdColor,
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      "Sensor Node",
+                                                      style: MainStyle
+                                                          .textStyleDefault15BlackBold,
+                                                    ),
+                                                    Text(
+                                                      "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                      style: MainStyle
+                                                          .textStyleDefault14Black,
+                                                    )
+                                                  ],
+                                                ),
                                               )
                                             ],
                                           ),
@@ -1861,12 +2024,14 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                       child: ListView.builder(
                                                           controller:
                                                               widget.scSel,
-                                                          itemCount: selData[
-                                                                  int.tryParse(
+                                                          itemCount: currTangki ==
+                                                                  0
+                                                              ? 30
+                                                              : selData[int.tryParse(
                                                                           filterTangki
                                                                               .tangkiValue) ??
                                                                       0]
-                                                              .length,
+                                                                  .length,
                                                           itemBuilder:
                                                               (context, i) {
                                                             final val = selData[
