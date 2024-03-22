@@ -1289,15 +1289,17 @@ class _HomeMobileState extends State<DataLogger> {
                           //       spreadRadius: 0),
                           // ]
                         ),
-                        child: PanelTable(
-                            isLoading: isLoading,
-                            changeIsAlarm: changeIsAlarm,
-                            loadmore: loadMore,
-                            dataLog: dataLog,
-                            onTap: ((index) {
-                              changeData(index);
-                            }),
-                            max: maxDataNum)),
+                        child: Center(
+                          child: PanelTable(
+                              isLoading: isLoading,
+                              changeIsAlarm: changeIsAlarm,
+                              loadmore: loadMore,
+                              dataLog: dataLog,
+                              onTap: ((index) {
+                                changeData(index);
+                              }),
+                              max: maxDataNum),
+                        )),
                     // const SizedBox(
                     //   width: 30,
                     // ),

@@ -12,9 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MonitoringSetting extends StatefulWidget {
-  MonitoringSetting({super.key, required this.mqtt});
+  MonitoringSetting({super.key, required this.mqtt, this.height});
 
   MyMqtt mqtt;
+  double? height;
 
   @override
   State<MonitoringSetting> createState() => _MonitoringSettingState();
@@ -112,6 +113,8 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
 
   bool isLoading = false;
 
+  // double lwidth = 200;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -122,7 +125,7 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
 
       Mytextfield_label tf = Mytextfield_label(
         isBorder: true,
-        width: 200,
+        width: (widget.height ?? 540) > 700 ? 150 : 200,
         obscure: false,
         hintText: val["hint"],
         suffixText: val["unit"],
@@ -225,7 +228,7 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
     final lwidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
-      height: 540,
+      height: widget.height ?? 540,
       child: Column(
         children: [
           Row(
@@ -292,7 +295,10 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: 200,
+                                width: (widget.height ?? 540) > 700 &&
+                                        (lwidth <= 500)
+                                    ? 150
+                                    : 200,
                                 child: Text(
                                   e["label"],
                                   // textAlign:

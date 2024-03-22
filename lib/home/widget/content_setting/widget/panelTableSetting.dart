@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 class PanelTableSetting extends StatefulWidget {
   PanelTableSetting(
       {super.key,
+      this.height,
       required this.mqtt,
       required this.dataLog,
       required this.onTap,
@@ -25,6 +26,7 @@ class PanelTableSetting extends StatefulWidget {
   List<Map<String, dynamic>> dataLog;
   final String email;
   final bool isAdmin;
+  double? height;
 
   MyMqtt mqtt;
 
@@ -80,6 +82,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
         "icon": Icons.bar_chart,
         "shown": false,
         "widget": MonitoringSetting(
+          height: widget.height ?? 540,
           mqtt: widget.mqtt,
         )
       },
@@ -106,7 +109,7 @@ class _PanelTableSettingState extends State<PanelTableSetting> {
     final lwidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
-      height: 620,
+      height: widget.height ?? 620,
       child: Stack(
         children: [
           SizedBox(

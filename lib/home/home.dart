@@ -1,6 +1,7 @@
 // library home;
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html';
 // import 'dart:js_interop';
 
@@ -574,6 +575,28 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         if (kDebugMode) {
           print("error: $e");
         }
+
+        final cookie = document.cookie!;
+
+        if (kDebugMode) {
+          print("cookie $cookie");
+        }
+        final entity = cookie.split("; ").map((item) {
+          final split = item.split("=");
+          return MapEntry(split[0], split[1]);
+        });
+        final cookieMap = Map.fromEntries(entity);
+
+        final token2 = cookieMap["log"]!;
+        final token3 = cookieMap["public"]!;
+
+        final token1 = cookieMap["data"]!;
+
+        c.saveSharedPref("antam.data", encrypt.encrypt(token1));
+        c.saveSharedPref("antam.log", encrypt.encrypt(token2));
+        c.saveSharedPref("antam.public", encrypt.encrypt(token3));
+
+        ApiHelper.tokenMain = ("$token1.$token2.$token3");
       }
 
       //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
@@ -662,8 +685,26 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     WidgetsFlutterBinding.ensureInitialized();
 
-    final encrypt = MyEncrtypt();
-    final c = Controller();
+    if (ApiHelper.tokenMain.isNotEmpty) {
+      // final encrypt = MyEncrtypt();
+      // final c = Controller();
+
+      final tokensplit = ApiHelper.tokenMain.split(".");
+
+      document.cookie = "";
+
+      document.cookie = "data=${(tokensplit[0])}";
+      document.cookie = "log=${(tokensplit[1])}";
+      document.cookie = "public=${(tokensplit[2])}";
+      document.cookie =
+          "access=${base64.encode(utf8.encode("sdfsdfeewr34234325235235235232523fdfdsaffasdasdsaa"))}";
+
+      document.cookie =
+          "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+      // saveSharedPref("antam.log", encrypt.encrypt(tokensplit[1]));
+      // saveSharedPref("antam.public", encrypt.encrypt(tokensplit[2]));
+    }
 
     for (var x = 2; x < 8; x++) {
       for (var i = 1; i < 6; i++) {
@@ -703,7 +744,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         c.saveSharedPref("antam.data", "");
         c.saveSharedPref("antam.log", "");
         c.saveSharedPref("antam.public", "");
-        c.saveSharedPref("antam.access", "");
+        // c.saveSharedPref("antam.access", "");
 
         // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
 
@@ -900,6 +941,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     c.saveSharedPref("antam.log", "");
     c.saveSharedPref("antam.public", "");
     c.saveSharedPref("antam.access", "");
+
+    document.cookie = "data=";
+    document.cookie = "log=";
+    document.cookie = "public=";
+    document.cookie = "access=";
+    document.cookie = "token=";
 
     // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
 

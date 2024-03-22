@@ -488,7 +488,7 @@ class _SettingMobileState extends State<SettingMobile> {
                   Container(
                       padding: const EdgeInsets.all(10),
                       width: lWidth,
-                      height: 620,
+                      height: 750,
                       decoration: BoxDecoration(
                         // color: MainStyle.secondaryColor,
 
@@ -514,12 +514,15 @@ class _SettingMobileState extends State<SettingMobile> {
                         //       spreadRadius: 0),
                         // ]
                       ),
-                      child: PanelTableSetting(
-                          mqtt: mqtt,
-                          email: widget.email,
-                          isAdmin: widget.isAdmin,
-                          dataLog: [],
-                          onTap: (index) {})),
+                      child: Center(
+                        child: PanelTableSetting(
+                            height: 750,
+                            mqtt: mqtt,
+                            email: widget.email,
+                            isAdmin: widget.isAdmin,
+                            dataLog: [],
+                            onTap: (index) {}),
+                      )),
                   const SizedBox(
                     height: 100,
                   )
