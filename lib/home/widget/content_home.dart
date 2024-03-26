@@ -799,6 +799,7 @@ class _Content_homeState extends State<Content_home> {
         }
 
         if (sData["pH"] != null) {
+          refresh = true;
           selData[tangki][(data["sel"] as int) - 1]["pH"] =
               (sData["pH"] ?? 0.0);
         }
@@ -1926,7 +1927,7 @@ class _Content_homeState extends State<Content_home> {
                                                                         Center(
                                                                       child:
                                                                           Text(
-                                                                        (value as double).toStringAsFixed((key == "sel")
+                                                                        ((value / 1) as double).toStringAsFixed((key == "sel")
                                                                                 ? 0
                                                                                 : 2) +
                                                                             (key == "suhu" || key == "celcius"
@@ -1947,7 +1948,7 @@ class _Content_homeState extends State<Content_home> {
                                                                   height: 35,
                                                                   child: Center(
                                                                     child: Text(
-                                                                      (value as double).toStringAsFixed(key == "tangki"
+                                                                      ((value / 1) as double).toStringAsFixed(key == "tangki"
                                                                               ? 0
                                                                               : 2) +
                                                                           (key == "suhu" || key == "celcius"

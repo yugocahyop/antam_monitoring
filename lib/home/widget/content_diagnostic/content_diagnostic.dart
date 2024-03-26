@@ -158,8 +158,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     c.goToDialog(
         context,
         AlertDialog(
-          title:
-              Text("${isActive ? "Matikan" : "Aktifkan"} sel $tangki - $sel ?"),
+          title: Text(
+              "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
           actions: [
             SizedBox(
               width: 80,
@@ -973,6 +973,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         }
 
         if (sData["pH"] != null) {
+          refresh = true;
           selData[tangki][(data["sel"] as int) - 1]["pH"] =
               (sData["pH"] ?? 0.0);
         }
@@ -1294,10 +1295,9 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     );
 
     // getMax();
-
+    initDiagData();
     initSelData();
     initTotalDataStatistic();
-    initDiagData();
   }
 
   @override
@@ -1437,25 +1437,48 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                       ]),
                                   child: Column(children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        // SvgPicture.asset(
-                                        //   "assets/monitoring.svg",
-                                        //   width: 30,
-                                        //   color: MainStyle.primaryColor,
-                                        // ),
-                                        const Icon(
-                                          Icons.lan,
-                                          size: 30,
-                                          color: MainStyle.primaryColor,
+                                        Row(
+                                          children: [
+                                            // SvgPicture.asset(
+                                            //   "assets/monitoring.svg",
+                                            //   width: 30,
+                                            //   color: MainStyle.primaryColor,
+                                            // ),
+                                            const Icon(
+                                              Icons.lan,
+                                              size: 30,
+                                              color: MainStyle.primaryColor,
+                                            ),
+                                            // const SizedBox(
+                                            //   width: 10,
+                                            // ),
+                                            MainStyle.sizedBoxW10,
+                                            Text(
+                                              "Diagnostic",
+                                              style: MainStyle
+                                                  .textStyleDefault20Primary,
+                                            )
+                                          ],
                                         ),
-                                        // const SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        MainStyle.sizedBoxW10,
-                                        Text(
-                                          "Diagnostic",
-                                          style: MainStyle
-                                              .textStyleDefault20Primary,
+                                        Row(
+                                          children: [
+                                            MyButton(
+                                                color: MainStyle.primaryColor,
+                                                text: "Matikan semua",
+                                                onPressed: () =>
+                                                    promptToggle(15, 15, true),
+                                                textColor: Colors.white),
+                                            MainStyle.sizedBoxW5,
+                                            MyButton(
+                                                color: MainStyle.primaryColor,
+                                                text: "Nyalakan semua",
+                                                onPressed: () =>
+                                                    promptToggle(15, 15, false),
+                                                textColor: Colors.white),
+                                          ],
                                         )
                                       ],
                                     ),
@@ -1773,7 +1796,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                             child:
                                                                                 Center(
                                                                               child: Text(
-                                                                                (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
+                                                                                (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                                 style: MainStyle.textStyleDefault16Black,
                                                                               ),
                                                                             ),
@@ -1793,7 +1816,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                             Center(
                                                                           child:
                                                                               Text(
-                                                                            (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
+                                                                            (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) +
                                                                                 (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                             style:
                                                                                 MainStyle.textStyleDefault16Black,
@@ -1830,7 +1853,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "Sel " + (value as int).toString(),
+                                                                                "Sel " + (value ~/ 1 as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

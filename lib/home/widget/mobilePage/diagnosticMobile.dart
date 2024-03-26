@@ -422,6 +422,24 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
       diagnosticData.clear();
 
       diagnosticData.addAll(r["data"][0]["diagnosticData"] ?? []);
+
+      final data = r["data"][0] as Map<String, dynamic>;
+
+      final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
+      final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+
+      if (listAlarmArus.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Arus")["isActive"] = true;
+      }
+
+      if (listAlarmTegangan.isNotEmpty) {
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Tegangan")["isActive"] =
+            true;
+      }
+
+      account_alarm.setState!();
     }
 
     if (mounted) setState(() {});
@@ -496,8 +514,8 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     c.goToDialog(
         context,
         AlertDialog(
-          title:
-              Text("${isActive ? "Matikan" : "Aktifkan"} sel $tangki - $sel ?"),
+          title: Text(
+              "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
           actions: [
             SizedBox(
               width: 80,
@@ -690,8 +708,29 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                         // ]
                       ),
                       child: Column(
-                        children:
-                            getDiagnostiWidget(lWidth <= 400 ? 60 : 70, lWidth),
+                        children: [
+                          Column(
+                            children: getDiagnostiWidget(
+                                lWidth <= 400 ? 60 : 70, lWidth),
+                          ),
+                          MainStyle.sizedBoxH20,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              MyButton(
+                                  color: MainStyle.primaryColor,
+                                  text: "Matikan semua",
+                                  onPressed: () => promptToggle(15, 15, true),
+                                  textColor: Colors.white),
+                              MainStyle.sizedBoxW5,
+                              MyButton(
+                                  color: MainStyle.primaryColor,
+                                  text: "Nyalakan semua",
+                                  onPressed: () => promptToggle(15, 15, false),
+                                  textColor: Colors.white),
+                            ],
+                          ),
+                        ],
                       )),
                   const SizedBox(
                     height: 100,

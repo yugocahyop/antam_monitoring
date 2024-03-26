@@ -239,6 +239,7 @@ class _MenuState extends State<Menu> {
                       final c = Controller();
                       c.saveSharedPref("antam.token", "");
                       c.saveSharedPref("antam.data", "");
+
                       Navigator.pushNamedAndRemoveUntil(
                           context, '/login', ((route) => false));
                     },

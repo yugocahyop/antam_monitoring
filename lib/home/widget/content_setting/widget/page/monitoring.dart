@@ -25,49 +25,49 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
   final List<Map<String, dynamic>> settingWidgetText = [
     {
       "label": "Maximum suhu",
-      "hint": "Minimal 80",
+      "hint": "",
       "unit": "Celcius",
       "value": 0,
       "reply": "suhuAtas"
     },
     {
       "label": "Minimum suhu",
-      "hint": "Minimal 80",
+      "hint": "",
       "unit": "Celcius",
       "value": 0,
       "reply": "suhuBawah"
     },
     {
       "label": "Maximum arus",
-      "hint": "Minimal 100, masksimal 200",
+      "hint": "",
       "unit": "Ampere",
       "value": 0,
       "reply": "arusAtas"
     },
     {
       "label": "Minimum arus",
-      "hint": "Minimal 100, masksimal 200",
+      "hint": "",
       "unit": "Ampere",
       "value": 0,
       "reply": "arusBawah"
     },
     {
       "label": "Maximum pH",
-      "hint": "Minimal 100, masksimal 200",
+      "hint": "",
       "unit": "",
       "value": 0,
       "reply": "phAtas"
     },
     {
       "label": "Minimum pH",
-      "hint": "Minimal 100, masksimal 200",
+      "hint": "",
       "unit": "",
       "value": 0,
       "reply": "phBawah"
     },
     {
       "label": "Maximum tegangan",
-      "hint": "Minimal 2, maksimal 4",
+      "hint": "",
       "value": 0,
       "unit": "Volt",
       "reply": "teganganAtas"
@@ -87,6 +87,12 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
     for (var i = 0; i < settingWidgetText.length; i++) {
       final val = settingWidgetText[i];
 
+      if (mapTextField[val["label"]]!.con.text.isEmpty ||
+          double.tryParse(mapTextField[val["label"]]!.con.text) == null) {
+        mapTextField[val["label"]]!.startShake();
+        return;
+      }
+
       data.putIfAbsent(val["reply"],
           () => double.tryParse(mapTextField[val["label"]]!.con.text) ?? 0);
     }
@@ -97,9 +103,20 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
     if (r["error"] == null) {
       widget.mqtt.publish(data, "antam/setLimit");
 
+      // checkData();
+
+      final c = Controller();
+
+      c.showSnackBar(context, "Update setting berhasil");
+
+      // initMqtt();
+
       checkData();
 
-      if (mounted) setState(() {});
+      // if (mounted)
+      //   setState(() {
+      //     isLoading = false;
+      //   });
     } else {
       if (kDebugMode) {
         print(r["error"]);
@@ -129,6 +146,7 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
         obscure: false,
         hintText: val["hint"],
         suffixText: val["unit"],
+        inputType: TextInputType.number,
       );
 
       mapTextField.putIfAbsent(val["label"], () => tf);
@@ -156,23 +174,18 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
       });
     }
     widget.mqtt.subscribe("antam/reply");
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 3), () {
       widget.mqtt.onReply = (json) {
         for (var i = 0; i < settingWidgetText.length; i++) {
           final val = settingWidgetText[i];
 
-          if (mapTextField[val["label"]]!.con.text !=
-              (json[val["reply"]] / 1 as double).toStringAsFixed(2)) {
-            final c = Controller();
-
-            c.showSnackBar(context, "Update setting gagal - data tidak sama");
-            return;
-          }
+          mapTextField[val["label"]]!.con.text =
+              ((json[val["reply"]] / 1) as double).toStringAsFixed(2);
         }
 
-        final c = Controller();
+        // final c = Controller();
 
-        c.showSnackBar(context, "Update setting berhasil");
+        // c.showSnackBar(context, "Update setting berhasil");
 
         // isReplied = true;
 

@@ -719,6 +719,7 @@ class _Content_settingState extends State<Content_setting> {
         }
 
         if (sData["pH"] != null) {
+          refresh = true;
           selData[tangki][(data["sel"] as int) - 1]["pH"] =
               (sData["pH"] ?? 0.0);
         }
@@ -1495,7 +1496,7 @@ class _Content_settingState extends State<Content_setting> {
                                                                             child:
                                                                                 Center(
                                                                               child: Text(
-                                                                                (value as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
+                                                                                (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                                 style: MainStyle.textStyleDefault16Black,
                                                                               ),
                                                                             ),
@@ -1515,7 +1516,7 @@ class _Content_settingState extends State<Content_setting> {
                                                                             Center(
                                                                           child:
                                                                               Text(
-                                                                            (value as double).toStringAsFixed(key == "sel" ? 0 : 2) +
+                                                                            (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) +
                                                                                 (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                             style:
                                                                                 MainStyle.textStyleDefault16Black,

@@ -613,13 +613,18 @@ class _HomeMobileState extends State<HomeMobile> {
         for (var i = 2; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
-          if (selData[tangki][(data["sel"] as int) - 1][title] !=
-              sData[title]) {
+          if (sData[title] != null &&
+              selData[tangki][(data["sel"] as int) - 1][title] !=
+                  sData[title]) {
             refresh = true;
             selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
           }
+        }
 
-          // selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
+        if (sData["pH"] != null) {
+          refresh = true;
+          selData[tangki][(data["sel"] as int) - 1]["pH"] =
+              (sData["pH"] ?? 0.0);
         }
 
         getMax2(isSetState: false);

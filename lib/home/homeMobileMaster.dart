@@ -19,6 +19,7 @@ import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/encrypt.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:mqtt_client/mqtt_client.dart';
@@ -366,6 +367,48 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         "energi": 0.0
       },
     ],
+    [
+      {
+        "sel": 1,
+        "suhu": 0.0,
+        "pH": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 2,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 3,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 4,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+      {
+        "sel": 5,
+        "suhu": 0.0,
+        "tegangan": 0.0,
+        "arus": 0.0,
+        "daya": 0.0,
+        "energi": 0.0
+      },
+    ]
   ];
 
   int curr_page = 0;
@@ -613,12 +656,86 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   late StreamSubscription listenUnload;
 
+  Future<void> fcm_unsubscribe(String topic) async {
+    await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+  }
+
+  Future<void> fcm_subscribe(String topic) async {
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
+  }
+
+  getPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+  }
+
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    await getPermission();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    // if (initialMessage != null) {
+    //   _handleMessage(initialMessage);
+    // }
+
+    // // Also handle any interaction when the app is in the background via a
+    // // Stream listener
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+
+    fcm_subscribe("antam-monitoring");
+  }
+
+  Future<void> _handleMessage(RemoteMessage message) async {
+    try {
+      // Map<String,dynamic> data = jsonDecode(message.data.toString());
+
+      // while(showNotif == null){
+      //   await Future.delayed(const Duration(milliseconds: 500));
+      // }
+
+      print("app opened");
+
+      if (kDebugMode) {
+        print("tapped show notif");
+      }
+
+      // showNotif!(message.data["TECHIDENTNO"], int.tryParse(message.data["dateTime"]) ?? 0 );
+    } catch (e) {
+      if (kDebugMode) {
+        print(" ${e}");
+      }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     WidgetsFlutterBinding.ensureInitialized();
+
+    setupInteractedMessage();
 
     final encrypt = MyEncrtypt();
     final c = Controller();
@@ -867,7 +984,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       // mqtt.isConnected = false;
     } else if (state == AppLifecycleState.resumed) {
       try {
-        mqtt.publish({}, "antam/command");
+        mqtt.publish({}, "antam/check");
       } catch (e) {
         mqtt.unsubscribeAll();
         mqtt.disconnect();
@@ -999,6 +1116,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                         // dispose();
 
                         Navigator.pop(context);
+
+                        fcm_unsubscribe("antam_monitoring");
 
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/login', ((route) => false));

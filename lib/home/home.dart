@@ -983,7 +983,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       // mqtt.isConnected = false;
     } else if (state == AppLifecycleState.resumed) {
       try {
-        mqtt.publish({}, "antam/command");
+        mqtt.publish({}, "antam/check");
       } catch (e) {
         mqtt.unsubscribeAll();
         mqtt.disconnect();

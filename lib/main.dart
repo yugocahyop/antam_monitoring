@@ -1,21 +1,44 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:antam_monitoring/firebase_options.dart';
 import 'package:antam_monitoring/home/homeMobileMaster.dart'
     if (dart.library.html) 'package:antam_monitoring/home/home.dart';
 // import 'package:antam_monitoring/home_mobile/home_mobile.dart';
 import 'package:antam_monitoring/login/login.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/certHttpOveride.dart';
+import 'package:antam_monitoring/tools/firebaseNotificaton.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
   HttpOverrides.global = DevHttpOverrides();
   GoogleFonts.config.allowRuntimeFetching = false;
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (!kIsWeb) {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    // Set the background messaging handler early on, as a named top-level function
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    // defaultUrl = await getDefaultUrl();
+
+    // await FlutterDownloader.initialize(
+    //     debug: true // optional: set false to disable printing logs to console
+    //     );
+
+    FirebaseMessaging.onMessage
+        .listen((message) => showFlutterNotification(message));
+
+    setupFlutterNotifications();
+  }
 
   initializeDateFormatting('id_ID', null).then((_) => runApp(const MyApp()));
 

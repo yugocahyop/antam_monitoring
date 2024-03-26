@@ -2062,7 +2062,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                               Center(
                                                                             child:
                                                                                 Text(
-                                                                              (value as double).toStringAsFixed((key == "sel") ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
+                                                                              (value / 1 as double).toStringAsFixed((key == "sel") ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                               style: MainStyle.textStyleDefault16Black,
                                                                             ),
                                                                           ),
@@ -2079,7 +2079,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                         Center(
                                                                       child:
                                                                           Text(
-                                                                        (value as double).toStringAsFixed(key == "tangki"
+                                                                        ((value / 1) as double).toStringAsFixed(key == "tangki"
                                                                                 ? 0
                                                                                 : 2) +
                                                                             (key == "suhu" || key == "celcius"
@@ -2280,7 +2280,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                                   const BoxDecoration(),
                                                               width: 300,
                                                               child: Text(
-                                                                (e["value"]
+                                                                ((e["value"])
                                                                         as double)
                                                                     .toStringAsFixed(
                                                                         2),
