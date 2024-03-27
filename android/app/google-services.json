@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:522023163171:android:7e19bd4bdca62991e52896",
+        "android_client_info": {
+          "package_name": "com.antam.antam_monitoring"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIpUB_IJgM-ZwsccgOnw945Ij6_h_yQ14"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:522023163171:android:3ef59480e37547fde52896",
         "android_client_info": {
           "package_name": "com.example.antam_monitoring"

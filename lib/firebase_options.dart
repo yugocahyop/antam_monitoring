@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDIpUB_IJgM-ZwsccgOnw945Ij6_h_yQ14',
-    appId: '1:522023163171:android:3ef59480e37547fde52896',
+    appId: '1:522023163171:android:7e19bd4bdca62991e52896',
     messagingSenderId: '522023163171',
     projectId: 'antam-monitoring',
     storageBucket: 'antam-monitoring.appspot.com',
