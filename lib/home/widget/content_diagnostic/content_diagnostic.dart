@@ -1582,7 +1582,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Sensor Node",
+                                                    "Elektrolit",
                                                     style: MainStyle
                                                         .textStyleDefault15BlackBold,
                                                   ),

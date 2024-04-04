@@ -1282,7 +1282,7 @@ class _Content_settingState extends State<Content_setting> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Sensor Node",
+                                                    "Elektrolit",
                                                     style: MainStyle
                                                         .textStyleDefault15BlackBold,
                                                   ),

@@ -131,19 +131,19 @@ class _Content_homeState extends State<Content_home> {
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
 
   var teganganData = [
+    const FlSpot(0, 0),
     const FlSpot(1, 0),
     const FlSpot(2, 0),
     const FlSpot(3, 0),
     const FlSpot(4, 0),
-    const FlSpot(5, 0),
   ];
 
   var arusData = [
+    const FlSpot(0, 0),
     const FlSpot(1, 0),
     const FlSpot(2, 0),
     const FlSpot(3, 0),
     const FlSpot(4, 0),
-    const FlSpot(5, 0),
   ];
 
   var arusSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -219,18 +219,103 @@ class _Content_homeState extends State<Content_home> {
 
     if (tangki >= selData.length) return;
 
-    for (var e in (tangki == 0 ? maxData : selData[tangki])) {
-      teganganData.add(FlSpot(
-          (e["sel"] as int).toDouble(),
-          (e["tegangan"] ?? e["volt"]) is double
-              ? (e["tegangan"] ?? e["volt"]) as double
-              : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
+    if (tangki == 0) {
+      final listZero = [];
 
-      arusData.add(FlSpot(
-          (e["sel"] as int).toDouble(),
-          (e["arus"] ?? e["ampere"]) is double
-              ? (e["arus"] ?? e["ampere"]) as double
-              : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
+      (selData[0] as List<dynamic>).sort(((a, b) {
+        final aVal = a["arus"] / 1 as double;
+        final bVal = b["arus"] / 1 as double;
+
+        return bVal.compareTo(aVal);
+      }));
+
+      // listZero.addAll((selData[0] as List<dynamic>).getRange(0, 3));
+
+      for (var i = 0; i < 3; i++) {
+        final val = selData[0][i] as Map<String, dynamic>;
+        listZero.add(
+          {
+            "tangki": val["tangki"],
+            "sel": val["sel"],
+            "arus": val["arus"],
+            "tegangan": val["tegangan"],
+          },
+        );
+      }
+
+      for (var i = 0; i < 3; i++) {
+        tangkiMaxData[i]["tegangan"] = listZero[i]["tangki"];
+        tangkiMaxData[i]["sel"] = listZero[i]["sel"];
+
+        tangkiMaxData[i]["arus"] = listZero[i]["tangki"];
+      }
+
+      resetSelDataSort();
+
+      (selData[0] as List<dynamic>).sort(((a, b) {
+        final aVal = a["arus"] / 1 as double;
+        final bVal = b["arus"] / 1 as double;
+
+        return aVal.compareTo(bVal);
+      }));
+
+      for (var i = 3; i < 5; i++) {
+        final val = selData[0][i] as Map<String, dynamic>;
+        listZero.add(
+          {
+            "tangki": val["tangki"],
+            "sel": val["sel"],
+            "arus": val["arus"],
+            "tegangan": val["tegangan"],
+          },
+        );
+      }
+
+      for (var i = 3; i < 5; i++) {
+        tangkiMaxData[i]["tegangan"] = listZero[i]["tangki"];
+
+        tangkiMaxData[i]["sel"] = listZero[i]["sel"];
+
+        tangkiMaxData[i]["arus"] = listZero[i]["tangki"];
+      }
+
+      resetSelDataSort();
+
+      if (kDebugMode) {
+        print("listZero:  ${listZero}");
+      }
+
+      for (var e in (listZero)) {
+        teganganData.add(FlSpot(
+            listZero.indexOf(e) / 1,
+            (e["tegangan"] ?? e["volt"]) is double
+                ? (e["tegangan"] ?? e["volt"]) as double
+                : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
+
+        arusData.add(FlSpot(
+            listZero.indexOf(e) / 1,
+            (e["arus"] ?? e["ampere"]) is double
+                ? (e["arus"] ?? e["ampere"]) as double
+                : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
+      }
+
+      if (kDebugMode) {
+        print("arusData: $arusData");
+      }
+    } else {
+      for (var e in (currTangki == 0 ? maxData : selData[tangki])) {
+        teganganData.add(FlSpot(
+            (e["sel"] as int).toDouble(),
+            (e["tegangan"] ?? e["volt"]) is double
+                ? (e["tegangan"] ?? e["volt"]) as double
+                : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
+
+        arusData.add(FlSpot(
+            (e["sel"] as int).toDouble(),
+            (e["arus"] ?? e["ampere"]) is double
+                ? (e["arus"] ?? e["ampere"]) as double
+                : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
+      }
     }
 
     // getTotal(tangki);
@@ -485,22 +570,22 @@ class _Content_homeState extends State<Content_home> {
                   : maxData[index]["energi"] as double,
               en);
 
-          tangkiMaxData[index]["suhu"] =
-              maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
+          // tangkiMaxData[index]["suhu"] =
+          //     maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
 
-          tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
-              ? i
-              : tangkiMaxData[index]["tegangan"];
+          // tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
+          //     ? i
+          //     : tangkiMaxData[index]["tegangan"];
 
-          tangkiMaxData[index]["arus"] =
-              maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
+          // tangkiMaxData[index]["arus"] =
+          //     maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
 
-          tangkiMaxData[index]["daya"] =
-              maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
+          // tangkiMaxData[index]["daya"] =
+          //     maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
 
-          tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
-              ? i
-              : tangkiMaxData[index]["energi"];
+          // tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
+          //     ? i
+          //     : tangkiMaxData[index]["energi"];
         }
 
         // count++;
@@ -1700,7 +1785,7 @@ class _Content_homeState extends State<Content_home> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Sensor Node",
+                                                    "Elektrolit",
                                                     style: MainStyle
                                                         .textStyleDefault15BlackBold,
                                                   ),

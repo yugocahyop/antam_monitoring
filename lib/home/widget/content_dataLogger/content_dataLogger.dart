@@ -1246,6 +1246,9 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    fileNum: 0,
+                                    progress: 0,
+                                    download: () {},
                                     isLoading: false,
                                     changeIsAlarm: (bool isAlarm) {},
                                     loadmore: () async {

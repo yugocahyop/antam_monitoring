@@ -76,16 +76,21 @@ class MyApp extends StatelessWidget {
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
           primarySwatch: Colors.blue,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: MainStyle.primaryColor, // button text color
+            ),
+          ),
           colorScheme: const ColorScheme(
               brightness: Brightness.light,
               primary: MainStyle.secondaryColor,
-              onPrimary: MainStyle.secondaryColor,
-              secondary: MainStyle.secondaryColor,
+              onPrimary: MainStyle.primaryColor,
+              secondary: MainStyle.primaryColor,
               onSecondary: MainStyle.secondaryColor,
               error: Colors.red,
               onError: Colors.red,
-              background: MainStyle.secondaryColor,
-              onBackground: MainStyle.secondaryColor,
+              background: Colors.white,
+              onBackground: MainStyle.primaryColor,
               surface: Colors.white,
               onSurface: Colors.black)),
       // home: Login(),

@@ -539,6 +539,7 @@ class _CallMobileState extends State<CallMobile> {
               SizedBox(
                   width: lWidth,
                   child: const Divider(
+                    color: Colors.black26,
                     thickness: 1,
                   ))
             ],

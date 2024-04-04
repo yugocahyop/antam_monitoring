@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -5,10 +6,13 @@ import 'package:antam_monitoring/home/widget/account_alarm.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
+import 'package:antam_monitoring/home/widget/mobilePage/dataloggerMobile.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/excel.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:excel/excel.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +41,12 @@ class Content_dataLogger2 extends StatefulWidget {
   Function(int index, {int? dari, int? hingga}) changePage;
 
   int? dari, hingga;
+
+  static double progress = 0.0;
+
+  static int fileNum = 0;
+  static bool isCancel = false;
+  static const int maxRowExcel = 5000;
 
   @override
   State<Content_dataLogger2> createState() => _Content_dataLogger2State();
@@ -1089,7 +1099,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   bool isTapped = false;
 
   changeData(int index) async {
-    if (index == indexData) return;
+    // if (index == indexData) return;
 
     if (isTapped) {
       setState(() {
@@ -1192,18 +1202,18 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
   }
 
-  // bool isLoadmore = false;
+  // bool stopLoadmore = false;
   Future<bool> loadMore() async {
-    // if (isLoadmore) {
+    // if (stopLoadmore) {
     //   return false;
     // }
 
     // isLoadmore = true;
-    offset += dataNum;
+    // offset += dataNum;
 
-    if (offset > maxDataNum) {
-      offset = maxDataNum;
-    }
+    // if (offset > maxDataNum) {
+    offset = dataLog.length;
+    // }
 
     await getDataLog(offset);
 
@@ -1312,7 +1322,190 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     });
   }
 
-  Future<void> getDataLog(int offsetNum, {bool setFilter = false}) async {
+  Future<void> download() async {
+    // if (!setFilter) {
+
+    // if (dataLog.isEmpty) return;
+
+    // stopLoadmore = true;
+
+    // offset = 0;
+
+    // maxDataNum = 40;
+
+    // dataLog.clear();
+
+    if (mounted) {
+      setState(() {
+        // isLoading = true;
+        Content_dataLogger2.progress = 0.000001;
+      });
+    }
+
+    final dariTgl = filterTglDari.today;
+
+    final hinggaTgl = filterTglHingga.today;
+
+    // await getDataLog(0, islimit: false);
+
+    List<String> header = ["Tanggal"];
+
+    final dataLog0 = dataLog[0]["tangkiData"] as List<dynamic>;
+
+    for (var i = (currTangki == 0 ? 0 : currTangki - 1);
+        i < (currTangki == 0 ? 6 : currTangki);
+        i++) {
+      final dataList = dataLog0[i] as List<dynamic>;
+
+      // if (kDebugMode) {
+      //   print("dataList: $dataList");
+      // }
+
+      for (var ii = 0; ii < dataList.length; ii++) {
+        final val = dataList[ii];
+
+        // listTite
+
+        for (var iii = 2; iii < titleData.length; iii++) {
+          header.add("Sel ${i + 1} - ${val["sel"]} ${titleData[iii]}");
+        }
+      }
+    }
+
+    header.add("Sel Elektrolit suhu");
+
+    header.add("Sel Elektrolit pH");
+
+    // if (kDebugMode) {
+    //   print("header $header");
+    // }
+
+    // dataNum = 200;
+
+    MyExcel ex = MyExcel();
+
+    Excel excel = ex.create();
+
+    bool isPopulate = false;
+
+    List<Map<String, dynamic>> dataLog2 = [];
+
+    int offset = 0, offset2 = 0, dataNum = 200, maxDataNum2 = maxDataNum;
+
+    while ((offset + dataLog2.length) < maxDataNum2) {
+      if (Content_dataLogger2.isCancel) {
+        Content_dataLogger2.isCancel = false;
+        Content_dataLogger2.progress = 0;
+        if (mounted) {
+          setState(() {});
+        }
+
+        return;
+      }
+
+      if (!isPopulate) {
+        isPopulate = true;
+        await ex.populate(excel, header, ["data monitoring"], listAny: dataLog);
+
+        Content_dataLogger2.progress = (offset + dataLog.length) / maxDataNum2;
+
+        Content_dataLogger2.fileNum =
+            (maxDataNum2 / Content_dataLogger2.maxRowExcel).ceil();
+
+        if (mounted) {
+          setState(() {
+            // isLoading = true;
+            // Content_dataLogger2.progress = 0.1;
+          });
+        }
+      } else {
+        if (dataLog2.isEmpty) {
+          break;
+        }
+        Sheet sheetObject = excel["data monitoring"];
+
+        if (sheetObject.rows.length >= Content_dataLogger2.maxRowExcel) {
+          final tempExcel = excel;
+          await ex.save(tempExcel, "antam_monitoring");
+
+          excel = ex.create();
+
+          offset2 = 0;
+
+          await ex.populate(excel, header, ["data monitoring"],
+              listAny: dataLog2);
+        } else {
+          await ex.append(excel, header, ["data monitoring"], offset2,
+              listAny: dataLog2);
+        }
+
+        Content_dataLogger2.progress = (offset + dataLog2.length) / maxDataNum2;
+
+        if (mounted) {
+          setState(() {
+            // isLoading = true;
+            // Content_dataLogger2.progress = 0.1;
+          });
+        }
+      }
+      // await loadMore();
+
+      offset += (dataLog2.isEmpty ? dataLog.length : dataLog2.length);
+      offset2 += (dataLog2.isEmpty ? dataLog.length : dataLog2.length);
+
+      dataLog2.clear();
+
+      final api = ApiHelper();
+
+      final r = await api.callAPI(
+          "/${isAlarm ? "alarm" : "monitoring"}/find?offset=$offset&limit=$dataNum",
+          "POST",
+          jsonEncode({"from": dariTgl, "to": hinggaTgl}),
+          true);
+
+      if (r["error"] == null) {
+        List<dynamic> data = r['data'] as List<dynamic>;
+
+        maxDataNum2 = r["count"];
+
+        for (var i = 0; i < data.length; i++) {
+          final val = data[i];
+
+          dataLog2.add({
+            "isClicked": false,
+            "isHover": false,
+            "timeStamp_server": val["timeStamp_server"],
+            "msg": "",
+            "tangkiData": val["tangkiData"] as List<dynamic>
+          });
+        }
+      }
+
+      // await Future.delayed(const Duration(microseconds: 1));
+      // if (kDebugMode) {
+      //   print("dataLog: ${dataLog.length}");
+      // }
+    }
+
+    // dataNum = 20;
+
+    // offset = dataLog.length;
+
+    await ex.save(excel, "antam_monitoring");
+
+    Content_dataLogger2.progress = 0;
+
+    if (mounted) {
+      setState(() {
+        // isLoading = false;
+        // Content_dataLogger2.progress = 0;
+        // stopLoadmore = false;
+      });
+    }
+  }
+
+  Future<void> getDataLog(int offsetNum,
+      {bool setFilter = false, bool islimit = true}) async {
     // if (!setFilter) {
     if (mounted) {
       setState(() {
@@ -1333,25 +1526,25 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     // print("is alarm: $isAlarm");
 
     final r = await api.callAPI(
-        "/${isAlarm ? "alarm" : "monitoring"}/find?limit=$dataNum&offset=$offsetNum",
+        "/${isAlarm ? "alarm" : "monitoring"}/find${!islimit ? "" : "?offset=$offsetNum&limit=$dataNum"}",
         "POST",
         jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today}),
         true);
 
     if (r["error"] == null) {
-      if (isAlarm) {
-        if (kDebugMode) {
-          print("alarm r: $r");
-        }
-      }
+      // if (isAlarm) {
+      //   if (kDebugMode) {
+      //     print("alarm r: $r");
+      //   }
+      // }
       List<dynamic> data = r['data'] as List<dynamic>;
 
       maxDataNum = r["count"];
       if (mounted) setState(() {});
 
-      if (kDebugMode) {
-        print("backend data2:  $data");
-      }
+      // if (kDebugMode) {
+      //   print("backend data2:  $data");
+      // }
 
       if (offset == 0) dataLog.clear();
 
@@ -1361,7 +1554,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
         String msg = "";
 
         if (isAlarm) {
-          final String status = val["status"];
+          final String status = val["status"] ?? "";
           if (status == "alarm") {
             msg =
                 ("Terjadi masalah pada sel ${val["tangki"]} - ${val["node"]}");
@@ -1376,9 +1569,12 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
           "isHover": false,
           "timeStamp_server": val["timeStamp_server"],
           "msg": isAlarm ? msg : "",
-          "tangkiData": isAlarm ? null : val["tangkiData"] as List<dynamic>
+          "tangkiData":
+              isAlarm ? [] : (val["tangkiData"] ?? []) as List<dynamic>
         });
       }
+
+      // offset = dataLog.length;
 
       if (mounted) setState(() {});
     } else {
@@ -1396,10 +1592,33 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   late Account_alarm account_alarm;
 
+  double progress = 0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    if (Content_dataLogger2.progress > 0) {
+      progress = Content_dataLogger2.progress;
+      Timer.periodic(const Duration(seconds: 1), ((timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+        if (progress != Content_dataLogger2.progress) {
+          if (mounted) {
+            setState(() {});
+          }
+
+          progress = Content_dataLogger2.progress;
+        }
+        if (Content_dataLogger2.progress == 0) {
+          progress = 0;
+          timer.cancel();
+        }
+      }));
+    }
 
     if (kDebugMode) {
       print("dari: ${widget.dari} hingga: ${widget.hingga}");
@@ -1714,6 +1933,9 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                           ? (lheight >= 1080 ? -45 : -15)
                                           : 0),
                                   child: PanelTable(
+                                    fileNum: Content_dataLogger2.fileNum,
+                                    progress: Content_dataLogger2.progress,
+                                    download: () => download(),
                                     isLoading: isLoading,
                                     changeIsAlarm: changeIsAlarm,
                                     max: maxDataNum,
@@ -1832,7 +2054,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                                       CrossAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      "Sensor Node",
+                                                      "Elektrolit",
                                                       style: MainStyle
                                                           .textStyleDefault15BlackBold,
                                                     ),

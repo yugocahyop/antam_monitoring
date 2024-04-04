@@ -2,6 +2,7 @@ library login;
 
 import 'dart:math';
 
+import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/login/controller/login_controller.dart';
 import 'package:antam_monitoring/login/widget/message.dart';
 import 'package:antam_monitoring/login/widget/message_mobile.dart';
@@ -93,6 +94,10 @@ class _LoginState extends State<Login> {
     WidgetsFlutterBinding.ensureInitialized();
     FlareCache.doesPrune = false;
 
+    final c = Controller();
+
+    c.saveSharedPref("antam.access", "");
+
     preCache(rootBundle);
   }
 
@@ -101,6 +106,7 @@ class _LoginState extends State<Login> {
     final lWidth = MediaQuery.of(context).size.width;
     final lheight = MediaQuery.of(context).size.height;
     return Scaffold(
+        backgroundColor: Colors.white,
         body: lWidth > 900
             ? Stack(
                 children: [

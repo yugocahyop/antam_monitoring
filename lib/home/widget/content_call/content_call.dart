@@ -1419,7 +1419,7 @@ class _Content_callState extends State<Content_call> {
                                                     CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    "Sensor Node",
+                                                    "Elektrolit",
                                                     style: MainStyle
                                                         .textStyleDefault15BlackBold,
                                                   ),

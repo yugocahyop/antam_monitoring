@@ -1,15 +1,19 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/content_dataLogger2.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
 import 'package:antam_monitoring/home/widget/myDropDown.dart';
 import 'package:antam_monitoring/home/widget/up.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/tools/excel.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:excel/excel.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +80,17 @@ class _HomeMobileState extends State<DataLogger> {
     }
   ];
 
-  var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
+  // var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
+
+  var titleData = [
+    "Sel",
+    "#Anoda",
+    "Suhu",
+    "Tegangan",
+    "Arus",
+    "Daya",
+    "Energi"
+  ];
 
   // final selScrollController = ScrollController();
   final pc = PageController(
@@ -886,6 +900,27 @@ class _HomeMobileState extends State<DataLogger> {
     // TODO: implement initState
     super.initState();
 
+    if (Content_dataLogger2.progress > 0) {
+      progress = Content_dataLogger2.progress;
+      Timer.periodic(const Duration(seconds: 1), ((timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+        if (progress != Content_dataLogger2.progress) {
+          if (mounted) {
+            setState(() {});
+          }
+
+          progress = Content_dataLogger2.progress;
+        }
+        if (Content_dataLogger2.progress == 0) {
+          progress = 0;
+          timer.cancel();
+        }
+      }));
+    }
+
     filterTglHingga = FilterTgl(
       title: "Hingga",
       lastValue: true,
@@ -1049,6 +1084,185 @@ class _HomeMobileState extends State<DataLogger> {
   bool isLoading = false;
   int dataNum = 20;
 
+  var progress = 0.0;
+
+  int fileNum = 0;
+
+  Future<void> download() async {
+    // if (!setFilter) {
+
+    // if (dataLog.isEmpty) return;
+
+    // stopLoadmore = true;
+
+    // offset = 0;
+
+    // maxDataNum = 40;
+
+    // dataLog.clear();
+
+    if (mounted) {
+      setState(() {
+        // isLoading = true;
+        Content_dataLogger2.progress = 0.000001;
+      });
+    }
+
+    final dariTgl = filterTglDari.today;
+
+    final hinggaTgl = filterTglHingga.today;
+
+    // await getDataLog(0, islimit: false);
+
+    List<String> header = ["Tanggal"];
+
+    final dataLog0 = dataLog[0]["tangkiData"] as List<dynamic>;
+
+    for (var i = 0; i < 6; i++) {
+      final dataList = dataLog0[i] as List<dynamic>;
+
+      // if (kDebugMode) {
+      //   print("dataList: $dataList");
+      // }
+
+      for (var ii = 0; ii < dataList.length; ii++) {
+        final val = dataList[ii];
+
+        // listTite
+
+        for (var iii = 2; iii < titleData.length; iii++) {
+          header.add("Sel ${i + 1} - ${val["sel"]} ${titleData[iii]}");
+        }
+      }
+    }
+
+    // if (kDebugMode) {
+    //   print("header $header");
+    // }
+
+    // dataNum = 200;
+
+    MyExcel ex = MyExcel();
+
+    Excel excel = ex.create();
+
+    bool isPopulate = false;
+
+    List<Map<String, dynamic>> dataLog2 = [];
+
+    int offset = 0, offset2 = 0, dataNum = 200, maxDataNum2 = maxDataNum;
+
+    while ((offset + dataLog2.length) < maxDataNum2) {
+      if (Content_dataLogger2.isCancel) {
+        Content_dataLogger2.isCancel = false;
+        Content_dataLogger2.progress = 0;
+        if (mounted) {
+          setState(() {});
+        }
+
+        return;
+      }
+
+      if (!isPopulate) {
+        isPopulate = true;
+        await ex.populate(excel, header, ["data monitoring"], listAny: dataLog);
+
+        Content_dataLogger2.progress = (offset + dataLog.length) / maxDataNum2;
+
+        Content_dataLogger2.fileNum =
+            (maxDataNum2 / Content_dataLogger2.maxRowExcel).ceil();
+
+        if (mounted) {
+          setState(() {
+            // isLoading = true;
+            // Content_dataLogger2.progress = 0.1;
+          });
+        }
+      } else {
+        if (dataLog2.isEmpty) {
+          break;
+        }
+        Sheet sheetObject = excel["data monitoring"];
+
+        if (sheetObject.rows.length > Content_dataLogger2.maxRowExcel) {
+          await ex.save(excel, "antam_monitoring");
+
+          excel = ex.create();
+
+          offset2 = 0;
+
+          await ex.populate(excel, header, ["data monitoring"],
+              listAny: dataLog2);
+        } else {
+          await ex.append(excel, header, ["data monitoring"], offset2,
+              listAny: dataLog2);
+        }
+
+        Content_dataLogger2.progress = (offset + dataLog2.length) / maxDataNum2;
+
+        if (mounted) {
+          setState(() {
+            // isLoading = true;
+            // Content_dataLogger2.progress = 0.1;
+          });
+        }
+      }
+      // await loadMore();
+
+      offset += (dataLog2.isEmpty ? dataLog.length : dataLog2.length);
+      offset2 += (dataLog2.isEmpty ? dataLog.length : dataLog2.length);
+
+      dataLog2.clear();
+
+      final api = ApiHelper();
+
+      final r = await api.callAPI(
+          "/${isAlarm ? "alarm" : "monitoring"}/find?offset=$offset&limit=$dataNum",
+          "POST",
+          jsonEncode({"from": dariTgl, "to": hinggaTgl}),
+          true);
+
+      if (r["error"] == null) {
+        List<dynamic> data = r['data'] as List<dynamic>;
+
+        maxDataNum2 = r["count"];
+
+        for (var i = 0; i < data.length; i++) {
+          final val = data[i];
+
+          dataLog2.add({
+            "isClicked": false,
+            "isHover": false,
+            "timeStamp_server": val["timeStamp_server"],
+            "msg": "",
+            "tangkiData": val["tangkiData"] as List<dynamic>
+          });
+        }
+      }
+
+      // await Future.delayed(const Duration(microseconds: 1));
+      // if (kDebugMode) {
+      //   print("dataLog: ${dataLog.length}");
+      // }
+    }
+
+    dataNum = 20;
+
+    // offset = dataLog.length;
+
+    await ex.save(excel, "antam_monitoring");
+
+    Content_dataLogger2.progress = 0;
+
+    if (mounted) {
+      setState(() {
+        // isLoading = false;
+        // Content_dataLogger2.progress = 0;
+        // stopLoadmore = false;
+      });
+    }
+  }
+
   Future<bool> loadMore() async {
     offset += dataNum;
 
@@ -1142,7 +1356,7 @@ class _HomeMobileState extends State<DataLogger> {
   String dataDate = "";
 
   changeData(int index) async {
-    if (index == indexData) return;
+    // if (index == indexData) return;
 
     if (isTapped) {
       setState(() {
@@ -1242,6 +1456,7 @@ class _HomeMobileState extends State<DataLogger> {
               SizedBox(
                   width: lWidth,
                   child: const Divider(
+                    color: Colors.black26,
                     thickness: 1,
                   ))
             ],
@@ -1291,6 +1506,9 @@ class _HomeMobileState extends State<DataLogger> {
                         ),
                         child: Center(
                           child: PanelTable(
+                              fileNum: Content_dataLogger2.fileNum,
+                              progress: Content_dataLogger2.progress,
+                              download: () => download(),
                               isLoading: isLoading,
                               changeIsAlarm: changeIsAlarm,
                               loadmore: loadMore,
@@ -1401,7 +1619,7 @@ class _HomeMobileState extends State<DataLogger> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              "Sensor Node",
+                                              "Elektrolit",
                                               style: MainStyle
                                                   .textStyleDefault15BlackBold,
                                             ),
@@ -1576,7 +1794,7 @@ class _HomeMobileState extends State<DataLogger> {
                                                                             borderRadius: BorderRadius.circular(5)),
                                                                         child:
                                                                             Text(
-                                                                          "S: ${(e["suhu"] as double).toStringAsFixed(2)} \u00B0 C",
+                                                                          "S: ${(e["suhu"] / 1 as double).toStringAsFixed(2)} \u00B0 C",
                                                                           style: MyTextStyle.defaultFontCustom(
                                                                               MainStyle.primaryColor,
                                                                               8,
@@ -1593,7 +1811,7 @@ class _HomeMobileState extends State<DataLogger> {
                                                                             borderRadius: BorderRadius.circular(5)),
                                                                         child:
                                                                             Text(
-                                                                          "T: ${(e["tegangan"] as double).toStringAsFixed(2)}  V",
+                                                                          "T: ${(e["tegangan"] / 1 as double).toStringAsFixed(2)}  V",
                                                                           style: MyTextStyle.defaultFontCustom(
                                                                               MainStyle.primaryColor,
                                                                               8,
@@ -1610,7 +1828,7 @@ class _HomeMobileState extends State<DataLogger> {
                                                                             borderRadius: BorderRadius.circular(5)),
                                                                         child:
                                                                             Text(
-                                                                          "Ars: ${(e["arus"] as double).toStringAsFixed(2)}  A",
+                                                                          "Ars: ${(e["arus"] / 1 as double).toStringAsFixed(2)}  A",
                                                                           style: MyTextStyle.defaultFontCustom(
                                                                               MainStyle.primaryColor,
                                                                               8,
@@ -1638,7 +1856,7 @@ class _HomeMobileState extends State<DataLogger> {
                                                                             borderRadius: BorderRadius.circular(5)),
                                                                         child:
                                                                             Text(
-                                                                          "D: ${(e["daya"] as double).toStringAsFixed(2)}  watt",
+                                                                          "D: ${(e["daya"] / 1 as double).toStringAsFixed(2)}  watt",
                                                                           style: MyTextStyle.defaultFontCustom(
                                                                               MainStyle.primaryColor,
                                                                               8,
@@ -1655,7 +1873,7 @@ class _HomeMobileState extends State<DataLogger> {
                                                                             borderRadius: BorderRadius.circular(5)),
                                                                         child:
                                                                             Text(
-                                                                          "E: ${(e["energi"] as double).toStringAsFixed(2)}  kwh",
+                                                                          "E: ${(e["energi"] / 1 as double).toStringAsFixed(2)}  kwh",
                                                                           style: MyTextStyle.defaultFontCustom(
                                                                               MainStyle.primaryColor,
                                                                               8,

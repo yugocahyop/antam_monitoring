@@ -68,7 +68,16 @@ class _HomeMobileState extends State<HomeMobile> {
     }
   ];
 
-  var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
+  // var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
+  var titleData = [
+    "Sel",
+    "#Anoda",
+    "Suhu",
+    "Tegangan",
+    "Arus",
+    "Daya",
+    "Energi"
+  ];
 
   // final selScrollController = ScrollController();
   final pc = PageController(
@@ -144,19 +153,19 @@ class _HomeMobileState extends State<HomeMobile> {
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
 
   var teganganData = [
+    const FlSpot(0, 0),
     const FlSpot(1, 0),
     const FlSpot(2, 0),
     const FlSpot(3, 0),
     const FlSpot(4, 0),
-    const FlSpot(5, 0),
   ];
 
   var arusData = [
+    const FlSpot(0, 0),
     const FlSpot(1, 0),
     const FlSpot(2, 0),
     const FlSpot(3, 0),
     const FlSpot(4, 0),
-    const FlSpot(5, 0),
   ];
 
   var arusSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -214,22 +223,107 @@ class _HomeMobileState extends State<HomeMobile> {
   getData(int tangki, {bool isSetState = true}) {
     currTangki = tangki;
     pc.jumpToPage(0);
-    teganganData = [];
+    teganganData.clear();
 
-    arusData = [];
+    arusData.clear();
 
-    for (var e in (tangki == 0 ? maxData : selData[tangki])) {
-      teganganData.add(FlSpot(
-          (e["sel"] as int).toDouble(),
-          (e["tegangan"] ?? e["volt"]) is double
-              ? (e["tegangan"] ?? e["volt"]) as double
-              : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
+    if (tangki == 0) {
+      final listZero = [];
 
-      arusData.add(FlSpot(
-          (e["sel"] as int).toDouble(),
-          (e["arus"] ?? e["ampere"]) is double
-              ? (e["arus"] ?? e["ampere"]) as double
-              : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
+      (selData[0] as List<dynamic>).sort(((a, b) {
+        final aVal = a["arus"] / 1 as double;
+        final bVal = b["arus"] / 1 as double;
+
+        return bVal.compareTo(aVal);
+      }));
+
+      // listZero.addAll((selData[0] as List<dynamic>).getRange(0, 3));
+
+      for (var i = 0; i < 3; i++) {
+        final val = selData[0][i] as Map<String, dynamic>;
+        listZero.add(
+          {
+            "tangki": val["tangki"],
+            "sel": val["sel"],
+            "arus": val["arus"],
+            "tegangan": val["tegangan"],
+          },
+        );
+      }
+
+      for (var i = 0; i < 3; i++) {
+        tangkiMaxData[i]["tegangan"] = listZero[i]["tangki"];
+        tangkiMaxData[i]["sel"] = listZero[i]["sel"];
+
+        tangkiMaxData[i]["arus"] = listZero[i]["tangki"];
+      }
+
+      resetSelDataSort();
+
+      (selData[0] as List<dynamic>).sort(((a, b) {
+        final aVal = a["arus"] / 1 as double;
+        final bVal = b["arus"] / 1 as double;
+
+        return aVal.compareTo(bVal);
+      }));
+
+      for (var i = 3; i < 5; i++) {
+        final val = selData[0][i] as Map<String, dynamic>;
+        listZero.add(
+          {
+            "tangki": val["tangki"],
+            "sel": val["sel"],
+            "arus": val["arus"],
+            "tegangan": val["tegangan"],
+          },
+        );
+      }
+
+      for (var i = 3; i < 5; i++) {
+        tangkiMaxData[i]["tegangan"] = listZero[i]["tangki"];
+
+        tangkiMaxData[i]["sel"] = listZero[i]["sel"];
+
+        tangkiMaxData[i]["arus"] = listZero[i]["tangki"];
+      }
+
+      resetSelDataSort();
+
+      if (kDebugMode) {
+        print("listZero:  ${listZero}");
+      }
+
+      for (var e in (listZero)) {
+        teganganData.add(FlSpot(
+            listZero.indexOf(e) / 1,
+            (e["tegangan"] ?? e["volt"]) is double
+                ? (e["tegangan"] ?? e["volt"]) as double
+                : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
+
+        arusData.add(FlSpot(
+            listZero.indexOf(e) / 1,
+            (e["arus"] ?? e["ampere"]) is double
+                ? (e["arus"] ?? e["ampere"]) as double
+                : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
+      }
+
+      if (kDebugMode) {
+        print("arusData: $arusData");
+      }
+    } else {
+      for (var e in (selData[tangki])) {
+        teganganData.add(FlSpot(
+            (e["sel"] as int).toDouble(),
+            (e["tegangan"] ?? e["volt"]) is double
+                ? (e["tegangan"] ?? e["volt"]) as double
+                : ((e["tegangan"] ?? e["volt"]) as int).toDouble()));
+
+        arusData.add(FlSpot(
+            (e["sel"] as int).toDouble(),
+            (e["arus"] ?? e["ampere"]) is double
+                ? (e["arus"] ?? e["ampere"]) as double
+                : ((e["arus"] ?? e["ampere"]) as int).toDouble()));
+      }
     }
 
     // if (pc.page != null) {
@@ -366,22 +460,22 @@ class _HomeMobileState extends State<HomeMobile> {
                   : maxData[index]["energi"] as double,
               en);
 
-          tangkiMaxData[index]["suhu"] =
-              maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
+          // tangkiMaxData[index]["suhu"] =
+          //     maxData[index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
 
-          tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
-              ? i
-              : tangkiMaxData[index]["tegangan"];
+          // tangkiMaxData[index]["tegangan"] = maxData[index]["tegangan"] == vv
+          //     ? i
+          //     : tangkiMaxData[index]["tegangan"];
 
-          tangkiMaxData[index]["arus"] =
-              maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
+          // tangkiMaxData[index]["arus"] =
+          //     maxData[index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
 
-          tangkiMaxData[index]["daya"] =
-              maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
+          // tangkiMaxData[index]["daya"] =
+          //     maxData[index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
 
-          tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
-              ? i
-              : tangkiMaxData[index]["energi"];
+          // tangkiMaxData[index]["energi"] = maxData[index]["energi"] == en
+          //     ? i
+          //     : tangkiMaxData[index]["energi"];
         }
 
         // count++;
@@ -1169,6 +1263,7 @@ class _HomeMobileState extends State<HomeMobile> {
               SizedBox(
                   width: lWidth,
                   child: const Divider(
+                    color: Colors.black26,
                     thickness: 1,
                   ))
             ],
@@ -1355,7 +1450,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Sensor Node",
+                                      "Elektrolit",
                                       style:
                                           MainStyle.textStyleDefault15BlackBold,
                                     ),
@@ -1517,7 +1612,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                                                         BorderRadius.circular(
                                                                             5)),
                                                                 child: Text(
-                                                                  "S: ${(e["suhu"] as double).toStringAsFixed(2)} \u00B0 C",
+                                                                  "S: ${(e["suhu"] / 1 as double).toStringAsFixed(2)} \u00B0 C",
                                                                   style: MyTextStyle.defaultFontCustom(
                                                                       MainStyle
                                                                           .primaryColor,
@@ -1537,7 +1632,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                                                         BorderRadius.circular(
                                                                             5)),
                                                                 child: Text(
-                                                                  "T: ${(e["tegangan"] as double).toStringAsFixed(2)}  V",
+                                                                  "T: ${(e["tegangan"] / 1 as double).toStringAsFixed(2)}  V",
                                                                   style: MyTextStyle.defaultFontCustom(
                                                                       MainStyle
                                                                           .primaryColor,
@@ -1557,7 +1652,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                                                         BorderRadius.circular(
                                                                             5)),
                                                                 child: Text(
-                                                                  "Ars: ${(e["arus"] as double).toStringAsFixed(2)}  A",
+                                                                  "Ars: ${(e["arus"] / 1 as double).toStringAsFixed(2)}  A",
                                                                   style: MyTextStyle.defaultFontCustom(
                                                                       MainStyle
                                                                           .primaryColor,
@@ -1588,7 +1683,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                                                         BorderRadius.circular(
                                                                             5)),
                                                                 child: Text(
-                                                                  "D: ${(e["daya"] as double).toStringAsFixed(2)}  watt",
+                                                                  "D: ${(e["daya"] / 1 as double).toStringAsFixed(2)}  watt",
                                                                   style: MyTextStyle.defaultFontCustom(
                                                                       MainStyle
                                                                           .primaryColor,
@@ -1608,7 +1703,7 @@ class _HomeMobileState extends State<HomeMobile> {
                                                                         BorderRadius.circular(
                                                                             5)),
                                                                 child: Text(
-                                                                  "E: ${(e["energi"] as double).toStringAsFixed(2)}  kwh",
+                                                                  "E: ${(e["energi"] / 1 as double).toStringAsFixed(2)}  kwh",
                                                                   style: MyTextStyle.defaultFontCustom(
                                                                       MainStyle
                                                                           .primaryColor,

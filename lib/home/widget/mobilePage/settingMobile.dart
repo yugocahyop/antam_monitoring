@@ -469,6 +469,7 @@ class _SettingMobileState extends State<SettingMobile> {
               SizedBox(
                   width: lWidth,
                   child: const Divider(
+                    color: Colors.black26,
                     thickness: 1,
                   ))
             ],

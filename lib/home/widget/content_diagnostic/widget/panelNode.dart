@@ -33,6 +33,7 @@ class _PanelNodeState extends State<PanelNode> {
   bool isHover = false;
   @override
   Widget build(BuildContext context) {
+    final lWidth = MediaQuery.of(context).size.width;
     return InkWell(
       onHover: (value) {
         setState(() {
@@ -66,12 +67,12 @@ class _PanelNodeState extends State<PanelNode> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.isSensor ? "Sensor node" : "Sel ${widget.tangki}",
+                      widget.isSensor ? "Elektrolit" : "Sel ${widget.tangki}",
                       style: MyTextStyle.defaultFontCustom(
                           widget.status.toLowerCase() == "inactive"
                               ? MainStyle.primaryColor
                               : Colors.white,
-                          12),
+                          lWidth > 500 ? 12 : 10),
                     ),
                     Visibility(
                       visible: !widget.isSensor,
@@ -81,7 +82,7 @@ class _PanelNodeState extends State<PanelNode> {
                             widget.status.toLowerCase() == "inactive"
                                 ? MainStyle.primaryColor
                                 : Colors.white,
-                            12),
+                            lWidth > 500 ? 12 : 10),
                       ),
                     ),
                   ],
@@ -90,7 +91,7 @@ class _PanelNodeState extends State<PanelNode> {
               Expanded(
                   child: Container(
                 width: widget.width,
-                padding: EdgeInsets.symmetric(horizontal: 2),
+                padding: EdgeInsets.symmetric(horizontal: 3),
                 decoration: BoxDecoration(
                     color: MainStyle.thirdColor,
                     borderRadius:
@@ -103,7 +104,8 @@ class _PanelNodeState extends State<PanelNode> {
                       scrollDirection: Axis.horizontal,
                       child: Text(
                         widget.status,
-                        style: MyTextStyle.defaultFontCustom(Colors.black, 10),
+                        style: MyTextStyle.defaultFontCustom(
+                            Colors.black, lWidth > 500 ? 10 : 9),
                       ),
                     ),
                     SizedBox(
@@ -111,7 +113,8 @@ class _PanelNodeState extends State<PanelNode> {
                       child: Text(
                         widget.lastUpdated,
                         textAlign: TextAlign.end,
-                        style: MyTextStyle.defaultFontCustom(Colors.black, 8),
+                        style: MyTextStyle.defaultFontCustom(
+                            Colors.black, lWidth > 500 ? 8 : 7),
                       ),
                     )
                   ],

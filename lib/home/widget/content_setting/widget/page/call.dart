@@ -391,24 +391,23 @@ class _CallSettingState extends State<CallSetting> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Emergency Call Setting",
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 22,
-                          weight: FontWeight.w700)),
-                  MainStyle.sizedBoxH10,
-                  Row(
-                    children: [
-                      Text(
-                        "Merupakan menu untuk mensetting emergency call. (max 5) ",
-                        style: MyTextStyle.defaultFontCustom(
-                            const Color(0xff919798), 14),
-                      ),
-                    ],
-                  )
-                ],
+              SizedBox(
+                width: 250,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Emergency Call Setting",
+                        style: MyTextStyle.defaultFontCustom(Colors.black, 22,
+                            weight: FontWeight.w700)),
+                    MainStyle.sizedBoxH10,
+                    Text(
+                      "Merupakan menu untuk menambah kontak emergency call. (max 5) ",
+                      style: MyTextStyle.defaultFontCustom(
+                          const Color(0xff919798), 14),
+                    )
+                  ],
+                ),
               ),
               const Icon(
                 Icons.phone,

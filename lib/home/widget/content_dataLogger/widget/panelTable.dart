@@ -1,16 +1,24 @@
 import 'dart:convert';
+// import 'dart:ffi';
 
+import 'package:antam_monitoring/home/widget/content_dataLogger/content_dataLogger2.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTableItem.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loadmore/loadmore.dart';
 
 class PanelTable extends StatefulWidget {
   PanelTable(
       {super.key,
+      required this.fileNum,
+      required this.progress,
+      required this.download,
       required this.isLoading,
       required this.changeIsAlarm,
       required this.loadmore,
@@ -20,7 +28,9 @@ class PanelTable extends StatefulWidget {
 
   List<Map<String, dynamic>> dataLog;
 
-  int max;
+  int max, fileNum;
+
+  double progress;
 
   bool isLoading;
 
@@ -29,6 +39,9 @@ class PanelTable extends StatefulWidget {
   Future<bool> Function() loadmore;
 
   Function(bool isAlarm) changeIsAlarm;
+  Function() download;
+
+  static int maxDataNumDownload = 0;
 
   @override
   State<PanelTable> createState() => _PanelTableState();
@@ -53,8 +66,15 @@ class _PanelTableState extends State<PanelTable> {
     dataLog = widget.dataLog;
   }
 
+  download() {
+    PanelTable.maxDataNumDownload = widget.max;
+
+    widget.download();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final lWidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: 500,
       height: 620,
@@ -187,21 +207,17 @@ class _PanelTableState extends State<PanelTable> {
                           itemCount: dataLog.length,
                           itemBuilder: ((context, index) => InkWell(
                               onTap: () {
-                                try {
-                                  dataLog.firstWhere((element) =>
-                                      element["isClicked"] ==
-                                      true)["isClicked"] = false;
-                                } catch (e) {}
-
-                                dataLog[index]["isClicked"] = true;
-
-                                if (!isAlarm) widget.onTap(index);
+                                OnTap(index);
                               },
                               onHover: (value) => setState(() {
                                     // print("hovered $value");
                                     dataLog[index]["isHover"] = value;
                                   }),
                               child: PanelItem(
+                                  onTap: () {
+                                    OnTap(index);
+                                  },
+                                  isDownload: !isAlarm,
                                   primaryColor: dataLog[index]["isClicked"]
                                       ? MainStyle.thirdColor.withAlpha(150)
                                       : dataLog[index]["isHover"]
@@ -218,80 +234,166 @@ class _PanelTableState extends State<PanelTable> {
             height: 100,
             width: 500,
             child: Row(
-              children: tabItems
-                  .map((e) => Opacity(
-                        opacity: !e["shown"] ? 0 : 1,
-                        child: Transform.translate(
-                          offset: Offset(tabItems.indexOf(e) * -10, 0),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            splashColor: Colors.transparent,
-                            onTap: () async {
-                              tabItems.firstWhere((element) =>
-                                  element["shown"] == true)["shown"] = false;
-                              e["shown"] = true;
-                              isAlarm = e["title"] == "Alarm";
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: tabItems
+                      .map((e) => Opacity(
+                            opacity: !e["shown"] ? 0 : 1,
+                            child: Transform.translate(
+                              offset: Offset(tabItems.indexOf(e) * -10, 0),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(10),
+                                splashColor: Colors.transparent,
+                                onTap: () async {
+                                  tabItems.firstWhere((element) =>
+                                          element["shown"] == true)["shown"] =
+                                      false;
+                                  e["shown"] = true;
+                                  isAlarm = e["title"] == "Alarm";
 
-                              // print("is alarm : $isAlarm");
-                              setState(() {});
+                                  // print("is alarm : $isAlarm");
+                                  setState(() {});
 
-                              dataLog.clear();
+                                  dataLog.clear();
 
-                              await widget.changeIsAlarm(isAlarm);
+                                  await widget.changeIsAlarm(isAlarm);
 
-                              setState(() {});
-                            },
-                            child: Container(
-                              width: 100,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10)),
-                                  color: MainStyle.secondaryColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        offset: const Offset(4, -4),
-                                        color: MainStyle.primaryColor
-                                            .withAlpha((255 * 0.05).toInt()),
-                                        blurRadius: 10,
-                                        spreadRadius: 0),
-                                    //   BoxShadow(
-                                    //       offset: const Offset(-4, -4),
-                                    //       color: Colors.white
-                                    //           .withAlpha((255 * 0.5).toInt()),
-                                    //       blurRadius: 13,
-                                    //       spreadRadius: 0),
-                                    //   BoxShadow(
-                                    //       offset: const Offset(6, 6),
-                                    //       color: MainStyle.primaryColor
-                                    //           .withAlpha((255 * 0.10).toInt()),
-                                    //       blurRadius: 20,
-                                    //       spreadRadius: 0),
-                                  ]),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(e["icon"],
-                                      color: MainStyle.primaryColor, size: 20),
-                                  const SizedBox(
-                                    width: 3,
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  width: 100,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10)),
+                                      color: MainStyle.secondaryColor,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            offset: const Offset(4, -4),
+                                            color: MainStyle.primaryColor
+                                                .withAlpha(
+                                                    (255 * 0.05).toInt()),
+                                            blurRadius: 10,
+                                            spreadRadius: 0),
+                                        //   BoxShadow(
+                                        //       offset: const Offset(-4, -4),
+                                        //       color: Colors.white
+                                        //           .withAlpha((255 * 0.5).toInt()),
+                                        //       blurRadius: 13,
+                                        //       spreadRadius: 0),
+                                        //   BoxShadow(
+                                        //       offset: const Offset(6, 6),
+                                        //       color: MainStyle.primaryColor
+                                        //           .withAlpha((255 * 0.10).toInt()),
+                                        //       blurRadius: 20,
+                                        //       spreadRadius: 0),
+                                      ]),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(e["icon"],
+                                          color: MainStyle.primaryColor,
+                                          size: 20),
+                                      const SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        e["title"],
+                                        style: MyTextStyle.defaultFontCustom(
+                                            MainStyle.primaryColor, 18),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    e["title"],
-                                    style: MyTextStyle.defaultFontCustom(
-                                        MainStyle.primaryColor, 18),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ))
-                  .toList(),
+                          ))
+                      .toList(),
+                ),
+                Transform.translate(
+                  offset: Offset(0, -20),
+                  child: SizedBox(
+                    height: 30,
+                    child: widget.progress > 0
+                        ? SizedBox(
+                            width: lWidth <= 500 ? 140 : 200,
+                            height: 30,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: lWidth <= 500 ? 120 : 180,
+                                      height: 8,
+                                      child: LinearProgressIndicator(
+                                        backgroundColor:
+                                            MainStyle.secondaryColor,
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: MainStyle.primaryColor,
+                                        value: widget.progress,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Content_dataLogger2.isCancel = true;
+                                      },
+                                      child: Container(
+                                          width: 18,
+                                          padding: EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                              color: MainStyle.primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Icon(
+                                            Icons.close,
+                                            size: 13,
+                                            color: Colors.white,
+                                          )),
+                                    )
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Wrap(
+                                      alignment: WrapAlignment.end,
+                                      children: [
+                                        Text(
+                                            "${"downloading"} ${((widget.progress * (PanelTable.maxDataNumDownload) / Content_dataLogger2.maxRowExcel)).ceil()} of ${widget.fileNum}"),
+                                      ]),
+                                ),
+                              ],
+                            ),
+                          )
+                        : MyButton(
+                            color: MainStyle.primaryColor,
+                            text: lWidth <= 500 ? "" : "Download",
+                            icon: Icon(
+                              Icons.download,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => download(),
+                            textColor: Colors.white),
+                  ),
+                )
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void OnTap(int index) {
+    try {
+      dataLog.firstWhere(
+          (element) => element["isClicked"] == true)["isClicked"] = false;
+    } catch (e) {}
+
+    dataLog[index]["isClicked"] = true;
+
+    if (!isAlarm) widget.onTap(index);
   }
 }

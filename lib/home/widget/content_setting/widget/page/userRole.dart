@@ -223,24 +223,23 @@ class _UserRoleState extends State<UserRole> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("User Role",
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 22,
-                          weight: FontWeight.w700)),
-                  MainStyle.sizedBoxH10,
-                  Row(
-                    children: [
-                      Text(
-                        "Merupakan menu untuk mengganti role user ",
-                        style: MyTextStyle.defaultFontCustom(
-                            const Color(0xff919798), 14),
-                      ),
-                    ],
-                  )
-                ],
+              SizedBox(
+                width: 250,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("User Role",
+                        style: MyTextStyle.defaultFontCustom(Colors.black, 22,
+                            weight: FontWeight.w700)),
+                    MainStyle.sizedBoxH10,
+                    Text(
+                      "Merupakan menu untuk mengganti role user ",
+                      style: MyTextStyle.defaultFontCustom(
+                          const Color(0xff919798), 14),
+                    )
+                  ],
+                ),
               ),
               const Icon(
                 Icons.manage_accounts,

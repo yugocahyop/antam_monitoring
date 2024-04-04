@@ -662,6 +662,7 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
               SizedBox(
                   width: lWidth,
                   child: const Divider(
+                    color: Colors.black26,
                     thickness: 1,
                   ))
             ],

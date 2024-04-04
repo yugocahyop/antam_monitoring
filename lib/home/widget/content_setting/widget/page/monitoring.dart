@@ -247,27 +247,30 @@ class _MonitoringSettingState extends State<MonitoringSetting> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Monitoring Setting",
-                      style: MyTextStyle.defaultFontCustom(Colors.black, 22,
-                          weight: FontWeight.w700)),
-                  MainStyle.sizedBoxH10,
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: lwidth <= 500 ? 250 : 380,
-                        child: Text(
-                          "Merupakan menu untuk mengganti parameter monitoring ",
-                          style: MyTextStyle.defaultFontCustom(
-                              const Color(0xff919798), 14),
+              SizedBox(
+                width: 250,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Monitoring Setting",
+                        style: MyTextStyle.defaultFontCustom(Colors.black, 22,
+                            weight: FontWeight.w700)),
+                    MainStyle.sizedBoxH10,
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: lwidth <= 500 ? 250 : 380,
+                          child: Text(
+                            "Merupakan menu untuk mengganti parameter monitoring ",
+                            style: MyTextStyle.defaultFontCustom(
+                                const Color(0xff919798), 14),
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
               const Icon(
                 Icons.bar_chart,

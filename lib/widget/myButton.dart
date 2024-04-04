@@ -52,8 +52,8 @@ class MyButton extends StatelessWidget {
 
     final logicalScreenSize = MediaQuery.of(context).size;
     final logicalWidth = logicalScreenSize.width;
-    final logicalHeight = logicalScreenSize.height;
-    final MyTextStyle ts = MyTextStyle(logicalHeight);
+    // final logicalHeight = logicalScreenSize.height;
+    final MyTextStyle ts = MyTextStyle(logicalWidth);
 
     // TODO: implement build
     return Container(

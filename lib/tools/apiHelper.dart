@@ -108,7 +108,7 @@ class ApiHelper {
             ..headers["authorization"] = "Bearer $tokenMain"
             ..headers["Content-Type"] = "application/json"
             ..body = data)
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 60));
 
       //
 

@@ -75,6 +75,17 @@ class _MenuState extends State<Menu> {
                 .map((e) => InkWell(
                       hoverColor: Colors.transparent,
                       splashColor: Colors.transparent,
+                      onHighlightChanged: (value) {
+                        setState(() {
+                          isHovers[widget.menuItem.indexOf(e)] = value;
+                        });
+                      },
+                      onFocusChange: (value) {
+                        setState(() {
+                          isHovers[widget.menuItem.indexOf(e)] = value;
+                        });
+                        // isHovers[widget.menuItem.indexOf(e)] = value;
+                      },
                       onHover: ((value) {
                         setState(() {
                           isHovers[widget.menuItem.indexOf(e)] = value;

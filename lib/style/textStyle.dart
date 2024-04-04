@@ -42,7 +42,7 @@ class MyTextStyle {
   }
 
   TextStyle defaultFontSmall(Color color) {
-    return GoogleFonts.inter(fontSize: height < 800 ? 13 : 15, color: color);
+    return GoogleFonts.inter(fontSize: height <= 500 ? 11 : 13, color: color);
   }
 
   TextStyle defaultFontSmallThick(Color color) {

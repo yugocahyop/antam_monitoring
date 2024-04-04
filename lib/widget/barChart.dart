@@ -66,7 +66,9 @@ class MyBarChart extends StatelessWidget {
         barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
           getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
-              "Anoda ${group.x}:\n",
+              tangkiMaxData.isNotEmpty
+                  ? "Sel ${tangkiMaxData[(group.x ~/ 1)][title!.toLowerCase()]} - ${tangkiMaxData[(group.x ~/ 1)]["sel"]} :\n"
+                  : "Anoda ${group.x}:\n",
               MyTextStyle.defaultFontCustom(Colors.white, 16,
                   weight: FontWeight.bold),
               children: [
@@ -133,31 +135,42 @@ class MyBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) => Stack(
                   children: [
                     Transform.translate(
-                      offset: Offset(tangkiMaxData.isEmpty ? 0 : 0, 0),
+                      offset: Offset(tangkiMaxData.isEmpty ? 0 : 10, 0),
                       child: Text(
-                        "Anoda ${value.toInt()}",
+                        tangkiMaxData.isEmpty
+                            ? "Anoda ${value.toInt()}"
+                            : "Sel ${tangkiMaxData[(value ~/ 1)][title!.toLowerCase()]}",
                         style: MyTextStyle.defaultFontCustom(
                             Colors.black, lWidth <= 500 ? 10 : 14),
                       ),
                     ),
                     Transform.translate(
                       offset: lWidth <= 500
-                          ? const Offset(3, 20)
-                          : const Offset(10, 20),
+                          ? const Offset(-3, 20)
+                          : const Offset(-5, 20),
                       child: Visibility(
                         visible: tangkiMaxData.isNotEmpty,
                         child: Container(
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: MainStyle.primaryColor),
-                          child: Text(
-                            tangkiMaxData.isEmpty
-                                ? ""
-                                : "Sel ${tangkiMaxData[value.toInt() - 1][title!.toLowerCase()]}",
-                            style: MyTextStyle.defaultFontCustom(
-                                Colors.white, 12,
-                                weight: FontWeight.w700),
+                              color: value > 2
+                                  ? MainStyle.thirdColor
+                                  : MainStyle.primaryColor),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                tangkiMaxData.isEmpty
+                                    ? ""
+                                    : "Anoda ${tangkiMaxData[(value ~/ 1)]["sel"]} ",
+                                style: MyTextStyle.defaultFontCustom(
+                                    value > 2 ? Colors.black : Colors.white,
+                                    lWidth <= 500 ? 8 : 12,
+                                    weight: FontWeight.w700),
+                              ),
+                            ],
                           ),
                         ),
                       ),
