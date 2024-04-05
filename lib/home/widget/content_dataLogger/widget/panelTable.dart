@@ -66,8 +66,26 @@ class _PanelTableState extends State<PanelTable> {
     dataLog = widget.dataLog;
   }
 
-  download() {
+  download() async {
     PanelTable.maxDataNumDownload = widget.max;
+
+    if (isAlarm) {
+      tabItems.firstWhere((element) => element["shown"] == true)["shown"] =
+          false;
+      tabItems.firstWhere((element) => element["title"] == "Data")["shown"] =
+          true;
+      // e["shown"] = true;
+      isAlarm = false;
+
+      // print("is alarm : $isAlarm");
+      setState(() {});
+
+      dataLog.clear();
+
+      await widget.changeIsAlarm(isAlarm);
+
+      setState(() {});
+    }
 
     widget.download();
   }

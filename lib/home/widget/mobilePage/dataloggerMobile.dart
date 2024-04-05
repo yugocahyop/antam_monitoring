@@ -1065,7 +1065,7 @@ class _HomeMobileState extends State<DataLogger> {
 
   int maxDataNum = 20, offset = 0;
 
-  changeIsAlarm(bool isAlarm2) async {
+  Future<void> changeIsAlarm(bool isAlarm2) async {
     isAlarm = isAlarm2;
 
     offset = 0;
@@ -1112,7 +1112,11 @@ class _HomeMobileState extends State<DataLogger> {
 
     final hinggaTgl = filterTglHingga.today;
 
-    // await getDataLog(0, islimit: false);
+    // await changeIsAlarm(false);
+
+    if (dataLog.isEmpty) {
+      await getDataLog(0);
+    }
 
     List<String> header = ["Tanggal"];
 
@@ -1135,6 +1139,10 @@ class _HomeMobileState extends State<DataLogger> {
         }
       }
     }
+
+    header.add("Sel Elektrolit suhu");
+
+    header.add("Sel Elektrolit pH");
 
     // if (kDebugMode) {
     //   print("header $header");

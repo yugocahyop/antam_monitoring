@@ -1346,7 +1346,11 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
     final hinggaTgl = filterTglHingga.today;
 
-    // await getDataLog(0, islimit: false);
+    // isAlarm = false;
+
+    if (dataLog.isEmpty) {
+      await getDataLog(0);
+    }
 
     List<String> header = ["Tanggal"];
 
@@ -1476,7 +1480,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
             "isHover": false,
             "timeStamp_server": val["timeStamp_server"],
             "msg": "",
-            "tangkiData": val["tangkiData"] as List<dynamic>
+            "tangkiData": (val["tangkiData"] ?? []) as List<dynamic>
           });
         }
       }
@@ -1546,7 +1550,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       //   print("backend data2:  $data");
       // }
 
-      if (offset == 0) dataLog.clear();
+      if (offsetNum == 0) dataLog.clear();
 
       for (var i = 0; i < data.length; i++) {
         final val = data[i];

@@ -99,9 +99,13 @@ class _FilterTglState extends State<FilterTgl> {
     timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       DateTime now = DateTime.now();
       if (dayNow != now.day) {
-        setDay();
+        // setDay();
 
-        widget.hariValue = widget.lastValue ? hari.last : hari[0];
+        // widget.hariValue = widget.lastValue ? hari.last : hari[0];
+
+        widget.today =
+            DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
+                ((widget.lastValue ? 0 : 56) * 86400000);
 
         // widget.jamValue = widget.lastValue ? jam.last : jam.first;
         if (mounted) {
@@ -130,9 +134,13 @@ class _FilterTglState extends State<FilterTgl> {
 
     DateTime now = DateTime.now();
 
+    // widget.today =
+    //     DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
+    //         ((hari.reversed.toList().indexOf(widget.hariValue)) * 86400000);
+
     widget.today =
         DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
-            ((hari.reversed.toList().indexOf(widget.hariValue)) * 86400000);
+            ((widget.lastValue ? 0 : 56) * 86400000);
     widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
         ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
 
