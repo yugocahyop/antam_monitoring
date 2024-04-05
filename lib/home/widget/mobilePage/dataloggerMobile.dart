@@ -1122,7 +1122,9 @@ class _HomeMobileState extends State<DataLogger> {
 
     final dataLog0 = dataLog[0]["tangkiData"] as List<dynamic>;
 
-    for (var i = 0; i < 6; i++) {
+    for (var i = (currTangki == 0 ? 0 : currTangki - 1);
+        i < (currTangki == 0 ? 6 : currTangki);
+        i++) {
       final dataList = dataLog0[i] as List<dynamic>;
 
       // if (kDebugMode) {
