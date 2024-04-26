@@ -74,6 +74,7 @@ class _Content_settingState extends State<Content_setting> {
     {"sel": 3, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
     {"sel": 4, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
     {"sel": 5, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
+    {"sel": 6, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
   ];
 
   List<dynamic> selData = [
@@ -270,7 +271,7 @@ class _Content_settingState extends State<Content_setting> {
     // ]);
 
     for (var x = 0; x < selData[0].length; x++) {
-      for (var i = 2; i < titleData.length; i++) {
+      for (var i = 1; i < titleData.length; i++) {
         final title = titleData[i].toLowerCase();
 
         selData[0][x][title] = 0;
@@ -298,9 +299,10 @@ class _Content_settingState extends State<Content_setting> {
             ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
             : (e["energi"] ?? e["kwh"] ?? 0) as double;
         //  e["celcius"] = (e["celcius"] as int) + 1;
-        final index = v.indexOf(e);
+        final index2 = v.indexOf(e) + 1;
+        final index = i - 1;
 
-        if (index < 5 && tangkiMaxData.isNotEmpty) {
+        if (index < 6 && tangkiMaxData.isNotEmpty) {
           selData[0][index]["suhu"] = max(
               selData[0][index]["suhu"] is int
                   ? (selData[0][index]["suhu"] as int).toDouble()
@@ -327,21 +329,24 @@ class _Content_settingState extends State<Content_setting> {
                   : selData[0][index]["energi"] as double,
               en);
 
-          tangkiMaxData[index]["suhu"] =
-              selData[0][index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
+          tangkiMaxData[index]["suhu"] = selData[0][index]["suhu"] == c
+              ? index2
+              : tangkiMaxData[index]["suhu"];
 
           tangkiMaxData[index]["tegangan"] = selData[0][index]["tegangan"] == vv
-              ? i
+              ? index2
               : tangkiMaxData[index]["tegangan"];
 
-          tangkiMaxData[index]["arus"] =
-              selData[0][index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
+          tangkiMaxData[index]["arus"] = selData[0][index]["arus"] == a
+              ? index2
+              : tangkiMaxData[index]["arus"];
 
-          tangkiMaxData[index]["daya"] =
-              selData[0][index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
+          tangkiMaxData[index]["daya"] = selData[0][index]["daya"] == w
+              ? index2
+              : tangkiMaxData[index]["daya"];
 
           tangkiMaxData[index]["energi"] = selData[0][index]["energi"] == en
-              ? i
+              ? index2
               : tangkiMaxData[index]["energi"];
         }
 
@@ -583,6 +588,15 @@ class _Content_settingState extends State<Content_setting> {
           "daya": 0.0,
           "energi": 0.0
         },
+        {
+          "tangki": 1,
+          "sel": 6,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
       ]);
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
@@ -707,7 +721,7 @@ class _Content_settingState extends State<Content_setting> {
           print((sData));
         }
 
-        for (var i = 2; i < titleData.length; i++) {
+        for (var i = 1; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
           if (sData[title] != null &&
@@ -1400,7 +1414,12 @@ class _Content_settingState extends State<Content_setting> {
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      e,
+                                                                      currTangki ==
+                                                                              0
+                                                                          ? e.contains("Anoda")
+                                                                              ? "Sel"
+                                                                              : e
+                                                                          : e,
                                                                       style: MainStyle
                                                                           .textStyleDefault15White,
                                                                     ),
@@ -1553,7 +1572,7 @@ class _Content_settingState extends State<Content_setting> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "Sel " + (value as int).toString(),
+                                                                                "Anoda " + (value as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

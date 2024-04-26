@@ -405,6 +405,8 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     ],
   ];
 
+  bool isLoading = true;
+
   initDiagData() async {
     final api = ApiHelper();
 
@@ -442,7 +444,10 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
       account_alarm.setState!();
     }
 
-    if (mounted) setState(() {});
+    if (mounted)
+      setState(() {
+        isLoading = false;
+      });
   }
 
   @override
@@ -566,11 +571,11 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
         print("now : ${df.format(now)} date: ${df.format(date)} ");
         // }
 
-        if (now.year <= date.year) {
-          if (now.month <= date.month) {
-            if (now.day <= (date.day)) {
-              if (now.hour <= date.hour) {
-                if (now.minute <= date.minute) {
+        if (now.year == date.year) {
+          if (now.month == date.month) {
+            if (now.day == (date.day)) {
+              if (now.hour == date.hour) {
+                if (now.minute == date.minute) {
                   if (now.second <= date.second) {
                     lastUpdated = "baru";
                   } else {
@@ -600,6 +605,8 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
           sel: ii + 1,
           status: status,
           lastUpdated: lastUpdated,
+          dateDiff: now.millisecondsSinceEpoch - date.millisecondsSinceEpoch,
+          isLoading: isLoading,
           // lastUpdated:  df.format(date)
         ));
       }

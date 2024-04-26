@@ -31,8 +31,7 @@ class _AlarmMsgState extends State<AlarmMsg> {
 
       final dataString = warningMsg
           .where((element) =>
-              element.contains(tangki.toString()) &&
-              element.contains(node.toString()))
+              element.contains("${tangki.toString()} - ${node.toString()}"))
           .toList();
       if (dataString.isEmpty) {
         warningMsg.insert(0, msg);

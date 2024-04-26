@@ -283,30 +283,31 @@ class _PanelTableState extends State<PanelTable> {
                                   width: 100,
                                   padding: EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(10)),
-                                      color: MainStyle.secondaryColor,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            offset: const Offset(4, -4),
-                                            color: MainStyle.primaryColor
-                                                .withAlpha(
-                                                    (255 * 0.05).toInt()),
-                                            blurRadius: 10,
-                                            spreadRadius: 0),
-                                        //   BoxShadow(
-                                        //       offset: const Offset(-4, -4),
-                                        //       color: Colors.white
-                                        //           .withAlpha((255 * 0.5).toInt()),
-                                        //       blurRadius: 13,
-                                        //       spreadRadius: 0),
-                                        //   BoxShadow(
-                                        //       offset: const Offset(6, 6),
-                                        //       color: MainStyle.primaryColor
-                                        //           .withAlpha((255 * 0.10).toInt()),
-                                        //       blurRadius: 20,
-                                        //       spreadRadius: 0),
-                                      ]),
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(10)),
+                                    color: MainStyle.secondaryColor,
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //       offset: const Offset(4, -4),
+                                    //       color: MainStyle.primaryColor
+                                    //           .withAlpha(
+                                    //               (255 * 0.05).toInt()),
+                                    //       blurRadius: 10,
+                                    //       spreadRadius: 0),
+                                    //   //   BoxShadow(
+                                    //   //       offset: const Offset(-4, -4),
+                                    //   //       color: Colors.white
+                                    //   //           .withAlpha((255 * 0.5).toInt()),
+                                    //   //       blurRadius: 13,
+                                    //   //       spreadRadius: 0),
+                                    //   //   BoxShadow(
+                                    //   //       offset: const Offset(6, 6),
+                                    //   //       color: MainStyle.primaryColor
+                                    //   //           .withAlpha((255 * 0.10).toInt()),
+                                    //   //       blurRadius: 20,
+                                    //   //       spreadRadius: 0),
+                                    // ]
+                                  ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -378,7 +379,7 @@ class _PanelTableState extends State<PanelTable> {
                                       alignment: WrapAlignment.end,
                                       children: [
                                         Text(
-                                            "${"downloading"} ${((widget.progress * (PanelTable.maxDataNumDownload) / Content_dataLogger2.maxRowExcel)).ceil()} of ${widget.fileNum}"),
+                                            "${"downloading"} ${((widget.progress * (PanelTable.maxDataNumDownload / Content_dataLogger2.maxRowExcel))).ceil()} of ${widget.fileNum}"),
                                       ]),
                                 ),
                               ],

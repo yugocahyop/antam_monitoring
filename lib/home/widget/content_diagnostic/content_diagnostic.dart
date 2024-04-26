@@ -74,6 +74,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     {"sel": 3, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
     {"sel": 4, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
     {"sel": 5, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
+    {"sel": 6, "suhu": 0, "tegangan": 0, "arus": 0, "daya": 0, "energi": 0},
   ];
 
   List<dynamic> selData = [
@@ -154,6 +155,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   }
 
   promptToggle(int tangki, int sel, bool isActive) {
+    if (tangki == 7 && sel == 1) {
+      return;
+    }
+
     final c = Controller();
     c.goToDialog(
         context,
@@ -190,8 +195,6 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   List<Widget> getDiagnostiWidget(double width) {
     List<Widget> rows = [];
 
-    DateFormat df = DateFormat("dd MMM yyyy HH:mm");
-
     for (var i = 0; i < diagnosticData.length; i++) {
       final sel = diagnosticData[i];
       List<Widget> pn = [];
@@ -206,15 +209,16 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
         String lastUpdated = "";
 
-        // if (kDebugMode) {
-        // print("now : ${df.format(now)} date: ${df.format(date)} ");
-        // }
+        if (kDebugMode && i == 3 && ii == 0) {
+          DateFormat df = DateFormat("dd MMM yyyy HH:mm");
+          print("now : ${df.format(now)} date: ${df.format(date)} ");
+        }
 
-        if (now.year <= date.year) {
-          if (now.month <= date.month) {
-            if (now.day <= (date.day)) {
-              if (now.hour <= date.hour) {
-                if (now.minute <= date.minute) {
+        if (now.year == date.year) {
+          if (now.month == date.month) {
+            if (now.day == date.day) {
+              if (now.hour == date.hour) {
+                if (now.minute == date.minute) {
                   if (now.second <= date.second) {
                     lastUpdated = "baru";
                   } else {
@@ -244,6 +248,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
           sel: ii + 1,
           status: status,
           lastUpdated: lastUpdated,
+          dateDiff: now.millisecondsSinceEpoch - date.millisecondsSinceEpoch,
+          isLoading: isLoading,
           // lastUpdated:  df.format(date)
         ));
       }
@@ -468,7 +474,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     // ]);
 
     for (var x = 0; x < selData[0].length; x++) {
-      for (var i = 2; i < titleData.length; i++) {
+      for (var i = 1; i < titleData.length; i++) {
         final title = titleData[i].toLowerCase();
 
         selData[0][x][title] = 0;
@@ -496,9 +502,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
             ? ((e["energi"] ?? e["kwh"] ?? 0) as int).toDouble()
             : (e["energi"] ?? e["kwh"] ?? 0) as double;
         //  e["celcius"] = (e["celcius"] as int) + 1;
-        final index = v.indexOf(e);
+        final index2 = v.indexOf(e) + 1;
+        final index = i - 1;
 
-        if (index < 5 && tangkiMaxData.isNotEmpty) {
+        if (index < 6 && tangkiMaxData.isNotEmpty) {
           selData[0][index]["suhu"] = max(
               selData[0][index]["suhu"] is int
                   ? (selData[0][index]["suhu"] as int).toDouble()
@@ -525,21 +532,24 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                   : selData[0][index]["energi"] as double,
               en);
 
-          tangkiMaxData[index]["suhu"] =
-              selData[0][index]["suhu"] == c ? i : tangkiMaxData[index]["suhu"];
+          tangkiMaxData[index]["suhu"] = selData[0][index]["suhu"] == c
+              ? index2
+              : tangkiMaxData[index]["suhu"];
 
           tangkiMaxData[index]["tegangan"] = selData[0][index]["tegangan"] == vv
-              ? i
+              ? index2
               : tangkiMaxData[index]["tegangan"];
 
-          tangkiMaxData[index]["arus"] =
-              selData[0][index]["arus"] == a ? i : tangkiMaxData[index]["arus"];
+          tangkiMaxData[index]["arus"] = selData[0][index]["arus"] == a
+              ? index2
+              : tangkiMaxData[index]["arus"];
 
-          tangkiMaxData[index]["daya"] =
-              selData[0][index]["daya"] == w ? i : tangkiMaxData[index]["daya"];
+          tangkiMaxData[index]["daya"] = selData[0][index]["daya"] == w
+              ? index2
+              : tangkiMaxData[index]["daya"];
 
           tangkiMaxData[index]["energi"] = selData[0][index]["energi"] == en
-              ? i
+              ? index2
               : tangkiMaxData[index]["energi"];
         }
 
@@ -788,6 +798,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
           "daya": 0.0,
           "energi": 0.0
         },
+        {
+          "tangki": 1,
+          "sel": 6,
+          "suhu": 0.0,
+          "tegangan": 0.0,
+          "arus": 0.0,
+          "daya": 0.0,
+          "energi": 0.0
+        },
       ]);
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
@@ -815,6 +834,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
     if (mounted) setState(() {});
   }
+
+  bool isLoading = true;
 
   initDiagData() async {
     final api = ApiHelper();
@@ -853,7 +874,10 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
       account_alarm.setState!();
     }
 
-    if (mounted) setState(() {});
+    if (mounted)
+      setState(() {
+        isLoading = false;
+      });
   }
 
   initMqtt() {
@@ -961,12 +985,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
           print((sData));
         }
 
-        for (var i = 2; i < titleData.length; i++) {
+        for (var i = 1; i < titleData.length; i++) {
           final title = titleData[i].toLowerCase();
 
           if (sData[title] != null &&
               selData[tangki][(data["sel"] as int) - 1][title] !=
                   sData[title]) {
+            if (kDebugMode) {
+              print(("data changed"));
+            }
             refresh = true;
             selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
           }
@@ -1700,7 +1727,12 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      e,
+                                                                      e.contains(
+                                                                              "Anoda")
+                                                                          ? currTangki == 0
+                                                                              ? "Sel"
+                                                                              : e
+                                                                          : e,
                                                                       style: MainStyle
                                                                           .textStyleDefault15White,
                                                                     ),
@@ -1853,7 +1885,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "Sel " + (value ~/ 1 as int).toString(),
+                                                                                "Anoda " + (value ~/ 1 as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),
