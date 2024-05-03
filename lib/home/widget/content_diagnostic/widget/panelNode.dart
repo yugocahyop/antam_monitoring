@@ -71,20 +71,12 @@ class _PanelNodeState extends State<PanelNode> {
                         BorderRadius.vertical(top: Radius.circular(10)),
                     color: widget.status.toLowerCase() == "active"
                         ? MainStyle.primaryColor.withOpacity(
-                            widget.dateDiff > (60000 * 5) || widget.dateDiff < 0
-                                ? 0.5
-                                : 1)
+                            widget.dateDiff > (60000 * 5) ? 0.5 : 1)
                         : widget.status.toLowerCase().contains("alarm")
                             ? Colors.red.withOpacity(
-                                widget.dateDiff > (60000 * 5) ||
-                                        widget.dateDiff < 0
-                                    ? 0.5
-                                    : 1)
+                                widget.dateDiff > (60000 * 5) ? 0.5 : 1)
                             : MainStyle.thirdColor.withOpacity(
-                                widget.dateDiff > (60000 * 5) ||
-                                        widget.dateDiff < 0
-                                    ? 0.5
-                                    : 1)),
+                                widget.dateDiff > (60000 * 5) ? 0.5 : 1)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

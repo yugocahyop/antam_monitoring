@@ -514,13 +514,39 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     } catch (e) {}
   }
 
-  promptToggle(int tangki, int sel, bool isActive) {
+  resetEnergi() {
+    // while (!mqtt!.isConnected) {
+    //   await Future.delayed(Duration(milliseconds: 500));
+    // }
+
+    final api = ApiHelper();
+
+    api.callAPI("/diagnostic/reset", "POST", jsonEncode({}), true);
+
+    try {
+      mqtt2.publish({
+        "tangki": 15,
+        "node": 15,
+        // "activate": !isActive,
+        "command": "resetEnergi"
+        // "status": isActive ? false : true
+      }, "antam/command");
+    } catch (e) {}
+  }
+
+  promptToggle(int tangki, int sel, bool isActive,
+      {bool isResetEnergi = false}) {
+    if (tangki == 7 && sel == 1) {
+      return;
+    }
+
     final c = Controller();
     c.goToDialog(
         context,
         AlertDialog(
-          title: Text(
-              "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
+          title: Text(isResetEnergi
+              ? "Reset energi ?"
+              : "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
           actions: [
             SizedBox(
               width: 80,
@@ -540,7 +566,16 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                   textColor: Colors.white,
                   onPressed: () {
                     Navigator.pop(context);
-                    togglePanelMqtt(tangki, sel, isActive);
+
+                    if (isResetEnergi) {
+                      resetEnergi();
+                    } else {
+                      togglePanelMqtt(
+                        tangki,
+                        sel,
+                        isActive,
+                      );
+                    }
                   },
                   text: ("Yes")),
             ),
@@ -725,6 +760,16 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              SizedBox(
+                                width: 120,
+                                child: MyButton(
+                                    color: MainStyle.primaryColor,
+                                    text: "Reset energi",
+                                    onPressed: () => promptToggle(15, 15, false,
+                                        isResetEnergi: true),
+                                    textColor: Colors.white),
+                              ),
+                              MainStyle.sizedBoxW5,
                               MyButton(
                                   color: MainStyle.primaryColor,
                                   text: "Matikan semua",

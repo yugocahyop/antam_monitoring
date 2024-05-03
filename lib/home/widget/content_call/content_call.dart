@@ -1863,13 +1863,21 @@ class _Content_callState extends State<Content_call> {
                                                               decoration:
                                                                   const BoxDecoration(),
                                                               width: 300,
-                                                              child: Text(
-                                                                  (e["value"]
-                                                                          as double)
-                                                                      .toStringAsFixed(
-                                                                          2),
-                                                                  style: MainStyle
-                                                                      .textStyleDefault25Primary),
+                                                              child: Transform
+                                                                  .translate(
+                                                                offset: Offset(
+                                                                    0, -3),
+                                                                child: Text(
+                                                                    (e["value"]
+                                                                            as double)
+                                                                        .toStringAsFixed(
+                                                                            2),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .right,
+                                                                    style: MainStyle
+                                                                        .textStyleDefault25Primary),
+                                                              ),
                                                             ),
                                                             SizedBox(
                                                               width: 100,

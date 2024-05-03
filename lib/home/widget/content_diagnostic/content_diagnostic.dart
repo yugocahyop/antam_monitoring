@@ -154,7 +154,28 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     } catch (e) {}
   }
 
-  promptToggle(int tangki, int sel, bool isActive) {
+  resetEnergi() {
+    // while (!mqtt!.isConnected) {
+    //   await Future.delayed(Duration(milliseconds: 500));
+    // }
+
+    final api = ApiHelper();
+
+    api.callAPI("/diagnostic/reset", "POST", jsonEncode({}), true);
+
+    try {
+      mqtt2.publish({
+        "tangki": 15,
+        "node": 15,
+        // "activate": !isActive,
+        "command": "resetEnergi"
+        // "status": isActive ? false : true
+      }, "antam/command");
+    } catch (e) {}
+  }
+
+  promptToggle(int tangki, int sel, bool isActive,
+      {bool isResetEnergi = false}) {
     if (tangki == 7 && sel == 1) {
       return;
     }
@@ -163,8 +184,9 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     c.goToDialog(
         context,
         AlertDialog(
-          title: Text(
-              "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
+          title: Text(isResetEnergi
+              ? "Reset energi ?"
+              : "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
           actions: [
             SizedBox(
               width: 80,
@@ -184,7 +206,16 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                   textColor: Colors.white,
                   onPressed: () {
                     Navigator.pop(context);
-                    togglePanelMqtt(tangki, sel, isActive);
+
+                    if (isResetEnergi) {
+                      resetEnergi();
+                    } else {
+                      togglePanelMqtt(
+                        tangki,
+                        sel,
+                        isActive,
+                      );
+                    }
                   },
                   text: ("Yes")),
             ),
@@ -1512,7 +1543,28 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    Column(children: getDiagnostiWidget(70))
+                                    SizedBox(
+                                      height: 510,
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                              children: getDiagnostiWidget(70)),
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: SizedBox(
+                                              width: 120,
+                                              child: MyButton(
+                                                  color: MainStyle.primaryColor,
+                                                  text: "Reset energi",
+                                                  onPressed: () => promptToggle(
+                                                      15, 15, false,
+                                                      isResetEnergi: true),
+                                                  textColor: Colors.white),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
                                     // PanelNode(
                                     //     tangki: 1,
                                     //     sel: 1,
@@ -2042,13 +2094,21 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                               decoration:
                                                                   const BoxDecoration(),
                                                               width: 300,
-                                                              child: Text(
-                                                                (e["value"]
-                                                                        as double)
-                                                                    .toStringAsFixed(
-                                                                        2),
-                                                                style: MainStyle
-                                                                    .textStyleDefault25Primary,
+                                                              child: Transform
+                                                                  .translate(
+                                                                offset: Offset(
+                                                                    0, -3),
+                                                                child: Text(
+                                                                  (e["value"]
+                                                                          as double)
+                                                                      .toStringAsFixed(
+                                                                          2),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .right,
+                                                                  style: MainStyle
+                                                                      .textStyleDefault25Primary,
+                                                                ),
                                                               ),
                                                             ),
                                                             SizedBox(

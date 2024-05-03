@@ -42,7 +42,7 @@ class MainStyle {
       MyTextStyle.defaultFontCustom(Colors.black, 15, weight: FontWeight.bold);
 
   static TextStyle textStyleDefault25Primary =
-      MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 25);
+      MyTextStyle.defaultFontCustomMono(MainStyle.primaryColor, 25);
 
   static TextStyle textStyleDefault20BlackBold =
       MyTextStyle.defaultFontCustom(Colors.black, 20, weight: FontWeight.bold);
