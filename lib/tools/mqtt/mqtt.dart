@@ -23,7 +23,7 @@ class MyMqtt {
 
   bool isConnected = false;
 
-  late Timer timer;
+  // late Timer timer;
 
   // setup() async {
   //   await connect();

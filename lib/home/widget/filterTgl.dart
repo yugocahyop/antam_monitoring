@@ -127,22 +127,21 @@ class _FilterTglState extends State<FilterTgl> {
         print("jam value ${widget.jamValue}");
       }
     } else {
+      DateTime now = DateTime.now();
       widget.hariValue = widget.lastValue ? hari.last : hari[0];
 
       widget.jamValue = widget.lastValue ? jam.last : jam.first;
-    }
 
-    DateTime now = DateTime.now();
+      widget.today =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
+              ((widget.lastValue ? 0 : 56) * 86400000);
+      widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
+          ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
+    }
 
     // widget.today =
     //     DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
     //         ((hari.reversed.toList().indexOf(widget.hariValue)) * 86400000);
-
-    widget.today =
-        DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
-            ((widget.lastValue ? 0 : 56) * 86400000);
-    widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
-        ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
 
     setState(() {});
   }
@@ -402,13 +401,13 @@ class _FilterTglState extends State<FilterTgl> {
                                 onChange: (value) {
                                   // DateTime now = DateTime.now();
 
-                                  // widget.today =
-                                  //     DateTime(now.year, now.month, now.day)
-                                  //             .millisecondsSinceEpoch -
-                                  //         ((hari.reversed
-                                  //                 .toList()
-                                  //                 .indexOf(widget.hariValue)) *
-                                  //             86400000);
+                                  DateTime today =
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          widget.today);
+
+                                  widget.today = DateTime(
+                                          today.year, today.month, today.day)
+                                      .millisecondsSinceEpoch;
                                   widget.today += jam.indexOf(value!) *
                                       (3600000 -
                                           (jam.indexOf(value!) ==

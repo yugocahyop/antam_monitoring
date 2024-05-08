@@ -1208,12 +1208,14 @@ class _Content_homeState extends State<Content_home> {
       title: "Hingga",
       lastValue: true,
       changePage: () => filterChange(),
+      // today: 0,
     );
 
     filterTglDari = FilterTgl(
       title: "Dari",
       lastValue: false,
       changePage: () => filterChange(),
+      // today: 0,
     );
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
