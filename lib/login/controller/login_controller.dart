@@ -178,9 +178,9 @@ class Login_controller extends Controller {
 
   Future<void> login(List<Mytextfield> inputs, BuildContext context,
       bool isRemember, Function() toggleLoading) async {
-    if (inputs.first.con.text.toLowerCase().trim() == "demo") {
-      super.pageRoute(context, Home());
-    }
+    // if (inputs.first.con.text.toLowerCase().trim() == "demo") {
+    //   super.pageRoute(context, Home());
+    // }
 
     if (!super.validate(inputs, context)) return;
 

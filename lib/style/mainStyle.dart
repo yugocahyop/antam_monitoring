@@ -35,6 +35,9 @@ class MainStyle {
     15,
   );
 
+  static TextStyle textStyleDefault15WhiteBold =
+      MyTextStyle.defaultFontCustom(Colors.white, 15, weight: FontWeight.w900);
+
   static TextStyle textStyleDefault16Black =
       MyTextStyle.defaultFontCustom(Colors.black, 16);
 

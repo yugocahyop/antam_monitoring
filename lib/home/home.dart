@@ -22,6 +22,7 @@ import 'package:antam_monitoring/tools/encrypt.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/form.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:mqtt_client/mqtt_client.dart';
@@ -422,6 +423,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     switch (p) {
       case 0:
+        if (widget.page == "tv") {
+          changePage(5);
+          return;
+        }
         c.saveSharedPref("antam.access", encrypt.encrypt("home"));
         setState(() {
           page = Content_home(
@@ -543,36 +548,32 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         break;
 
       case 5:
-        widget.page = "";
+        // widget.page = "";
         c.saveSharedPref("antam.access", encrypt.encrypt("tv"));
+        if (!mounted) return;
+        page = Content_tv(
+          changePage: changePage,
+          // email: email,
+          isAdmin: isAdmin,
+          mqtt: mqtt,
+          scSel: ScrollController(),
+          selData: selData,
+        );
+        pageMobile = Content_tv(
+          changePage: changePage,
+          // email: email,
+          isAdmin: isAdmin,
+          mqtt: mqtt,
+          scSel: ScrollController(),
+          selData: selData,
+        );
 
-        Future.delayed(
-            Duration(
-              seconds: 2,
-            ), () {
-          if (!mounted) return;
-          page = Content_tv(
-            changePage: changePage,
-            // email: email,
-            isAdmin: isAdmin,
-            mqtt: mqtt,
-            scSel: ScrollController(),
-            selData: selData,
-          );
-          pageMobile = Content_tv(
-            changePage: changePage,
-            // email: email,
-            isAdmin: isAdmin,
-            mqtt: mqtt,
-            scSel: ScrollController(),
-            selData: selData,
-          );
+        setState(() {});
 
-          menuItems =
-              menuItems.where((element) => element["title"] == "Home").toList();
-          setState(() {});
-        });
+        menuItems =
+            menuItems.where((element) => element["title"] == "Home").toList();
 
+        setState(() {});
         break;
     }
   }
@@ -640,30 +641,30 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
     } else {
       if (isPassword && widget.page == "tv") {
-        Future.delayed(const Duration(seconds: 2), () async {
-          page = const SizedBox(
-            width: 1200,
-            height: 500,
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: CircularProgressIndicator(
-                      color: MainStyle.primaryColor,
-                    ))
-              ],
-            ),
-          );
+        Future.delayed(const Duration(seconds: 1), () async {
+          // page = const SizedBox(
+          //   width: 1200,
+          //   height: 500,
+          //   child: const Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       SizedBox(
+          //           width: 100,
+          //           height: 100,
+          //           child: CircularProgressIndicator(
+          //             color: MainStyle.primaryColor,
+          //           ))
+          //     ],
+          //   ),
+          // );
 
-          setState(() {});
+          // setState(() {});
           await passwordAdmin(context);
 
-          // Future.delayed(const Duration(seconds: 2), () {
-          changePage(5);
-          // });
+          Future.delayed(const Duration(seconds: 1), () {
+            changePage(5);
+          });
         });
       }
     }
@@ -922,57 +923,77 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       }
     });
 
-    menuItems = [
-      {
-        "title": "Home",
-        "icon": Icons.home_outlined,
-        "isActive": true,
-        "function": () => changePage(0)
-      },
-      {
-        "title": "Data Logger",
-        "icon": Icons.description_outlined,
-        "isActive": false,
-        "function": () => changePage(1)
-      },
-      {
-        "title": "Diagnostic",
-        "icon": Icons.lan,
-        "isActive": false,
-        "function": () => changePage(2)
-      },
-      {
-        "title": "Emergency Call",
-        "icon": Icons.call_outlined,
-        "isActive": false,
-        "function": () => changePage(3)
-      },
-      {
-        "title": "Settings",
-        "icon": Icons.settings_outlined,
-        "isActive": false,
-        "function": () => changePage(4)
-      },
-    ];
+    if (widget.page == "tv") {
+      menuItems = [];
 
-    page = Content_home(
-      changePage: changePage,
-      isAdmin: isAdmin,
-      mqtt: mqtt,
-      scSel: ScrollController(),
-      selData: selData,
-    );
+      page = Content_tv(
+        changePage: changePage,
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        scSel: ScrollController(),
+        selData: selData,
+      );
 
-    pageMobile = Content_home_mobile(
-      email: email,
-      page: 0,
-      changePage: changePage,
-      isAdmin: isAdmin,
-      mqtt: mqtt,
-      selData: selData,
-      scSel: ScrollController(),
-      menuItem: menuItems,
-    );
+      pageMobile = Content_tv(
+        changePage: changePage,
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        scSel: ScrollController(),
+        selData: selData,
+      );
+    } else {
+      menuItems = [
+        {
+          "title": "Home",
+          "icon": Icons.home_outlined,
+          "isActive": true,
+          "function": () => changePage(0)
+        },
+        {
+          "title": "Data Logger",
+          "icon": Icons.description_outlined,
+          "isActive": false,
+          "function": () => changePage(1)
+        },
+        {
+          "title": "Diagnostic",
+          "icon": Icons.lan,
+          "isActive": false,
+          "function": () => changePage(2)
+        },
+        {
+          "title": "Emergency Call",
+          "icon": Icons.call_outlined,
+          "isActive": false,
+          "function": () => changePage(3)
+        },
+        {
+          "title": "Settings",
+          "icon": Icons.settings_outlined,
+          "isActive": false,
+          "function": () => changePage(4)
+        },
+      ];
+
+      page = Content_home(
+        changePage: changePage,
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        scSel: ScrollController(),
+        selData: selData,
+      );
+
+      pageMobile = Content_home_mobile(
+        email: email,
+        page: 0,
+        changePage: changePage,
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        selData: selData,
+        scSel: ScrollController(),
+        menuItem: menuItems,
+      );
+    }
 
     initPage();
 
@@ -1097,6 +1118,76 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   //   if (mounted) setState(() {});
   // }
 
+  Future<void> login(
+      BuildContext context, bool isRemember, Function() toggleLoading) async {
+    // final c = Controller();
+
+    // if (c.validate(inputs, context)) return;
+
+    // inputs.forEach((e) => e.isInvalid = false);
+    // toggleLoading();
+    final api = ApiHelper();
+
+    final data = {
+      "email": base64.encode(utf8.encode("adminTV")),
+      "password": base64.encode(utf8.encode("xirka@30"))
+    };
+
+    final r = api.callAPI("/auth", "POST", jsonEncode(data), false);
+
+    await Future.value(r).then((r) {
+      print("tv login: ${r}");
+      ApiHelper.tokenMain = r["activeToken"];
+
+      final encrypt = MyEncrtypt();
+
+      final c = Controller();
+
+      final tokensplit = ApiHelper.tokenMain.split(".");
+
+      c.saveSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
+      c.saveSharedPref("antam.log", encrypt.encrypt(tokensplit[1]));
+      c.saveSharedPref("antam.public", encrypt.encrypt(tokensplit[2]));
+
+      // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
+
+      c.saveSharedPref("antam.token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+
+      // saveSharedPref("antam.email", r["email"]);
+      // saveSharedPref("antam.isAdmin", r["isAdmin"]);
+
+      Home.email = r["email"] ?? "";
+      Home.isAdmin = (r["isAdmin"] ?? false);
+
+      email = r["email"] ?? "";
+
+      isAdmin = r["isAdmin"] ?? false;
+
+      // final tokensplit = ApiHelper.tokenMain.split(".");
+
+      document.cookie = "";
+
+      document.cookie = "data=${(tokensplit[0])}";
+      document.cookie = "log=${(tokensplit[1])}";
+      document.cookie = "public=${(tokensplit[2])}";
+      document.cookie =
+          "access=${base64.encode(utf8.encode("sdfsdfeewr34234325235235235232523fdfdsaffasdasdsaa"))}";
+
+      document.cookie =
+          "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+      Navigator.pop(context);
+    });
+
+    // if (isRemember) {
+    //   final encrypt = MyEncrtypt();
+    //   super.saveSharedPref("com.antam.email", inputs.first.con.text);
+    // } else {
+    //   super.saveSharedPref("com.antam.email", "");
+    // }
+  }
+
   Future<dynamic> passwordAdmin(BuildContext context) async {
     final c = Controller();
     final r = await c.heroPageRoute(
@@ -1106,6 +1197,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             height: 420,
             onSubmit: (mapTextField) async {
               // print("object ${mapTextField["Nama"]}");
+              await login(context, true, () => null);
             },
             listTextParam: [
               {
@@ -1142,7 +1234,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       if (mounted) setState(() {});
     } else {
       if (kDebugMode) {
-        print(r["error"]);
+        print("error: ${r["error"]}");
       }
 
       if (widget.page != "tv") {
@@ -1176,24 +1268,24 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         }
       }
 
-      page = Content_home(
-        changePage: changePage,
-        isAdmin: isAdmin,
-        mqtt: mqtt,
-        scSel: ScrollController(),
-        selData: selData,
-      );
+      // page = Content_home(
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   scSel: ScrollController(),
+      //   selData: selData,
+      // );
 
-      pageMobile = Content_home_mobile(
-        email: email,
-        page: 0,
-        changePage: changePage,
-        isAdmin: isAdmin,
-        mqtt: mqtt,
-        selData: selData,
-        scSel: ScrollController(),
-        menuItem: menuItems,
-      );
+      // pageMobile = Content_home_mobile(
+      //   email: email,
+      //   page: 0,
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   selData: selData,
+      //   scSel: ScrollController(),
+      //   menuItem: menuItems,
+      // );
     }
     // print(lheight);
     return WillPopScope(

@@ -8,12 +8,15 @@ import 'package:antam_monitoring/home/widget/account_alarm.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
+import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
@@ -231,7 +234,7 @@ class _Content_diagnosticState extends State<Content_tv> {
   List<Widget> getDiagnostiWidget(double width) {
     List<Widget> rows = [];
 
-    for (var i = 0; i < diagnosticData.length; i++) {
+    for (var i = 0; i < 6; i++) {
       final sel = diagnosticData[i];
       List<Widget> pn = [];
 
@@ -290,15 +293,19 @@ class _Content_diagnosticState extends State<Content_tv> {
         ));
       }
 
-      rows.add(SizedBox(
-        height: width,
+      rows.add(Container(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        height: 70,
+        decoration: BoxDecoration(
+            color: MainStyle.secondaryColor,
+            borderRadius: BorderRadius.circular(10)),
         child: Stack(
           children: [
             Center(
               child: Visibility(
                 visible: (i != 6),
                 child: const SizedBox(
-                  width: 400,
+                  width: 900,
                   child: Divider(
                     thickness: 2,
                     color: MainStyle.thirdColor,
@@ -308,7 +315,21 @@ class _Content_diagnosticState extends State<Content_tv> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: pn,
+              children: [
+                SizedBox(
+                  child: Text(
+                    "Sel ${i + 1}",
+                    style: MyTextStyle.defaultFontCustom(
+                        MainStyle.primaryColor, 22),
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: pn,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -1359,7 +1380,7 @@ class _Content_diagnosticState extends State<Content_tv> {
     super.initState();
 
     timerRefreshDiagnostic = Timer(const Duration(minutes: 5), () {
-      getDiagnostiWidget(70);
+      getDiagnostiWidget(200);
     });
 
     filterTglHingga = FilterTgl(
@@ -1437,38 +1458,38 @@ class _Content_diagnosticState extends State<Content_tv> {
                   //   height: 20,
                   // ),
                   MainStyle.sizedBoxH20,
-                  Transform.scale(
-                    scale: (lWidth / lheight) < wide ? 1.2 : 1,
-                    origin: Offset((lWidth / lheight) < wide ? -800 : 0,
-                        (lWidth / lheight) < wide ? -50 : 0),
-                    child: SizedBox(
-                      width: (lWidth / lheight) < wide
-                          ? 2200
-                          : lWidth >= 1920
-                              ? lWidth
-                              : 1270,
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          filterTglDari,
-                          // const SizedBox(
-                          //   width: 10,
-                          // ),
-                          MainStyle.sizedBoxW10,
-                          filterTglHingga,
-                          // const SizedBox(
-                          //   width: 10,
-                          // ),
-                          MainStyle.sizedBoxW10,
-                          filterTangki
-                        ],
-                      ),
-                    ),
-                  ),
-                  // const SizedBox(
-                  //   height: 20,
+                  // Transform.scale(
+                  //   scale: (lWidth / lheight) < wide ? 1.2 : 1,
+                  //   origin: Offset((lWidth / lheight) < wide ? -800 : 0,
+                  //       (lWidth / lheight) < wide ? -50 : 0),
+                  //   child: SizedBox(
+                  //     width: (lWidth / lheight) < wide
+                  //         ? 2200
+                  //         : lWidth >= 1920
+                  //             ? lWidth
+                  //             : 1270,
+                  //     child: Row(
+                  //       // mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         filterTglDari,
+                  //         // const SizedBox(
+                  //         //   width: 10,
+                  //         // ),
+                  //         MainStyle.sizedBoxW10,
+                  //         filterTglHingga,
+                  //         // const SizedBox(
+                  //         //   width: 10,
+                  //         // ),
+                  //         MainStyle.sizedBoxW10,
+                  //         filterTangki
+                  //       ],
+                  //     ),
+                  //   ),
                   // ),
-                  MainStyle.sizedBoxH20,
+                  // // const SizedBox(
+                  // //   height: 20,
+                  // // ),
+                  // MainStyle.sizedBoxH20,
                   Expanded(
                     child: SizedBox(
                       width: (lWidth / lheight) < wide
@@ -1503,7 +1524,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                         : 0),
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
-                                  width: 500,
+                                  width: lWidth - 300,
                                   height: 620,
                                   decoration: BoxDecoration(
                                       color: MainStyle.secondaryColor,
@@ -1555,7 +1576,34 @@ class _Content_diagnosticState extends State<Content_tv> {
                                               "Diagnostic",
                                               style: MainStyle
                                                   .textStyleDefault20Primary,
-                                            )
+                                            ),
+                                            MainStyle.sizedBoxW20,
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: BoxDecoration(
+                                                  color: MainStyle.primaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Elektrolit",
+                                                    style: MainStyle
+                                                        .textStyleDefault15WhiteBold,
+                                                  ),
+                                                  Text(
+                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                    style: MainStyle
+                                                        .textStyleDefault15White,
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -1585,7 +1633,8 @@ class _Content_diagnosticState extends State<Content_tv> {
                                       child: Stack(
                                         children: [
                                           Column(
-                                              children: getDiagnostiWidget(70)),
+                                              children:
+                                                  getDiagnostiWidget(200)),
                                           Align(
                                             alignment: Alignment.bottomRight,
                                             child: SizedBox(
@@ -1613,565 +1662,6 @@ class _Content_diagnosticState extends State<Content_tv> {
                             ),
                             const SizedBox(
                               width: 30,
-                            ),
-                            Transform.scale(
-                              scale: (lWidth / lheight) < wide ? 1.30 : 1,
-                              origin: Offset(
-                                  (lWidth / lheight) < wide ? -590 : 0,
-                                  (lWidth / lheight) < wide ? -1400 : 0),
-                              child: Transform.translate(
-                                offset: Offset(
-                                    0,
-                                    lWidth >= 1920
-                                        ? (lheight >= 1080 ? 100 : 90)
-                                        : 0),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      width: 650,
-                                      height: 320,
-                                      decoration: BoxDecoration(
-                                          color: MainStyle.secondaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                offset: const Offset(4, 4),
-                                                color: MainStyle.primaryColor
-                                                    .withAlpha(
-                                                        (255 * 0.05).toInt()),
-                                                blurRadius: 10,
-                                                spreadRadius: 0),
-                                            BoxShadow(
-                                                offset: const Offset(-4, -4),
-                                                color: Colors.white.withAlpha(
-                                                    (255 * 0.5).toInt()),
-                                                blurRadius: 13,
-                                                spreadRadius: 0),
-                                            BoxShadow(
-                                                offset: const Offset(6, 6),
-                                                color: MainStyle.primaryColor
-                                                    .withAlpha(
-                                                        (255 * 0.10).toInt()),
-                                                blurRadius: 20,
-                                                spreadRadius: 0),
-                                          ]),
-                                      child: Column(children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                SvgPicture.asset(
-                                                  "assets/dataNyata.svg",
-                                                  width: 30,
-                                                  color: MainStyle.primaryColor,
-                                                ),
-                                                // const SizedBox(
-                                                //   width: 10,
-                                                // ),
-                                                MainStyle.sizedBoxW10,
-                                                Text(
-                                                  "Data Nyata",
-                                                  style: MainStyle
-                                                      .textStyleDefault20Primary,
-                                                )
-                                              ],
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  top: 5,
-                                                  bottom: 5,
-                                                  left: 8,
-                                                  right: 8),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                color: MainStyle.thirdColor,
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Elektrolit",
-                                                    style: MainStyle
-                                                        .textStyleDefault15BlackBold,
-                                                  ),
-                                                  Text(
-                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
-                                                    style: MainStyle
-                                                        .textStyleDefault14Black,
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        // const SizedBox(
-                                        //   height: 20,
-                                        // ),
-                                        MainStyle.sizedBoxH20,
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: MainStyle
-                                                        .primaryColor
-                                                        .withAlpha((255 * 0.15)
-                                                            .toInt()),
-                                                    offset: const Offset(0, 3),
-                                                    blurRadius: 5,
-                                                    spreadRadius: 0),
-                                                BoxShadow(
-                                                    color: MainStyle
-                                                        .primaryColor
-                                                        .withAlpha((255 * 0.15)
-                                                            .toInt()),
-                                                    offset: const Offset(0, 3),
-                                                    blurRadius: 30,
-                                                    spreadRadius: 0)
-                                              ]),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                width: 600,
-                                                decoration: const BoxDecoration(
-                                                    color:
-                                                        MainStyle.primaryColor,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    4),
-                                                            topRight: Radius
-                                                                .circular(4))),
-                                                child: Row(
-                                                  children: titleData
-                                                      .map((e) => InkWell(
-                                                            onTap: () {
-                                                              if (dataNyataSortOrder
-                                                                  .containsKey(
-                                                                      e)) {
-                                                                if (dataNyataSortOrder[
-                                                                    e]!) {
-                                                                  dataNyataSortOrder[
-                                                                          e] =
-                                                                      !dataNyataSortOrder[
-                                                                          e]!;
-                                                                } else {
-                                                                  dataNyataSortOrder
-                                                                      .remove(
-                                                                          e);
-                                                                  dataNyataSortOrderList
-                                                                      .remove(
-                                                                          e);
-
-                                                                  if (dataNyataSortOrder
-                                                                      .isEmpty) {
-                                                                    resetSelDataSort();
-
-                                                                    if (mounted) {
-                                                                      setState(
-                                                                          () {});
-                                                                    }
-
-                                                                    return;
-                                                                  }
-                                                                  // else {
-                                                                  //   sortSelData();
-                                                                  //   getMax();
-                                                                  // }
-                                                                }
-                                                              } else {
-                                                                dataNyataSortOrderList
-                                                                    .add(e);
-                                                                dataNyataSortOrder
-                                                                    .putIfAbsent(
-                                                                        e,
-                                                                        () =>
-                                                                            true);
-                                                              }
-
-                                                              sortSelData();
-                                                              // getMax();
-                                                            },
-                                                            child: SizedBox(
-                                                              width: 90,
-                                                              child: Center(
-                                                                child: Row(
-                                                                  // crossAxisAlignment:
-                                                                  //     CrossAxisAlignment
-                                                                  //         .center,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      e.contains(
-                                                                              "Anoda")
-                                                                          ? currTangki == 0
-                                                                              ? "Sel"
-                                                                              : e
-                                                                          : e,
-                                                                      style: MainStyle
-                                                                          .textStyleDefault15White,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 3,
-                                                                    ),
-                                                                    Stack(
-                                                                      children: [
-                                                                        Center(
-                                                                          child:
-                                                                              Visibility(
-                                                                            visible: dataNyataSortOrder.containsKey(e)
-                                                                                ? !dataNyataSortOrder[e]!
-                                                                                : false,
-                                                                            child:
-                                                                                Transform.translate(
-                                                                              offset: const Offset(0, -2),
-                                                                              child: const Icon(Icons.arrow_drop_up, size: 13, color: Colors.white),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Center(
-                                                                          child:
-                                                                              Visibility(
-                                                                            visible: dataNyataSortOrder.containsKey(e)
-                                                                                ? dataNyataSortOrder[e]!
-                                                                                : false,
-                                                                            child:
-                                                                                Transform.translate(
-                                                                              offset: const Offset(0, 2),
-                                                                              child: const Icon(Icons.arrow_drop_down, size: 13, color: Colors.white),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ))
-                                                      .toList(),
-                                                ),
-                                              ),
-                                              Container(
-                                                  padding:
-                                                      const EdgeInsets.all(8),
-                                                  width: 600,
-                                                  height: 200,
-                                                  decoration: const BoxDecoration(
-                                                      color: Color(0xffC1E1DF),
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              bottomLeft: Radius
-                                                                  .circular(4),
-                                                              bottomRight:
-                                                                  Radius
-                                                                      .circular(
-                                                                          4))),
-                                                  child: Scrollbar(
-                                                    thumbVisibility: true,
-                                                    controller: widget.scSel,
-                                                    child: ListView.builder(
-                                                        controller:
-                                                            widget.scSel,
-                                                        itemCount: selData[int.tryParse(
-                                                                    filterTangki
-                                                                        .tangkiValue) ??
-                                                                0]
-                                                            .length,
-                                                        itemBuilder:
-                                                            (context, i) {
-                                                          final val = selData[
-                                                              int.tryParse(
-                                                                      filterTangki
-                                                                          .tangkiValue) ??
-                                                                  0][i];
-                                                          List<Widget> listSel =
-                                                              [];
-                                                          List<Widget>
-                                                              listTangki = [];
-                                                          val.forEach((key,
-                                                                  value) =>
-                                                              key == "sel"
-                                                                  ? listSel
-                                                                      .insert(
-                                                                          0,
-                                                                          SizedBox(
-                                                                            width:
-                                                                                90,
-                                                                            height:
-                                                                                35,
-                                                                            child:
-                                                                                Center(
-                                                                              child: Text(
-                                                                                (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) + (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                                style: MainStyle.textStyleDefault16Black,
-                                                                              ),
-                                                                            ),
-                                                                          ))
-                                                                  : listSel.add(
-                                                                      Visibility(
-                                                                      visible:
-                                                                          key !=
-                                                                              "tangki",
-                                                                      child:
-                                                                          SizedBox(
-                                                                        width:
-                                                                            90,
-                                                                        height:
-                                                                            35,
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Text(
-                                                                            (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) +
-                                                                                (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
-                                                                            style:
-                                                                                MainStyle.textStyleDefault16Black,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )));
-
-                                                          tangkiMaxData[tangkiMaxData.indexOf(
-                                                                  tangkiMaxData.firstWhere((element) =>
-                                                                      element[
-                                                                          "sel"] ==
-                                                                      selData[0]
-                                                                              [i]
-                                                                          [
-                                                                          "sel"]))]
-                                                              .forEach(
-                                                                  (key, value) =>
-                                                                      listTangki
-                                                                          .add(
-                                                                              SizedBox(
-                                                                        width:
-                                                                            90,
-                                                                        // height: 35,
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Visibility(
-                                                                            visible:
-                                                                                key != "sel",
-                                                                            child:
-                                                                                Container(
-                                                                              width: 80,
-                                                                              padding: const EdgeInsets.all(2),
-                                                                              decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
-                                                                              child: Text(
-                                                                                "Anoda " + (value ~/ 1 as int).toString(),
-                                                                                style: MainStyle.textStyleDefault12PrimaryW600,
-                                                                                textAlign: TextAlign.center,
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      )));
-
-                                                          // listSel.add();
-                                                          return Column(
-                                                            children: [
-                                                              Row(
-                                                                  children:
-                                                                      listSel),
-                                                              SizedBox(
-                                                                width: 600,
-                                                                child: Stack(
-                                                                  children: [
-                                                                    const Divider(
-                                                                      color: Color(
-                                                                          0xff9ACBC7),
-                                                                    ),
-                                                                    Visibility(
-                                                                      visible:
-                                                                          currTangki ==
-                                                                              0,
-                                                                      child:
-                                                                          Row(
-                                                                        children:
-                                                                            listTangki,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              )
-                                                            ],
-                                                          );
-                                                        }),
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                      ]),
-                                    ),
-                                    const SizedBox(
-                                      height: 13,
-                                    ),
-                                    Container(
-                                      clipBehavior: Clip.none,
-                                      padding: const EdgeInsets.all(10),
-                                      width: 650,
-                                      height: 250,
-                                      decoration: BoxDecoration(
-                                          color: MainStyle.secondaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                offset: const Offset(4, 4),
-                                                color: MainStyle.primaryColor
-                                                    .withAlpha(
-                                                        (255 * 0.05).toInt()),
-                                                blurRadius: 10,
-                                                spreadRadius: 0),
-                                            BoxShadow(
-                                                offset: const Offset(-4, -4),
-                                                color: Colors.white.withAlpha(
-                                                    (255 * 0.5).toInt()),
-                                                blurRadius: 13,
-                                                spreadRadius: 0),
-                                            BoxShadow(
-                                                offset: const Offset(6, 6),
-                                                color: MainStyle.primaryColor
-                                                    .withAlpha(
-                                                        (255 * 0.10).toInt()),
-                                                blurRadius: 20,
-                                                spreadRadius: 0),
-                                          ]),
-                                      child: Column(
-                                        children: totalData
-                                            .map((e) => Container(
-                                                  clipBehavior: Clip.none,
-                                                  decoration:
-                                                      const BoxDecoration(),
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 200,
-                                                        child: Text(
-                                                          e["title"] as String,
-                                                          style: MainStyle
-                                                              .textStyleDefault15BlackBold,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(bottom: 10),
-                                                        clipBehavior: Clip.none,
-                                                        // width: 300,
-                                                        height: 35,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(3),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          gradient: LinearGradient(
-                                                              colors:
-                                                                  grad_colors,
-                                                              stops: [
-                                                                0,
-                                                                0.6,
-                                                                1
-                                                              ],
-                                                              begin: Alignment
-                                                                  .topLeft,
-                                                              end: Alignment
-                                                                  .bottomRight),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4),
-                                                          // boxShadow: [
-                                                          //   BoxShadow(
-                                                          //       color: MainStyle
-                                                          //           .primaryColor
-                                                          //           .withAlpha(
-                                                          //               (255 * 0.15)
-                                                          //                   .toInt()),
-                                                          //       offset: Offset(0, 3),
-                                                          //       blurRadius: 5,
-                                                          //       spreadRadius: 0),
-                                                          //   BoxShadow(
-                                                          //       color: MainStyle
-                                                          //           .primaryColor
-                                                          //           .withAlpha(
-                                                          //               (255 * 0.15)
-                                                          //                   .toInt()),
-                                                          //       offset: Offset(0, 3),
-                                                          //       blurRadius: 30,
-                                                          //       spreadRadius: 0)
-                                                          // ]
-                                                        ),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Container(
-                                                              height: 30,
-                                                              clipBehavior:
-                                                                  Clip.none,
-                                                              decoration:
-                                                                  const BoxDecoration(),
-                                                              width: 300,
-                                                              child: Transform
-                                                                  .translate(
-                                                                offset: Offset(
-                                                                    0, -3),
-                                                                child: Text(
-                                                                  (e["value"]
-                                                                          as double)
-                                                                      .toStringAsFixed(
-                                                                          2),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .right,
-                                                                  style: MainStyle
-                                                                      .textStyleDefault25Primary,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 100,
-                                                              child: Text(
-                                                                e["unit"]
-                                                                    as String,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .right,
-                                                                style: MainStyle
-                                                                    .textStyleDefault15BlackBold,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ))
-                                            .toList(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
                             ),
                           ],
                         ),
