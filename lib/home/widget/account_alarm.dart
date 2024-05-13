@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,7 @@ class Account_alarm extends StatefulWidget {
 
   List<Map> alarm;
 
-  final bool isAdmin;
+  bool isAdmin;
 
   Function()? setState;
 
@@ -117,40 +118,46 @@ class _Account_alarmState extends State<Account_alarm> {
             ? MainAxisAlignment.center
             : MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
+          Container(
+            decoration: const BoxDecoration(),
+            clipBehavior: Clip.none,
             width: lWidth < 900
                 ? lWidth < 800
-                    ? 300
+                    ? 500
                     : lWidth * 0.4
                 : 500,
-            child: Row(
-              children: widget.alarm
-                  .map((e) => Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Icon(
-                            Icons.circle,
-                            color: (e["isActive"] as bool)
-                                ? Colors.red
-                                : Colors.grey,
-                            size: 15,
-                          ),
-                          SizedBox(
-                            width: (lWidth / lheight) < wide ? 3 : 2,
-                          ),
-                          Text(
-                            e["title"] as String,
-                            style: (lWidth / lheight) < wide && lWidth > 900
-                                ? textStyle24Grey
-                                : textStyle16Grey,
-                          ),
-                          // const SizedBox(
-                          //   width: 10,
-                          // )
-                          MainStyle.sizedBoxW10,
-                        ],
-                      ))
-                  .toList(),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none,
+              child: Row(
+                children: widget.alarm
+                    .map((e) => Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(
+                              Icons.circle,
+                              color: ((e["isActive"] as bool)
+                                  ? Colors.red
+                                  : Colors.grey),
+                              size: 15,
+                            ),
+                            SizedBox(
+                              width: (lWidth / lheight) < wide ? 3 : 2,
+                            ),
+                            Text(
+                              e["title"] as String,
+                              style: (lWidth / lheight) < wide && lWidth > 900
+                                  ? textStyle24Grey
+                                  : textStyle16Grey,
+                            ),
+                            // const SizedBox(
+                            //   width: 10,
+                            // )
+                            MainStyle.sizedBoxW10,
+                          ],
+                        ))
+                    .toList(),
+              ),
             ),
           ),
           Visibility(

@@ -14,11 +14,13 @@ import 'package:antam_monitoring/home/widget/content_diagnostic/content_diagnost
 import 'package:antam_monitoring/home/widget/content_home.dart';
 import 'package:antam_monitoring/home/widget/content_home_mobile.dart';
 import 'package:antam_monitoring/home/widget/content_setting/content_setting.dart';
+import 'package:antam_monitoring/home/widget/content_tv/content_tv.dart';
 import 'package:antam_monitoring/home/widget/menu.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/encrypt.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
+import 'package:antam_monitoring/widget/form.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,20 +54,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with WidgetsBindingObserver {
-  var alarm = [
-    {
-      "title": "Status",
-      "isActive": true,
-    },
-    {
-      "title": "Alarm Arus",
-      "isActive": true,
-    },
-    {
-      "title": "Alarm Tegangan",
-      "isActive": false,
-    }
-  ];
+  // var alarm = [
+  //   {
+  //     "title": "Status",
+  //     "isActive": true,
+  //   },
+  //   {"title": "Alarm Arus", "isActive": false, "isLower": false, "list": []},
+  //   {"title": "Alarm Tegangan", "isActive": false, "isLower": false, "list": []}
+  // ];
 
   List<dynamic> selData = [
     [
@@ -419,7 +415,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     final encrypt = MyEncrtypt();
     curr_page = p;
     mqtt.onUpdate = (data, topi) {};
-    checkAccess();
+
+    if (widget.page != "tv") {
+      checkAccess();
+    }
+
     switch (p) {
       case 0:
         c.saveSharedPref("antam.access", encrypt.encrypt("home"));
@@ -541,6 +541,39 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         });
 
         break;
+
+      case 5:
+        widget.page = "";
+        c.saveSharedPref("antam.access", encrypt.encrypt("tv"));
+
+        Future.delayed(
+            Duration(
+              seconds: 2,
+            ), () {
+          if (!mounted) return;
+          page = Content_tv(
+            changePage: changePage,
+            // email: email,
+            isAdmin: isAdmin,
+            mqtt: mqtt,
+            scSel: ScrollController(),
+            selData: selData,
+          );
+          pageMobile = Content_tv(
+            changePage: changePage,
+            // email: email,
+            isAdmin: isAdmin,
+            mqtt: mqtt,
+            scSel: ScrollController(),
+            selData: selData,
+          );
+
+          menuItems =
+              menuItems.where((element) => element["title"] == "Home").toList();
+          setState(() {});
+        });
+
+        break;
     }
   }
 
@@ -556,8 +589,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   late MyMqtt mqtt;
 
-  initToken() async {
-    if (ApiHelper.tokenMain.isEmpty) {
+  initToken({bool isPassword = false}) async {
+    if (ApiHelper.tokenMain.isEmpty && widget.page != "tv") {
       final c = Controller();
       final encrypt = MyEncrtypt();
 
@@ -592,14 +625,47 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
         final token1 = cookieMap["data"]!;
 
-        c.saveSharedPref("antam.data", encrypt.encrypt(token1));
-        c.saveSharedPref("antam.log", encrypt.encrypt(token2));
-        c.saveSharedPref("antam.public", encrypt.encrypt(token3));
+        try {
+          c.saveSharedPref("antam.data", encrypt.encrypt(token1));
+          c.saveSharedPref("antam.log", encrypt.encrypt(token2));
+          c.saveSharedPref("antam.public", encrypt.encrypt(token3));
+        } catch (er) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, "/login", (route) => false);
+        }
 
         ApiHelper.tokenMain = ("$token1.$token2.$token3");
       }
 
       //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
+    } else {
+      if (isPassword && widget.page == "tv") {
+        Future.delayed(const Duration(seconds: 2), () async {
+          page = const SizedBox(
+            width: 1200,
+            height: 500,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator(
+                      color: MainStyle.primaryColor,
+                    ))
+              ],
+            ),
+          );
+
+          setState(() {});
+          await passwordAdmin(context);
+
+          // Future.delayed(const Duration(seconds: 2), () {
+          changePage(5);
+          // });
+        });
+      }
     }
   }
 
@@ -619,23 +685,31 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     await Future.delayed(const Duration(milliseconds: 1000));
     try {
       String p = "";
-      // if (widget.page.isEmpty) {
-      final c = Controller();
+      if (widget.page.isEmpty) {
+        final c = Controller();
 
-      final encrypt = MyEncrtypt();
+        final encrypt = MyEncrtypt();
 
-      final raw = await c.loadSharedPref("antam.access", "String");
+        final raw = await c.loadSharedPref("antam.access", "String");
 
-      p = raw != null ? encrypt.decrypt(raw) : "";
-      // } else {
-      //   p = widget.page;
-      // }
+        p = raw != null ? encrypt.decrypt(raw) : "";
+      } else {
+        p = widget.page;
+      }
 
       if (kDebugMode) {
         print("init page: $p");
       }
 
       switch (p) {
+        case "tv":
+          // menuItems.firstWhere(
+          //     (element) => element["isActive"] == true)["isActive"] = false;
+          // menuItems[0]["isActive"] = true;
+          // changePage(5);
+          // break;
+
+          break;
         case "home":
           menuItems.firstWhere(
               (element) => element["isActive"] == true)["isActive"] = false;
@@ -685,7 +759,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     WidgetsFlutterBinding.ensureInitialized();
 
-    if (ApiHelper.tokenMain.isNotEmpty) {
+    if (ApiHelper.tokenMain.isNotEmpty && widget.page != "tv") {
       // final encrypt = MyEncrtypt();
       // final c = Controller();
 
@@ -783,7 +857,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       WidgetsBinding.instance!.addObserver(this);
     }
     // final r = Random(70);
-    initToken();
+    initToken(isPassword: true);
 
     mqtt = MyMqtt(onUpdate: (data, topic) {});
 
@@ -933,10 +1007,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     // }
   }
 
-  @override
-  void dispose() {
-    final c = Controller();
+  resetDispose() {
+    ApiHelper.tokenMain = "";
 
+    final c = Controller();
     c.saveSharedPref("antam.data", "");
     c.saveSharedPref("antam.log", "");
     c.saveSharedPref("antam.public", "");
@@ -947,7 +1021,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     document.cookie = "public=";
     document.cookie = "access=";
     document.cookie = "token=";
+  }
 
+  @override
+  void dispose() {
+    final c = Controller();
+
+    resetDispose();
     // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
 
     c.saveSharedPref("antam.token", "");
@@ -1017,8 +1097,34 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   //   if (mounted) setState(() {});
   // }
 
+  Future<dynamic> passwordAdmin(BuildContext context) async {
+    final c = Controller();
+    final r = await c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Password tv",
+            height: 420,
+            onSubmit: (mapTextField) async {
+              // print("object ${mapTextField["Nama"]}");
+            },
+            listTextParam: [
+              {
+                "label": "Password",
+                "hint": "Masukan password admin",
+                "obscure": true
+              },
+            ]));
+
+    return r;
+  }
+
   checkAccess() async {
-    await initToken();
+    // if (widget.page == "tv") {
+    //   await passwordAdmin(context);
+    // } else {
+    await initToken(isPassword: false);
+    // }
+
     final api = ApiHelper();
 
     final r =
@@ -1039,7 +1145,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         print(r["error"]);
       }
 
-      Navigator.pushNamedAndRemoveUntil(context, '/login', ((route) => false));
+      if (widget.page != "tv") {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/login', ((route) => false));
+      }
     }
   }
 
@@ -1113,6 +1222,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       textColor: Colors.white,
                       onPressed: () {
                         // dispose();
+                        resetDispose();
                         Navigator.pop(context);
 
                         Navigator.pushNamedAndRemoveUntil(

@@ -13,6 +13,7 @@ import 'package:antam_monitoring/home/widget/content_diagnostic/content_diagnost
 import 'package:antam_monitoring/home/widget/content_home.dart';
 import 'package:antam_monitoring/home/widget/content_home_mobile.dart';
 import 'package:antam_monitoring/home/widget/content_setting/content_setting.dart';
+import 'package:antam_monitoring/home/widget/content_tv/content_tv.dart';
 import 'package:antam_monitoring/home/widget/menu.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
@@ -541,6 +542,32 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         });
 
         break;
+
+      case 5:
+        c.saveSharedPref("antam.access", encrypt.encrypt("setting"));
+        setState(() {
+          page = Content_tv(
+            changePage: changePage,
+            // email: email,
+            isAdmin: isAdmin,
+            mqtt: mqtt,
+            scSel: ScrollController(),
+            selData: selData,
+          );
+          pageMobile = Content_tv(
+            changePage: changePage,
+            // email: email,
+            isAdmin: isAdmin,
+            mqtt: mqtt,
+            scSel: ScrollController(),
+            selData: selData,
+          );
+
+          menuItems =
+              menuItems.where((element) => element["title"] == "Home").toList();
+        });
+
+        break;
     }
   }
 
@@ -575,6 +602,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         if (kDebugMode) {
           print("error: $e");
         }
+        Navigator.pop(context);
       }
 
       //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
@@ -597,23 +625,29 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     await Future.delayed(const Duration(milliseconds: 1000));
     try {
       String p = "";
-      // if (widget.page.isEmpty) {
-      final c = Controller();
+      if (widget.page.isEmpty) {
+        final c = Controller();
 
-      final encrypt = MyEncrtypt();
+        final encrypt = MyEncrtypt();
 
-      final raw = await c.loadSharedPref("antam.access", "String");
+        final raw = await c.loadSharedPref("antam.access", "String");
 
-      p = raw != null ? encrypt.decrypt(raw) : "";
-      // } else {
-      //   p = widget.page;
-      // }
+        p = raw != null ? encrypt.decrypt(raw) : "";
+      } else {
+        p = widget.page;
+      }
 
       if (kDebugMode) {
         print("init page: $p");
       }
 
       switch (p) {
+        case "tv":
+          menuItems.firstWhere(
+              (element) => element["isActive"] == true)["isActive"] = false;
+          menuItems[0]["isActive"] = true;
+          changePage(5);
+          break;
         case "home":
           menuItems.firstWhere(
               (element) => element["isActive"] == true)["isActive"] = false;
@@ -726,6 +760,17 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         print(" ${e}");
       }
     }
+  }
+
+  resetDispose() {
+    ApiHelper.tokenMain = "";
+
+    final c = Controller();
+    c.saveSharedPref("antam.data", "");
+    c.saveSharedPref("antam.log", "");
+    c.saveSharedPref("antam.public", "");
+    c.saveSharedPref("antam.access", "");
+    c.saveSharedPref("antam.token", "");
   }
 
   @override
@@ -944,14 +989,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void dispose() {
     final c = Controller();
 
-    c.saveSharedPref("antam.data", "");
-    c.saveSharedPref("antam.log", "");
-    c.saveSharedPref("antam.public", "");
-    c.saveSharedPref("antam.access", "");
-
-    // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
-
-    c.saveSharedPref("antam.token", "");
+    resetDispose();
     // TODO: implement dispose
     super.dispose();
     // scSel.dispose();
@@ -1102,6 +1140,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       color: MainStyle.primaryColor,
                       textColor: Colors.white,
                       onPressed: () {
+                        resetDispose();
                         Navigator.pop(context);
                       },
                       text: "No"),

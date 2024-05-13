@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 
+import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
-import 'package:antam_monitoring/home/widget/content_call/widget/phonePanel.dart';
+// import 'package:antam_monitoring/home/widget/content_diagnostic/widget/panelNode.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
@@ -12,9 +15,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
-class Content_call extends StatefulWidget {
-  Content_call(
+import 'widget/panelNode.dart';
+
+class Content_tv extends StatefulWidget {
+  Content_tv(
       {super.key,
       required this.changePage,
       required this.isAdmin,
@@ -33,10 +39,10 @@ class Content_call extends StatefulWidget {
   Function(int index, {int? dari, int? hingga}) changePage;
 
   @override
-  State<Content_call> createState() => _Content_callState();
+  State<Content_tv> createState() => _Content_diagnosticState();
 }
 
-class _Content_callState extends State<Content_call> {
+class _Content_diagnosticState extends State<Content_tv> {
   var alarm = [
     {
       "title": "Status",
@@ -81,6 +87,240 @@ class _Content_callState extends State<Content_call> {
       {},
     ],
   ];
+
+  List<dynamic> diagnosticData = [
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 2, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 3, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 4, "status": "inactive", "lastUpdated": 1706561733680},
+      {"sel": 5, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+    [
+      {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+    ],
+  ];
+
+  togglePanelMqtt(int tangki, int sel, bool isActive) {
+    // while (!mqtt!.isConnected) {
+    //   await Future.delayed(Duration(milliseconds: 500));
+    // }
+
+    final api = ApiHelper();
+
+    api.callAPI(
+        "/diagnostic/toggle",
+        "POST",
+        jsonEncode({"tangki": tangki, "node": sel, "isActive": isActive}),
+        true);
+
+    try {
+      mqtt2.publish({
+        "tangki": tangki,
+        "node": sel,
+        "activate": !isActive,
+        // "status": isActive ? false : true
+      }, "antam/command");
+    } catch (e) {}
+  }
+
+  resetEnergi() {
+    // while (!mqtt!.isConnected) {
+    //   await Future.delayed(Duration(milliseconds: 500));
+    // }
+
+    final api = ApiHelper();
+
+    api.callAPI("/diagnostic/reset", "POST", jsonEncode({}), true);
+
+    try {
+      mqtt2.publish({
+        "tangki": 15,
+        "node": 15,
+        // "activate": !isActive,
+        "command": "resetEnergi"
+        // "status": isActive ? false : true
+      }, "antam/command");
+    } catch (e) {}
+  }
+
+  promptToggle(int tangki, int sel, bool isActive,
+      {bool isResetEnergi = false}) {
+    if (tangki == 7 && sel == 1) {
+      return;
+    }
+
+    final c = Controller();
+    c.goToDialog(
+        context,
+        AlertDialog(
+          title: Text(isResetEnergi
+              ? "Reset energi ?"
+              : "${isActive ? "Matikan" : "Aktifkan"} ${tangki == 15 && sel == 15 ? "semua" : "sel $tangki - $sel"} ?"),
+          actions: [
+            SizedBox(
+              width: 80,
+              child: MyButton(
+                  color: MainStyle.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: "No"),
+            ),
+            MainStyle.sizedBoxW10,
+            SizedBox(
+              width: 80,
+              child: MyButton(
+                  color: MainStyle.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    if (isResetEnergi) {
+                      resetEnergi();
+                    } else {
+                      togglePanelMqtt(
+                        tangki,
+                        sel,
+                        isActive,
+                      );
+                    }
+                  },
+                  text: ("Yes")),
+            ),
+          ],
+        ));
+  }
+
+  List<Widget> getDiagnostiWidget(double width) {
+    List<Widget> rows = [];
+
+    for (var i = 0; i < diagnosticData.length; i++) {
+      final sel = diagnosticData[i];
+      List<Widget> pn = [];
+
+      // DateFormat df2 = DateFormat("dd MMM yyyy");
+
+      for (var ii = 0; ii < sel.length; ii++) {
+        DateTime now = DateTime.now();
+        DateTime date =
+            DateTime.fromMillisecondsSinceEpoch(sel[ii]["lastUpdated"] as int);
+        String status = sel[ii]["status"] as String;
+
+        String lastUpdated = "";
+
+        if (kDebugMode && i == 3 && ii == 0) {
+          DateFormat df = DateFormat("dd MMM yyyy HH:mm");
+          print("now : ${df.format(now)} date: ${df.format(date)} ");
+        }
+
+        if (now.year == date.year) {
+          if (now.month == date.month) {
+            if (now.day == date.day) {
+              if (now.hour == date.hour) {
+                if (now.minute == date.minute) {
+                  if (now.second <= date.second) {
+                    lastUpdated = "baru";
+                  } else {
+                    lastUpdated = "${now.second - date.second} detik lalu";
+                  }
+                } else {
+                  lastUpdated = "${now.minute - date.minute} menit lalu";
+                }
+              } else {
+                lastUpdated = "${now.hour - date.hour} jam lalu";
+              }
+            } else {
+              lastUpdated = "${now.day - date.day} hari lalu";
+            }
+          } else {
+            lastUpdated = "${now.month - date.month} bulan lalu";
+          }
+        } else {
+          lastUpdated = "${now.year - date.year} tahun lalu";
+        }
+        pn.add(PanelNode(
+          tapFunction: () => promptToggle(i + 1, ii + 1,
+              status == "active" || status.contains("alarm") ? true : false),
+          isSensor: i == 6,
+          width: width,
+          tangki: i + 1,
+          sel: ii + 1,
+          status: status,
+          lastUpdated: lastUpdated,
+          dateDiff: now.millisecondsSinceEpoch - date.millisecondsSinceEpoch,
+          isLoading: isLoading,
+          // lastUpdated:  df.format(date)
+        ));
+      }
+
+      rows.add(SizedBox(
+        height: width,
+        child: Stack(
+          children: [
+            Center(
+              child: Visibility(
+                visible: (i != 6),
+                child: const SizedBox(
+                  width: 400,
+                  child: Divider(
+                    thickness: 2,
+                    color: MainStyle.thirdColor,
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: pn,
+            ),
+          ],
+        ),
+      ));
+
+      rows.add(const SizedBox(
+        height: 7,
+      ));
+    }
+
+    return rows;
+  }
 
   var totalData = [
     {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
@@ -203,50 +443,6 @@ class _Content_callState extends State<Content_call> {
     // getTotal(tangki);
 
     if (mounted && isSetState) setState(() {});
-  }
-
-  bool isLoading = true;
-
-  getUserData(int offset) async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
-
-    final api = ApiHelper();
-
-    final r =
-        await api.callAPI("/call/find?limit=5&offset=0", "POST", "{}", true);
-
-    if (r["error"] == null) {
-      if (kDebugMode) {
-        print("user data: ${r['data']}");
-      }
-
-      if ((r["data"] as List<dynamic>).isNotEmpty) {
-        callData.clear();
-        callData = r["data"];
-      }
-
-      // createPhonePanels(500);
-
-      // final int count = r["count"];
-
-      // maxPage = (count / (int.tryParse(dataNum) ?? 0)).ceil();
-
-      // if (mounted) setState(() {});
-    } else {
-      if (kDebugMode) {
-        print(r["error"]);
-      }
-    }
-
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   late FilterTangki filterTangki;
@@ -402,7 +598,8 @@ class _Content_callState extends State<Content_call> {
     }
   }
 
-  MyMqtt? mqtt;
+  late MyMqtt mqtt;
+  late MyMqtt mqtt2;
 
   Map<String, bool> dataNyataSortOrder = {};
   List<String> dataNyataSortOrderList = [];
@@ -559,12 +756,17 @@ class _Content_callState extends State<Content_call> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    // mqtt!.onUpdate = (t, d) {};
 
-    tangkiMaxData.clear();
-    maxDdata.clear();
+    // mqtt!.onUpdate = (t, d) {};
+    mqtt2.disconnect();
+    mqtt2.dispose();
+    timerRefreshDiagnostic.cancel();
 
     widget.scSel.dispose();
+
+    // diagnosticData.clear();
+    maxDdata.clear();
+    tangkiMaxData.clear();
 
     // if (mqtt != null) {
     //   mqtt!.disconnect();
@@ -572,6 +774,8 @@ class _Content_callState extends State<Content_call> {
   }
 
   int currTangki = 0;
+
+  initDiagnosticData() async {}
 
   initSelData() async {
     final api = ApiHelper();
@@ -658,8 +862,8 @@ class _Content_callState extends State<Content_call> {
 
       Future.delayed(const Duration(milliseconds: 300), () {
         if (!mounted) return;
-        setSetting("tegangan", 3);
-        setSetting("arus", 100);
+        // setSetting("tegangan", 3);
+        // setSetting("arus", 100);
 
         initMqtt();
       });
@@ -668,7 +872,9 @@ class _Content_callState extends State<Content_call> {
     if (mounted) setState(() {});
   }
 
-  initStatus() async {
+  bool isLoading = true;
+
+  initDiagData() async {
     final api = ApiHelper();
 
     while (ApiHelper.tokenMain.isEmpty) {
@@ -682,6 +888,10 @@ class _Content_callState extends State<Content_call> {
     }
 
     if (r["error"] == null) {
+      diagnosticData.clear();
+
+      diagnosticData.addAll(r["data"][0]["diagnosticData"] ?? []);
+
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
@@ -713,7 +923,10 @@ class _Content_callState extends State<Content_call> {
       account_alarm.setState!();
     }
 
-    if (mounted) setState(() {});
+    if (mounted)
+      setState(() {
+        isLoading = false;
+      });
   }
 
   initMqtt() {
@@ -724,7 +937,25 @@ class _Content_callState extends State<Content_call> {
         print("mqtt topic $topic");
       }
 
-      if (topic == "antam/device") {
+      if (topic == "antam/statusNode" || topic == "antam/statusnode") {
+        int tangki = data["tangki"] as int;
+        int sel = data["node"] as int;
+        String status = data["status"] as String;
+        int timeStamp = (data["timeStamp"] as int) * 1000;
+
+        // DateFormat df = DateFormat("dd MMMM yyyy");
+
+        // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+
+        if (diagnosticData[tangki - 1][sel - 1]["status"] != status
+            // ||
+            //     diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp
+            ) {
+          refresh = true;
+          diagnosticData[tangki - 1][sel - 1]["status"] = status;
+          diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+        }
+      } else if (topic == "antam/device") {
         selData.clear();
         selData.add([
           {
@@ -809,6 +1040,9 @@ class _Content_callState extends State<Content_call> {
           if (sData[title] != null &&
               selData[tangki][(data["sel"] as int) - 1][title] !=
                   sData[title]) {
+            if (kDebugMode) {
+              print(("data changed"));
+            }
             refresh = true;
             selData[tangki][(data["sel"] as int) - 1][title] = sData[title];
           }
@@ -1112,18 +1346,21 @@ class _Content_callState extends State<Content_call> {
       totalData.clear();
       totalData.addAll(temp);
 
-      if (mounted) {
-        setState(() {});
-      }
+      if (mounted) setState(() {});
     }
   }
 
   late Account_alarm account_alarm;
+  late Timer timerRefreshDiagnostic;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    timerRefreshDiagnostic = Timer(const Duration(minutes: 5), () {
+      getDiagnostiWidget(70);
+    });
 
     filterTglHingga = FilterTgl(
       title: "Hingga",
@@ -1140,6 +1377,7 @@ class _Content_callState extends State<Content_call> {
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 
     mqtt = widget.mqtt;
+    mqtt2 = MyMqtt(onUpdate: (data, topic) {});
 
     selData = widget.selData;
 
@@ -1147,43 +1385,14 @@ class _Content_callState extends State<Content_call> {
 
     filterTangki = FilterTangki(
       tangkiValue: "Max",
-      items: ["Max", "1", "2", "3", "4", "5", "6"],
+      items: const ["Max", "1", "2", "3", "4", "5", "6"],
       onChange: (value) => getData(int.tryParse(value) ?? 0),
     );
 
     // getMax();
-
-    initStatus();
+    initDiagData();
     initSelData();
     initTotalDataStatistic();
-    getUserData(0);
-  }
-
-  List<dynamic> callData = [
-    {
-      "name": "Yugo cahyopratopo",
-      "phone": "+6282120432996",
-      "role": "Developer"
-    },
-    {"name": "Tengku Ahmad", "phone": "+6285265262812", "role": "Developer"}
-  ];
-
-  List<Widget> createPhonePanels(double width) {
-    List<Widget> panels = [];
-
-    for (var i = 0; i < callData.length; i++) {
-      final val = callData[i];
-      panels.add(PhonePanel(
-          name: val["name"],
-          role: val["role"],
-          phone: val["phone"],
-          width: width));
-      panels.add(SizedBox(
-        height: 5,
-      ));
-    }
-
-    return panels;
   }
 
   @override
@@ -1323,48 +1532,76 @@ class _Content_callState extends State<Content_call> {
                                       ]),
                                   child: Column(children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        // SvgPicture.asset(
-                                        //   "assets/monitoring.svg",
-                                        //   width: 30,
-                                        //   color: MainStyle.primaryColor,
-                                        // ),
-                                        const Icon(
-                                          Icons.call_outlined,
-                                          size: 30,
-                                          color: MainStyle.primaryColor,
+                                        Row(
+                                          children: [
+                                            // SvgPicture.asset(
+                                            //   "assets/monitoring.svg",
+                                            //   width: 30,
+                                            //   color: MainStyle.primaryColor,
+                                            // ),
+                                            const Icon(
+                                              Icons.lan,
+                                              size: 30,
+                                              color: MainStyle.primaryColor,
+                                            ),
+                                            // const SizedBox(
+                                            //   width: 10,
+                                            // ),
+                                            MainStyle.sizedBoxW10,
+                                            Text(
+                                              "Diagnostic",
+                                              style: MainStyle
+                                                  .textStyleDefault20Primary,
+                                            )
+                                          ],
                                         ),
-                                        // const SizedBox(
-                                        //   width: 10,
-                                        // ),
-                                        MainStyle.sizedBoxW10,
-                                        Text(
-                                          "Emergency Call",
-                                          style: MainStyle
-                                              .textStyleDefault20Primary,
+                                        Row(
+                                          children: [
+                                            MyButton(
+                                                color: MainStyle.primaryColor,
+                                                text: "Matikan semua",
+                                                onPressed: () =>
+                                                    promptToggle(15, 15, true),
+                                                textColor: Colors.white),
+                                            MainStyle.sizedBoxW5,
+                                            MyButton(
+                                                color: MainStyle.primaryColor,
+                                                text: "Nyalakan semua",
+                                                onPressed: () =>
+                                                    promptToggle(15, 15, false),
+                                                textColor: Colors.white),
+                                          ],
                                         )
                                       ],
                                     ),
                                     const SizedBox(
                                       height: 20,
                                     ),
-
-                                    isLoading
-                                        ? const Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              CircularProgressIndicator(
-                                                color: Colors.blue,
-                                              ),
-                                              MainStyle.sizedBoxW10,
-                                              Text("Loading Data")
-                                            ],
+                                    SizedBox(
+                                      height: 510,
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                              children: getDiagnostiWidget(70)),
+                                          Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: SizedBox(
+                                              width: 120,
+                                              child: MyButton(
+                                                  color: MainStyle.primaryColor,
+                                                  text: "Reset energi",
+                                                  onPressed: () => promptToggle(
+                                                      15, 15, false,
+                                                      isResetEnergi: true),
+                                                  textColor: Colors.white),
+                                            ),
                                           )
-                                        : Column(
-                                            children: createPhonePanels(500))
+                                        ],
+                                      ),
+                                    )
                                     // PanelNode(
                                     //     tangki: 1,
                                     //     sel: 1,
@@ -1548,9 +1785,11 @@ class _Content_callState extends State<Content_call> {
                                                                     }
 
                                                                     return;
-                                                                  } else {
-                                                                    sortSelData();
                                                                   }
+                                                                  // else {
+                                                                  //   sortSelData();
+                                                                  //   getMax();
+                                                                  // }
                                                                 }
                                                               } else {
                                                                 dataNyataSortOrderList
@@ -1563,6 +1802,7 @@ class _Content_callState extends State<Content_call> {
                                                               }
 
                                                               sortSelData();
+                                                              // getMax();
                                                             },
                                                             child: SizedBox(
                                                               width: 90,
@@ -1576,9 +1816,9 @@ class _Content_callState extends State<Content_call> {
                                                                           .center,
                                                                   children: [
                                                                     Text(
-                                                                      currTangki ==
-                                                                              0
-                                                                          ? e.contains("Anoda")
+                                                                      e.contains(
+                                                                              "Anoda")
+                                                                          ? currTangki == 0
                                                                               ? "Sel"
                                                                               : e
                                                                           : e,
@@ -1734,7 +1974,7 @@ class _Content_callState extends State<Content_call> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "Anoda " + (value as int).toString(),
+                                                                                "Anoda " + (value ~/ 1 as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),
@@ -1896,15 +2136,16 @@ class _Content_callState extends State<Content_call> {
                                                                 offset: Offset(
                                                                     0, -3),
                                                                 child: Text(
-                                                                    (e["value"]
-                                                                            as double)
-                                                                        .toStringAsFixed(
-                                                                            2),
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .right,
-                                                                    style: MainStyle
-                                                                        .textStyleDefault25Primary),
+                                                                  (e["value"]
+                                                                          as double)
+                                                                      .toStringAsFixed(
+                                                                          2),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .right,
+                                                                  style: MainStyle
+                                                                      .textStyleDefault25Primary,
+                                                                ),
                                                               ),
                                                             ),
                                                             SizedBox(

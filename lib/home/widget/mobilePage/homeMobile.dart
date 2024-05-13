@@ -57,17 +57,18 @@ class _HomeMobileState extends State<HomeMobile> {
     {
       "title": "Status",
       "isActive": true,
+      "isLower": false,
     },
-    {
-      "title": "Alarm Arus",
-      "isActive": false,
-    },
+    {"title": "Alarm Arus", "isActive": false, "isLower": false, "list": []},
     {
       "title": "Alarm Tegangan",
       "isActive": false,
-    }
+      "isLower": false,
+      "list": []
+    },
+    {"title": "Alarm Suhu", "isActive": false, "isLower": false, "list": []},
+    {"title": "Alarm pH", "isActive": false, "isLower": false, "list": []},
   ];
-
   // var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
   var titleData = [
     "Sel",
@@ -752,6 +753,20 @@ class _HomeMobileState extends State<HomeMobile> {
                     .where((element) => element["title"] == "Alarm Tegangan")
                     .first["isActive"]!
                 : (data["alarmTegangan"] as bool));
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Suhu")["isActive"] =
+            (data["alarmSuhu"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Alarm Suhu")
+                    .first["isActive"]!
+                : (data["alarmSuhu"] as bool));
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm pH")["isActive"] =
+            (data["alarmPh"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Alarm pH")
+                    .first["isActive"]!
+                : (data["alarmPh"] as bool));
 
         // var temp = [
         //   {
@@ -1030,6 +1045,8 @@ class _HomeMobileState extends State<HomeMobile> {
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
       final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+      final listAlarmSuhu = (data["listAlarmSuhu"] ?? []) as List<dynamic>;
+      final listAlarmPh = (data["listAlarmPh"] ?? []) as List<dynamic>;
 
       if (listAlarmArus.isNotEmpty) {
         alarm.firstWhere(
@@ -1040,6 +1057,16 @@ class _HomeMobileState extends State<HomeMobile> {
         alarm.firstWhere(
                 (element) => element["title"] == "Alarm Tegangan")["isActive"] =
             true;
+      }
+
+      if (listAlarmSuhu.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Suhu")["isActive"] = true;
+      }
+
+      if (listAlarmPh.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm pH")["isActive"] = true;
       }
 
       account_alarm.setState!();

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 
 import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
@@ -44,15 +45,17 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     {
       "title": "Status",
       "isActive": true,
+      "isLower": false,
     },
-    {
-      "title": "Alarm Arus",
-      "isActive": false,
-    },
+    {"title": "Alarm Arus", "isActive": false, "isLower": false, "list": []},
     {
       "title": "Alarm Tegangan",
       "isActive": false,
-    }
+      "isLower": false,
+      "list": []
+    },
+    {"title": "Alarm Suhu", "isActive": false, "isLower": false, "list": []},
+    {"title": "Alarm pH", "isActive": false, "isLower": false, "list": []},
   ];
 
   var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
@@ -755,6 +758,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     // mqtt!.onUpdate = (t, d) {};
     mqtt2.disconnect();
     mqtt2.dispose();
+    timerRefreshDiagnostic.cancel();
 
     widget.scSel.dispose();
 
@@ -890,6 +894,8 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
       final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+      final listAlarmSuhu = (data["listAlarmSuhu"] ?? []) as List<dynamic>;
+      final listAlarmPh = (data["listAlarmPh"] ?? []) as List<dynamic>;
 
       if (listAlarmArus.isNotEmpty) {
         alarm.firstWhere(
@@ -900,6 +906,16 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         alarm.firstWhere(
                 (element) => element["title"] == "Alarm Tegangan")["isActive"] =
             true;
+      }
+
+      if (listAlarmSuhu.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Suhu")["isActive"] = true;
+      }
+
+      if (listAlarmPh.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm pH")["isActive"] = true;
       }
 
       account_alarm.setState!();
@@ -1066,6 +1082,20 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                     .where((element) => element["title"] == "Alarm Tegangan")
                     .first["isActive"]!
                 : (data["alarmTegangan"] as bool));
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm Suhu")["isActive"] =
+            (data["alarmSuhu"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Alarm Suhu")
+                    .first["isActive"]!
+                : (data["alarmSuhu"] as bool));
+        alarm.firstWhere(
+                (element) => element["title"] == "Alarm pH")["isActive"] =
+            (data["alarmPh"] == null
+                ? alarm
+                    .where((element) => element["title"] == "Alarm pH")
+                    .first["isActive"]!
+                : (data["alarmPh"] as bool));
 
         // var temp = [
         //   {
@@ -1319,11 +1349,16 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
   }
 
   late Account_alarm account_alarm;
+  late Timer timerRefreshDiagnostic;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    timerRefreshDiagnostic = Timer(const Duration(minutes: 5), () {
+      getDiagnostiWidget(70);
+    });
 
     filterTglHingga = FilterTgl(
       title: "Hingga",
