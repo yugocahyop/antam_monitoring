@@ -6,6 +6,11 @@ import 'package:flutter/material.dart';
 class PanelNode extends StatefulWidget {
   PanelNode(
       {super.key,
+      required this.arus,
+      required this.tegangan,
+      required this.daya,
+      required this.suhu,
+      required this.energi,
       required this.isLoading,
       required this.dateDiff,
       required this.tangki,
@@ -25,6 +30,12 @@ class PanelNode extends StatefulWidget {
 
   String status;
   String lastUpdated;
+
+  double tegangan;
+  double arus;
+  double suhu;
+  double daya;
+  double energi;
 
   Function() tapFunction;
 
@@ -55,8 +66,9 @@ class _PanelNodeState extends State<PanelNode> {
         scale: isHover ? 1.15 : 1,
         child: Container(
           width: widget.width,
-          height: 100,
+          height: 125,
           decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, width: 2),
               borderRadius: BorderRadius.circular(10),
               color: MainStyle.thirdColor),
           child: Column(
@@ -73,8 +85,16 @@ class _PanelNodeState extends State<PanelNode> {
                         ? MainStyle.primaryColor.withOpacity(
                             widget.dateDiff > (60000 * 5) ? 0.5 : 1)
                         : widget.status.toLowerCase().contains("alarm")
-                            ? Colors.red.withOpacity(
-                                widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                            ? widget.status
+                                        .toLowerCase()
+                                        .contains("tegangan") ||
+                                    widget.status
+                                        .toLowerCase()
+                                        .contains("rendah")
+                                ? Colors.orange.withOpacity(
+                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                                : Colors.red.withOpacity(
+                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
                             : MainStyle.thirdColor.withOpacity(
                                 widget.dateDiff > (60000 * 5) ? 0.5 : 1)),
                 child: Row(
@@ -113,18 +133,25 @@ class _PanelNodeState extends State<PanelNode> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Container(
-                            child: Text(
-                              "00.00V",
-                              style: MyTextStyle.defaultFontCustom(
-                                  widget.status.toLowerCase() == "active"
-                                      ? MainStyle.primaryColor.withOpacity(1)
-                                      : widget.status
-                                              .toLowerCase()
-                                              .contains("alarm")
-                                          ? Colors.red.withOpacity(1)
-                                          : MainStyle.primaryColor
-                                              .withOpacity(1),
-                                  13),
+                            child: Center(
+                              child: Text(
+                                "${widget.tegangan.toStringAsFixed(2)}V",
+                                style: MyTextStyle.defaultFontCustom(
+                                    widget.status.toLowerCase() == "active"
+                                        ? MainStyle.primaryColor.withOpacity(1)
+                                        : widget.status
+                                                .toLowerCase()
+                                                .contains("alarm")
+                                            ? Colors.red.withOpacity(1)
+                                            : MainStyle.primaryColor
+                                                .withOpacity(1),
+                                    16,
+                                    weight: widget.status
+                                            .toLowerCase()
+                                            .contains("tegangan")
+                                        ? FontWeight.w900
+                                        : FontWeight.normal),
+                              ),
                             ),
                             width: 55,
                             height: 30,
@@ -134,18 +161,25 @@ class _PanelNodeState extends State<PanelNode> {
                                 borderRadius: BorderRadius.circular(5)),
                           ),
                           Container(
-                            child: Text(
-                              "000.0A",
-                              style: MyTextStyle.defaultFontCustom(
-                                  widget.status.toLowerCase() == "active"
-                                      ? MainStyle.primaryColor.withOpacity(1)
-                                      : widget.status
-                                              .toLowerCase()
-                                              .contains("alarm")
-                                          ? Colors.red.withOpacity(1)
-                                          : MainStyle.primaryColor
-                                              .withOpacity(1),
-                                  13),
+                            child: Center(
+                              child: Text(
+                                "${widget.arus.toStringAsFixed(1)}A",
+                                style: MyTextStyle.defaultFontCustom(
+                                    widget.status.toLowerCase() == "active"
+                                        ? MainStyle.primaryColor.withOpacity(1)
+                                        : widget.status
+                                                .toLowerCase()
+                                                .contains("alarm")
+                                            ? Colors.red.withOpacity(1)
+                                            : MainStyle.primaryColor
+                                                .withOpacity(1),
+                                    16,
+                                    weight: widget.status
+                                            .toLowerCase()
+                                            .contains("arus")
+                                        ? FontWeight.w900
+                                        : FontWeight.normal),
+                              ),
                             ),
                             width: 55,
                             height: 30,
@@ -161,16 +195,25 @@ class _PanelNodeState extends State<PanelNode> {
                 ),
               ),
               Expanded(
-                  child: Container(
+                  child: AnimatedContainer(
+                duration: d,
                 width: widget.width,
-                padding: EdgeInsets.symmetric(horizontal: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                     color: widget.status.toLowerCase() == "active"
                         ? MainStyle.primaryColor.withOpacity(
                             widget.dateDiff > (60000 * 5) ? 0.5 : 1)
                         : widget.status.toLowerCase().contains("alarm")
-                            ? Colors.red.withOpacity(
-                                widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                            ? widget.status
+                                        .toLowerCase()
+                                        .contains("tegangan") ||
+                                    widget.status
+                                        .toLowerCase()
+                                        .contains("rendah")
+                                ? Colors.orange.withOpacity(
+                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                                : Colors.red.withOpacity(
+                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
                             : MainStyle.thirdColor.withOpacity(
                                 widget.dateDiff > (60000 * 5) ? 0.5 : 1),
                     borderRadius:
@@ -179,33 +222,76 @@ class _PanelNodeState extends State<PanelNode> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: widget.width - 10,
-                        child: Text(
-                          widget.isLoading
-                              ? "Memuat"
-                              : "0000 W 0000 Whr 00.0 C",
-                          textAlign: TextAlign.end,
-                          style: MyTextStyle.defaultFontCustom(
-                              widget.status.toLowerCase() == "inactive"
-                                  ? Colors.black
-                                  : Colors.white,
-                              lWidth > 500 ? 10 : 9),
-                        ),
-                      ),
-                    ),
+                    widget.isLoading
+                        ? SizedBox(
+                            width: widget.width - 10,
+                            child: Text(
+                              "Memuat",
+                              textAlign: TextAlign.end,
+                              style: MyTextStyle.defaultFontCustom(
+                                  widget.status.toLowerCase() == "inactive"
+                                      ? Colors.black
+                                      : Colors.white,
+                                  lWidth > 500 ? 13 : 12),
+                            ),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                                Text(
+                                  "${widget.daya.toStringAsFixed(2)} W ",
+                                  textAlign: TextAlign.end,
+                                  style: MyTextStyle.defaultFontCustom(
+                                      widget.status.toLowerCase() == "inactive"
+                                          ? Colors.black
+                                          : Colors.white,
+                                      lWidth > 500 ? 13 : 12,
+                                      weight: widget.status
+                                              .toLowerCase()
+                                              .contains("power")
+                                          ? FontWeight.w900
+                                          : FontWeight.normal),
+                                ),
+                                Text(
+                                  " ${widget.energi.toStringAsFixed(2)} Whr ",
+                                  textAlign: TextAlign.end,
+                                  style: MyTextStyle.defaultFontCustom(
+                                      widget.status.toLowerCase() == "inactive"
+                                          ? Colors.black
+                                          : Colors.white,
+                                      lWidth > 500 ? 13 : 12,
+                                      weight: widget.status
+                                              .toLowerCase()
+                                              .contains("energi")
+                                          ? FontWeight.w900
+                                          : FontWeight.normal),
+                                ),
+                                Text(
+                                  " ${widget.suhu.toStringAsFixed(2)} \u00B0 C",
+                                  textAlign: TextAlign.end,
+                                  style: MyTextStyle.defaultFontCustom(
+                                      widget.status.toLowerCase() == "inactive"
+                                          ? Colors.black
+                                          : Colors.white,
+                                      lWidth > 500 ? 13 : 12,
+                                      weight: widget.status
+                                              .toLowerCase()
+                                              .contains("suhu")
+                                          ? FontWeight.w900
+                                          : FontWeight.normal),
+                                ),
+                              ]),
                     SizedBox(
                       width: widget.width,
                       child: Text(
                         widget.isLoading ? "" : widget.lastUpdated,
                         textAlign: TextAlign.end,
                         style: MyTextStyle.defaultFontCustom(
-                            widget.status.toLowerCase() == "inactive"
-                                ? Colors.black
-                                : Colors.white,
-                            lWidth > 500 ? 8 : 7),
+                          widget.status.toLowerCase() == "inactive"
+                              ? Colors.black
+                              : Colors.white,
+                          lWidth > 500 ? 10 : 9,
+                        ),
                       ),
                     )
                   ],

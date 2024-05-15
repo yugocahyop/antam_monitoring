@@ -278,9 +278,14 @@ class _Content_diagnosticState extends State<Content_tv> {
         } else {
           lastUpdated = "${now.year - date.year} tahun lalu";
         }
+
+        if (kDebugMode) {
+          print("sel data get: $selData");
+        }
         pn.add(PanelNode(
-          tapFunction: () => promptToggle(i + 1, ii + 1,
-              status == "active" || status.contains("alarm") ? true : false),
+          tapFunction: (() {}),
+          // tapFunction: () => promptToggle(i + 1, ii + 1,
+          //     status == "active" || status.contains("alarm") ? true : false),
           isSensor: i == 6,
           width: width,
           tangki: i + 1,
@@ -289,13 +294,28 @@ class _Content_diagnosticState extends State<Content_tv> {
           lastUpdated: lastUpdated,
           dateDiff: now.millisecondsSinceEpoch - date.millisecondsSinceEpoch,
           isLoading: isLoading,
+          // daya: 0,
+          // arus: 0,
+          // tegangan: 0,
+          // suhu: 0,
+          // energi: 0,
+          daya: selData.length <= 1 ? 0.0 : (selData[i + 1][ii]["daya"] ?? 0.0),
+          arus: selData.length <= 1 ? 0.0 : (selData[i + 1][ii]["arus"] ?? 0.0),
+          tegangan: selData.length <= 1
+              ? 0.0
+              : (selData[i + 1][ii]["tegangan"] ?? 0.00),
+          suhu:
+              selData.length <= 1 ? 0.0 : (selData[i + 1][ii]["suhu"] ?? 0.00),
+          energi: selData.length <= 1
+              ? 0.0
+              : (selData[i + 1][ii]["energi"] ?? 0.00),
           // lastUpdated:  df.format(date)
         ));
       }
 
       rows.add(Container(
         padding: EdgeInsets.symmetric(horizontal: 8),
-        height: 70,
+        height: 77,
         decoration: BoxDecoration(
             color: MainStyle.secondaryColor,
             borderRadius: BorderRadius.circular(10)),
@@ -876,6 +896,8 @@ class _Content_diagnosticState extends State<Content_tv> {
 
     getMax();
 
+    // getDiagnostiWidget(200);
+
     Future.delayed(const Duration(seconds: 1), () {
       if (!mounted) return;
       setState(() {});
@@ -942,6 +964,14 @@ class _Content_diagnosticState extends State<Content_tv> {
       }
 
       account_alarm.setState!();
+
+      if (diagnosticData.length < 7) {
+        diagnosticData.add(
+          [
+            {"sel": 1, "status": "inactive", "lastUpdated": 1706561733680},
+          ],
+        );
+      }
     }
 
     if (mounted)
@@ -951,7 +981,7 @@ class _Content_diagnosticState extends State<Content_tv> {
   }
 
   initMqtt() {
-    mqtt!.onUpdate = (data, topic) {
+    mqtt.onUpdate = (data, topic) {
       bool refresh = false;
 
       if (kDebugMode) {
@@ -1047,7 +1077,7 @@ class _Content_diagnosticState extends State<Content_tv> {
       } else if (topic == "antam/device/node") {
         final int tangki = data["tangki"] as int;
 
-        final sData = Map.from(data["selData"]);
+        final sData = Map.from(data["selData"] ?? {});
 
         resetSelDataSort();
 
@@ -1421,6 +1451,10 @@ class _Content_diagnosticState extends State<Content_tv> {
     final lWidth = MediaQuery.of(context).size.width;
     final lheight = MediaQuery.of(context).size.height;
 
+    // if (kDebugMode) {
+    //   print("width: $lWidth");
+    // }
+
     return SizedBox(
       width: (lWidth / lheight) < wide
           ? 1800
@@ -1437,7 +1471,7 @@ class _Content_diagnosticState extends State<Content_tv> {
           Container(
               padding: const EdgeInsets.fromLTRB(45, 30, 30, 10),
               width: (lWidth / lheight) < wide
-                  ? 2200
+                  ? 1800
                   : lWidth >= 1920
                       ? lWidth
                       : 1270,
@@ -1495,27 +1529,27 @@ class _Content_diagnosticState extends State<Content_tv> {
                       width: (lWidth / lheight) < wide
                           ? 2200
                           : lWidth >= 1920
-                              ? lWidth + 500
-                              : 1270,
+                              ? lWidth + 500 //set width here
+                              : lWidth,
                       child: Transform.scale(
                         scale: (lWidth / lheight) < wide
                             ? 1.2
                             : lWidth >= 1920
                                 ? 1.1
-                                : 1,
+                                : 0.92, //set scale here
                         origin: Offset(
                             (lWidth / lheight) < wide
                                 ? -1010
                                 : lWidth >= 1920
                                     ? -1010
-                                    : 0,
+                                    : -600,
                             (lWidth / lheight) < wide ? -50 : 0),
                         child: Row(
                           children: [
                             Transform.scale(
                               scale: (lWidth / lheight) < wide ? 1.25 : 1,
                               origin: Offset(
-                                  (lWidth / lheight) < wide ? -150 : 0, 0),
+                                  (lWidth / lheight) < wide ? -500 : 0, 0),
                               child: Transform.translate(
                                 offset: Offset(
                                     0,
@@ -1523,9 +1557,14 @@ class _Content_diagnosticState extends State<Content_tv> {
                                         ? (lheight >= 1080 ? -45 : -15)
                                         : 0),
                                 child: Container(
+                                  clipBehavior: Clip.none,
                                   padding: const EdgeInsets.all(10),
-                                  width: lWidth - 300,
-                                  height: 620,
+                                  width: lheight / lWidth < wide
+                                      ? 1280
+                                      : lWidth <= 1920
+                                          ? lWidth
+                                          : lWidth - 300,
+                                  height: 680,
                                   decoration: BoxDecoration(
                                       color: MainStyle.secondaryColor,
                                       borderRadius: BorderRadius.circular(30),
@@ -1579,9 +1618,11 @@ class _Content_diagnosticState extends State<Content_tv> {
                                             ),
                                             MainStyle.sizedBoxW20,
                                             Container(
+                                              width: 200,
                                               padding: EdgeInsets.all(5),
                                               decoration: BoxDecoration(
-                                                  color: MainStyle.primaryColor,
+                                                  color:
+                                                      MainStyle.secondaryColor,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
@@ -1591,16 +1632,109 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  Text(
-                                                    "Elektrolit",
-                                                    style: MainStyle
-                                                        .textStyleDefault15WhiteBold,
+                                                  Center(
+                                                    child: Text(
+                                                      "Elektrolit",
+                                                      style: MyTextStyle
+                                                          .defaultFontCustom(
+                                                              MainStyle
+                                                                  .primaryColor,
+                                                              14,
+                                                              weight: FontWeight
+                                                                  .w900),
+                                                    ),
                                                   ),
-                                                  Text(
-                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
-                                                    style: MainStyle
-                                                        .textStyleDefault15White,
-                                                  )
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: (diagnosticData[6][0]["status"]
+                                                                          as String)
+                                                                      .toLowerCase() ==
+                                                                  "active"
+                                                              ? MainStyle
+                                                                  .primaryColor
+                                                                  .withOpacity(
+                                                                      (diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5)
+                                                                          ? 0.5
+                                                                          : 1)
+                                                              : (diagnosticData[6][0]["status"]
+                                                                          as String)
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          "alarm")
+                                                                  ? (diagnosticData[6][0]["status"] as String).toLowerCase().contains("tegangan") ||
+                                                                          (diagnosticData[6][0]["status"] as String).toLowerCase().contains("rendah")
+                                                                      ? Colors.orange.withOpacity((diagnosticData[6][0]["lastUpdatde"] as int) > (60000 * 5) ? 0.5 : 1)
+                                                                      : Colors.red.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
+                                                                  : MainStyle.thirdColor.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(2),
+                                                        ),
+                                                        child: Text(
+                                                            "pH: ${(((selData[6][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)} ",
+                                                            style: MyTextStyle.defaultFontCustom(
+                                                                (diagnosticData[6][0]["status"]
+                                                                                as String)
+                                                                            .toLowerCase() !=
+                                                                        "inactive"
+                                                                    ? Colors
+                                                                        .white
+                                                                    : MainStyle
+                                                                        .primaryColor,
+                                                                14)),
+                                                      ),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: (diagnosticData[6][0]["status"]
+                                                                          as String)
+                                                                      .toLowerCase() ==
+                                                                  "active"
+                                                              ? MainStyle
+                                                                  .primaryColor
+                                                                  .withOpacity(
+                                                                      (diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5)
+                                                                          ? 0.5
+                                                                          : 1)
+                                                              : (diagnosticData[6][0]["status"]
+                                                                          as String)
+                                                                      .toLowerCase()
+                                                                      .contains(
+                                                                          "alarm")
+                                                                  ? (diagnosticData[6][0]["status"] as String).toLowerCase().contains("tegangan") ||
+                                                                          (diagnosticData[6][0]["status"] as String).toLowerCase().contains("rendah")
+                                                                      ? Colors.orange.withOpacity((diagnosticData[6][0]["lastUpdatde"] as int) > (60000 * 5) ? 0.5 : 1)
+                                                                      : Colors.red.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
+                                                                  : MainStyle.thirdColor.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(2),
+                                                        ),
+                                                        child: Text(
+                                                          " Suhu: ${(((selData[6][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                          style: MyTextStyle.defaultFontCustom(
+                                                              (diagnosticData[6][0]["status"]
+                                                                              as String)
+                                                                          .toLowerCase() !=
+                                                                      "inactive"
+                                                                  ? Colors.white
+                                                                  : MainStyle
+                                                                      .primaryColor,
+                                                              14),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -1608,19 +1742,19 @@ class _Content_diagnosticState extends State<Content_tv> {
                                         ),
                                         Row(
                                           children: [
-                                            MyButton(
-                                                color: MainStyle.primaryColor,
-                                                text: "Matikan semua",
-                                                onPressed: () =>
-                                                    promptToggle(15, 15, true),
-                                                textColor: Colors.white),
-                                            MainStyle.sizedBoxW5,
-                                            MyButton(
-                                                color: MainStyle.primaryColor,
-                                                text: "Nyalakan semua",
-                                                onPressed: () =>
-                                                    promptToggle(15, 15, false),
-                                                textColor: Colors.white),
+                                            // MyButton(
+                                            //     color: MainStyle.primaryColor,
+                                            //     text: "Matikan semua",
+                                            //     onPressed: () =>
+                                            //         promptToggle(15, 15, true),
+                                            //     textColor: Colors.white),
+                                            // MainStyle.sizedBoxW5,
+                                            // MyButton(
+                                            //     color: MainStyle.primaryColor,
+                                            //     text: "Nyalakan semua",
+                                            //     onPressed: () =>
+                                            //         promptToggle(15, 15, false),
+                                            //     textColor: Colors.white),
                                           ],
                                         )
                                       ],
@@ -1635,22 +1769,148 @@ class _Content_diagnosticState extends State<Content_tv> {
                                           Column(
                                               children:
                                                   getDiagnostiWidget(200)),
-                                          Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: SizedBox(
-                                              width: 120,
-                                              child: MyButton(
-                                                  color: MainStyle.primaryColor,
-                                                  text: "Reset energi",
-                                                  onPressed: () => promptToggle(
-                                                      15, 15, false,
-                                                      isResetEnergi: true),
-                                                  textColor: Colors.white),
-                                            ),
-                                          )
+                                          // Align(
+                                          //   alignment: Alignment.bottomRight,
+                                          //   child: SizedBox(
+                                          //     width: 120,
+                                          //     child: MyButton(
+                                          //         color: MainStyle.primaryColor,
+                                          //         text: "Reset energi",
+                                          //         onPressed: () => promptToggle(
+                                          //             15, 15, false,
+                                          //             isResetEnergi: true),
+                                          //         textColor: Colors.white),
+                                          //   ),
+                                          // )
                                         ],
                                       ),
-                                    )
+                                    ),
+
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: totalData
+                                          .map((e) => Container(
+                                                clipBehavior: Clip.none,
+                                                decoration:
+                                                    const BoxDecoration(),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      // width: 120,
+                                                      child: Text(
+                                                        e["title"] as String,
+                                                        style: MyTextStyle
+                                                            .defaultFontCustom(
+                                                                Colors.black,
+                                                                13,
+                                                                weight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                      clipBehavior: Clip.none,
+                                                      // width: 300,
+                                                      height: 35,
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3),
+                                                      decoration: BoxDecoration(
+                                                        gradient: LinearGradient(
+                                                            colors: grad_colors,
+                                                            stops: [0, 0.6, 1],
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                        // boxShadow: [
+                                                        //   BoxShadow(
+                                                        //       color: MainStyle
+                                                        //           .primaryColor
+                                                        //           .withAlpha(
+                                                        //               (255 * 0.15)
+                                                        //                   .toInt()),
+                                                        //       offset: Offset(0, 3),
+                                                        //       blurRadius: 5,
+                                                        //       spreadRadius: 0),
+                                                        //   BoxShadow(
+                                                        //       color: MainStyle
+                                                        //           .primaryColor
+                                                        //           .withAlpha(
+                                                        //               (255 * 0.15)
+                                                        //                   .toInt()),
+                                                        //       offset: Offset(0, 3),
+                                                        //       blurRadius: 30,
+                                                        //       spreadRadius: 0)
+                                                        // ]
+                                                      ),
+                                                      child: SizedBox(
+                                                        width: 102,
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              // height: 30,
+                                                              clipBehavior:
+                                                                  Clip.none,
+                                                              decoration:
+                                                                  const BoxDecoration(),
+                                                              width: 50,
+                                                              child: Text(
+                                                                (e["value"]
+                                                                        as double)
+                                                                    .toStringAsFixed(
+                                                                        2),
+                                                                style: MyTextStyle
+                                                                    .defaultFontCustom(
+                                                                        MainStyle
+                                                                            .primaryColor,
+                                                                        16),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 60,
+                                                              child: Text(
+                                                                e["unit"]
+                                                                    as String,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .right,
+                                                                style: MyTextStyle
+                                                                    .defaultFontCustom(
+                                                                        Colors
+                                                                            .black,
+                                                                        14,
+                                                                        weight:
+                                                                            FontWeight.bold),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    MainStyle.sizedBoxW20
+                                                  ],
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ),
                                     // PanelNode(
                                     //     tangki: 1,
                                     //     sel: 1,
@@ -1670,115 +1930,6 @@ class _Content_diagnosticState extends State<Content_tv> {
                   ),
                 ],
               )),
-          Center(
-            //warning
-            child: Transform.scale(
-              scale: (lWidth / lheight) < wide ? 1.4 : 1,
-              origin: Offset((lWidth / lheight) < wide ? 700 : 0, 0),
-              child: Visibility(
-                visible: isMsgVisible,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: msgOpacity,
-                  onEnd: () {
-                    if (msgOpacity == 0 && mounted) {
-                      setState(() {
-                        isMsgVisible = false;
-                      });
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 30),
-                    width: 700,
-                    height: 500,
-                    decoration: BoxDecoration(
-                        color: const Color(0xffFEF7F1),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          const BoxShadow(
-                              blurRadius: 30,
-                              color: Colors.black26,
-                              offset: Offset(0, 20))
-                        ]),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            width: 20,
-                            height: 400,
-                            decoration: const BoxDecoration(
-                              color: Color(0xffDF7B00),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  bottomRight: Radius.circular(50)),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 20,
-                          left: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Icon(
-                                    Icons.info_rounded,
-                                    color: Color(0xffDF7B00),
-                                    size: 50,
-                                  ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  Text(
-                                    "Warning Message",
-                                    style:
-                                        MainStyle.textStyleDefault20BlackBold,
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 300,
-                                width: 600,
-                                child: Center(
-                                  child: Text(
-                                    warningMsg,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        MainStyle.textStyleDefault40BlackBold,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 600,
-                                child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: MyButton(
-                                      width: 100,
-                                      color: const Color(0xffFCECDA),
-                                      text: "Dismiss",
-                                      onPressed: () {
-                                        if (mounted) {
-                                          setState(() {
-                                            msgOpacity = 0;
-                                          });
-                                        }
-                                      },
-                                      textColor: const Color(0xffDF7B00)),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );

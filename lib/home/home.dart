@@ -926,21 +926,55 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     if (widget.page == "tv") {
       menuItems = [];
 
-      page = Content_tv(
-        changePage: changePage,
-        isAdmin: isAdmin,
-        mqtt: mqtt,
-        scSel: ScrollController(),
-        selData: selData,
+      // page = Content_tv(
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   scSel: ScrollController(),
+      //   selData: selData,
+      // );
+
+      page = const SizedBox(
+        width: 1200,
+        height: 500,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(
+                  color: MainStyle.primaryColor,
+                ))
+          ],
+        ),
       );
 
-      pageMobile = Content_tv(
-        changePage: changePage,
-        isAdmin: isAdmin,
-        mqtt: mqtt,
-        scSel: ScrollController(),
-        selData: selData,
+      pageMobile = const SizedBox(
+        width: 1200,
+        height: 500,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(
+                  color: MainStyle.primaryColor,
+                ))
+          ],
+        ),
       );
+
+      // pageMobile = Content_tv(
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   scSel: ScrollController(),
+      //   selData: selData,
+      // );
     } else {
       menuItems = [
         {
@@ -1118,8 +1152,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   //   if (mounted) setState(() {});
   // }
 
-  Future<void> login(
-      BuildContext context, bool isRemember, Function() toggleLoading) async {
+  Future<void> login(String password, BuildContext context, bool isRemember,
+      Function() toggleLoading) async {
     // final c = Controller();
 
     // if (c.validate(inputs, context)) return;
@@ -1130,13 +1164,15 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     final data = {
       "email": base64.encode(utf8.encode("adminTV")),
-      "password": base64.encode(utf8.encode("xirka@30"))
+      "password": base64.encode(utf8.encode(password))
     };
 
     final r = api.callAPI("/auth", "POST", jsonEncode(data), false);
 
     await Future.value(r).then((r) {
-      print("tv login: ${r}");
+      if (kDebugMode) {
+        print("tv login: ${r}");
+      }
       ApiHelper.tokenMain = r["activeToken"];
 
       final encrypt = MyEncrtypt();
@@ -1197,7 +1233,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             height: 420,
             onSubmit: (mapTextField) async {
               // print("object ${mapTextField["Nama"]}");
-              await login(context, true, () => null);
+              await login(mapTextField["Password"]!.con.text, context, true,
+                  () => null);
+
+              // changePage(5);
             },
             listTextParam: [
               {
@@ -1330,7 +1369,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: lWidth < 900
+        body: lWidth < 900 && widget.page != "tv"
             ? Scrollbar(
                 controller: scMain,
                 thumbVisibility: true,

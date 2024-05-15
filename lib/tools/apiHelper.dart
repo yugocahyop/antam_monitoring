@@ -15,8 +15,8 @@ class ApiHelper {
   static const needleRegex = r'{#}';
   static const needle = '{#}';
 
-  // static const url = 'http://202.148.1.57:7003';
-  static const url = 'http://192.168.1.11:7003';
+  static const url = 'http://202.148.1.57:7003';
+  // static const url = 'http://192.168.1.11:7003';
 
   final RegExp exp = RegExp(needleRegex);
 
