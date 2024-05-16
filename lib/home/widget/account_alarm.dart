@@ -8,11 +8,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 class Account_alarm extends StatefulWidget {
-  Account_alarm({super.key, required this.alarm, required this.isAdmin});
+  Account_alarm(
+      {super.key,
+      required this.alarm,
+      required this.isAdmin,
+      this.isTv = false});
 
   List<Map> alarm;
 
   bool isAdmin;
+
+  bool isTv;
 
   Function()? setState;
 
@@ -121,11 +127,11 @@ class _Account_alarmState extends State<Account_alarm> {
           Container(
             decoration: const BoxDecoration(),
             clipBehavior: Clip.none,
-            width: lWidth < 900
+            width: (lWidth < 900
                 ? lWidth < 800
                     ? 500
                     : lWidth * 0.4
-                : 500,
+                : 500),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
@@ -161,7 +167,7 @@ class _Account_alarmState extends State<Account_alarm> {
             ),
           ),
           Visibility(
-            visible: lWidth >= 900,
+            visible: lWidth >= 900 || widget.isTv,
             child: SizedBox(
               width: (lWidth / lheight) < wide ? 430 : 300,
               child: Row(

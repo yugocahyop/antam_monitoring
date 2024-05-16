@@ -299,16 +299,21 @@ class _Content_diagnosticState extends State<Content_tv> {
           // tegangan: 0,
           // suhu: 0,
           // energi: 0,
-          daya: selData.length <= 1 ? 0.0 : (selData[i + 1][ii]["daya"] ?? 0.0),
-          arus: selData.length <= 1 ? 0.0 : (selData[i + 1][ii]["arus"] ?? 0.0),
+          daya: selData.length <= 1.0
+              ? 0.0
+              : (selData[i + 1][ii]["daya"] ?? 0.0) / 1,
+          arus: selData.length <= 1
+              ? 0.0
+              : (selData[i + 1][ii]["arus"] ?? 0.0) / 1,
           tegangan: selData.length <= 1
               ? 0.0
-              : (selData[i + 1][ii]["tegangan"] ?? 0.00),
-          suhu:
-              selData.length <= 1 ? 0.0 : (selData[i + 1][ii]["suhu"] ?? 0.00),
+              : (selData[i + 1][ii]["tegangan"] ?? 0.00) / 1,
+          suhu: selData.length <= 1
+              ? 0.0
+              : (selData[i + 1][ii]["suhu"] ?? 0.00) / 1,
           energi: selData.length <= 1
               ? 0.0
-              : (selData[i + 1][ii]["energi"] ?? 0.00),
+              : (selData[i + 1][ii]["energi"] ?? 0.00) / 1,
           // lastUpdated:  df.format(date)
         ));
       }
@@ -368,7 +373,7 @@ class _Content_diagnosticState extends State<Content_tv> {
     {"title": "Tegangan Total", "value": 0.0, "unit": "Volt"},
     {"title": "Arus Total", "value": 0.0, "unit": "Ampere"},
     {"title": "Power", "value": 0.0, "unit": "Watt"},
-    {"title": "Energi", "value": 0.0, "unit": "Watt_Jam"},
+    {"title": "Energi", "value": 0.0, "unit": "kWh"},
   ];
 
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -1390,7 +1395,7 @@ class _Content_diagnosticState extends State<Content_tv> {
               : (data["energi"] is double
                   ? (data["energi"] as double)
                   : (data["energi"] as int).toDouble()),
-          "unit": "Watt_Jam"
+          "unit": "kWh"
         },
       ];
 
@@ -1410,7 +1415,7 @@ class _Content_diagnosticState extends State<Content_tv> {
     super.initState();
 
     timerRefreshDiagnostic = Timer(const Duration(minutes: 5), () {
-      getDiagnostiWidget(200);
+      getDiagnostiWidget(220);
     });
 
     filterTglHingga = FilterTgl(
@@ -1425,7 +1430,11 @@ class _Content_diagnosticState extends State<Content_tv> {
       changePage: () => filterChange(),
     );
 
-    account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
+    account_alarm = Account_alarm(
+      alarm: alarm,
+      isAdmin: widget.isAdmin,
+      isTv: true,
+    );
 
     mqtt = widget.mqtt;
     mqtt2 = MyMqtt(onUpdate: (data, topic) {});
@@ -1618,7 +1627,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                             ),
                                             MainStyle.sizedBoxW20,
                                             Container(
-                                              width: 200,
+                                              width: 225,
                                               padding: EdgeInsets.all(5),
                                               decoration: BoxDecoration(
                                                   color:
@@ -1676,7 +1685,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   : MainStyle.thirdColor.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(2),
+                                                                  .circular(5),
                                                         ),
                                                         child: Text(
                                                             "pH: ${(((selData[6][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)} ",
@@ -1689,8 +1698,9 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                         .white
                                                                     : MainStyle
                                                                         .primaryColor,
-                                                                14)),
+                                                                16)),
                                                       ),
+                                                      MainStyle.sizedBoxW20,
                                                       Container(
                                                         padding:
                                                             EdgeInsets.all(3),
@@ -1718,7 +1728,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   : MainStyle.thirdColor.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(2),
+                                                                  .circular(5),
                                                         ),
                                                         child: Text(
                                                           " Suhu: ${(((selData[6][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
@@ -1730,7 +1740,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   ? Colors.white
                                                                   : MainStyle
                                                                       .primaryColor,
-                                                              14),
+                                                              16),
                                                         ),
                                                       ),
                                                     ],
@@ -1768,7 +1778,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                         children: [
                                           Column(
                                               children:
-                                                  getDiagnostiWidget(200)),
+                                                  getDiagnostiWidget(220)),
                                           // Align(
                                           //   alignment: Alignment.bottomRight,
                                           //   child: SizedBox(
@@ -1813,6 +1823,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                         .bold),
                                                       ),
                                                     ),
+                                                    MainStyle.sizedBoxW10,
                                                     Container(
                                                       margin:
                                                           const EdgeInsets.only(
@@ -1855,15 +1866,16 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                         //       spreadRadius: 0)
                                                         // ]
                                                       ),
+
                                                       child: SizedBox(
-                                                        width: 102,
+                                                        width: 112,
                                                         child: Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                          // mainAxisAlignment:
+                                                          //     MainAxisAlignment
+                                                          //         .spaceBetween,
                                                           children: [
                                                             Container(
                                                               // height: 30,
@@ -1877,8 +1889,11 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                         as double)
                                                                     .toStringAsFixed(
                                                                         2),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
                                                                 style: MyTextStyle
-                                                                    .defaultFontCustom(
+                                                                    .defaultFontCustomMono(
                                                                         MainStyle
                                                                             .primaryColor,
                                                                         16),
@@ -1905,7 +1920,8 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                         ),
                                                       ),
                                                     ),
-                                                    MainStyle.sizedBoxW20
+                                                    MainStyle.sizedBoxW20,
+                                                    MainStyle.sizedBoxW10
                                                   ],
                                                 ),
                                               ))

@@ -1170,8 +1170,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     final r = api.callAPI("/auth", "POST", jsonEncode(data), false);
 
     await Future.value(r).then((r) {
-      if (kDebugMode) {
-        print("tv login: ${r}");
+      // if (kDebugMode) {
+      //   print("tv login: ${r}");
+      // }
+      if (r["error"] != null) {
+        final c = Controller();
+        c.showSnackBar(context, "password salah");
+        return;
       }
       ApiHelper.tokenMain = r["activeToken"];
 
@@ -1419,6 +1424,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                 child: SizedBox(
                                   width: (lWidth / lheight) < wide ? 400 : 250,
                                   child: Menu(
+                                    isTv: widget.page == "tv",
                                     menuItem: menuItems,
                                   ),
                                 ),

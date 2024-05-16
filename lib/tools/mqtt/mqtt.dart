@@ -15,7 +15,7 @@ import 'server.dart' if (dart.library.html) 'browser.dart' as mqttsetup;
 class MyMqtt {
   StreamSubscription? subs;
 
-  MqttClient client = mqttsetup.setup('ws://202.148.1.57',
+  MqttClient client = mqttsetup.setup('ws://${ApiHelper.url}',
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
   Function(Map<String, dynamic> json, String topic) onUpdate;
   Function(Map<String, dynamic> json)? onUpdateAlarm;

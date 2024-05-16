@@ -1,13 +1,16 @@
 import 'package:antam_monitoring/controller/controller.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Menu extends StatefulWidget {
-  Menu({super.key, required this.menuItem});
+  Menu({super.key, required this.menuItem, this.isTv = false});
 
   List<Map<String, dynamic>> menuItem;
+
+  bool isTv;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -239,25 +242,28 @@ class _MenuState extends State<Menu> {
                 //   width: 10,
                 // ),
                 MainStyle.sizedBoxW10,
-                Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    color: MainStyle.primaryColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {
-                      final c = Controller();
-                      c.saveSharedPref("antam.token", "");
-                      c.saveSharedPref("antam.data", "");
+                Visibility(
+                  visible: !widget.isTv,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: MainStyle.primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        final c = Controller();
+                        c.saveSharedPref("antam.token", "");
+                        c.saveSharedPref("antam.data", "");
 
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/login', ((route) => false));
-                    },
-                    child: const Icon(
-                      Icons.logout_outlined,
-                      color: Colors.white,
-                      size: 18,
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', ((route) => false));
+                      },
+                      child: const Icon(
+                        Icons.logout_outlined,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
                 )

@@ -1,6 +1,7 @@
 // library home;
 
 import 'dart:async';
+import 'dart:convert';
 // import 'dart:html';
 // import 'dart:js_interop';
 
@@ -19,6 +20,7 @@ import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/encrypt.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
+import 'package:antam_monitoring/widget/form.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -420,9 +422,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     curr_page = p;
     mqtt.onUpdate = (data, topi) {};
 
-    checkAccess();
+    // checkAccess();
     switch (p) {
       case 0:
+        if (widget.page == "tv") {
+          changePage(6);
+          return;
+        }
         c.saveSharedPref("antam.access", encrypt.encrypt("home"));
         setState(() {
           page = Content_home(
@@ -568,6 +574,34 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         });
 
         break;
+      case 6:
+        // widget.page = "";
+        c.saveSharedPref("antam.access", encrypt.encrypt("tv"));
+        if (!mounted) return;
+        page = Content_tv(
+          changePage: changePage,
+          // email: email,
+          isAdmin: isAdmin,
+          mqtt: mqtt,
+          scSel: ScrollController(),
+          selData: selData,
+        );
+        pageMobile = Content_tv(
+          changePage: changePage,
+          // email: email,
+          isAdmin: isAdmin,
+          mqtt: mqtt,
+          scSel: ScrollController(),
+          selData: selData,
+        );
+
+        setState(() {});
+
+        menuItems =
+            menuItems.where((element) => element["title"] == "Home").toList();
+
+        setState(() {});
+        break;
     }
   }
 
@@ -583,8 +617,130 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   late MyMqtt mqtt;
 
+  Future<void> login(String? password, BuildContext context, bool isRemember,
+      Function() toggleLoading) async {
+    // final c = Controller();
+
+    // if (c.validate(inputs, context)) return;
+
+    // inputs.forEach((e) => e.isInvalid = false);
+    // toggleLoading();
+    final api = ApiHelper();
+
+    final data = {"email": "YWRtaW5UVg==", "password": "eGlya2FAMzA"};
+
+    final r = api.callAPI("/auth", "POST", jsonEncode(data), false);
+
+    await Future.value(r).then((r) {
+      if (kDebugMode) {
+        print("tv login: ${r}");
+      }
+      try {
+        if (r["error"] != null) {
+          final c = Controller();
+          c.showSnackBar(context, r["error"]);
+
+          c.saveSharedPref("antam.server", null);
+          return;
+        }
+        ApiHelper.tokenMain = r["activeToken"];
+
+        mqtt.disconnect();
+        mqtt.dispose();
+
+        mqtt = MyMqtt(onUpdate: ((json, topic) {}));
+
+        final encrypt = MyEncrtypt();
+
+        final c = Controller();
+
+        final tokensplit = ApiHelper.tokenMain.split(".");
+
+        c.saveSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
+        c.saveSharedPref("antam.log", encrypt.encrypt(tokensplit[1]));
+        c.saveSharedPref("antam.public", encrypt.encrypt(tokensplit[2]));
+
+        // saveSharedPref("antam.data", encrypt.encrypt(r["activeToken"]));
+
+        c.saveSharedPref("antam.token",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+
+        // saveSharedPref("antam.email", r["email"]);
+        // saveSharedPref("antam.isAdmin", r["isAdmin"]);
+
+        Home.email = r["email"] ?? "";
+        Home.isAdmin = (r["isAdmin"] ?? false);
+
+        toggleLoading();
+
+        Navigator.pop(context);
+
+        Future.delayed(const Duration(seconds: 1), () {
+          changePage(6);
+        });
+      } catch (e) {
+        print("error login: $e");
+        Navigator.pop(context);
+        setServer(context);
+      }
+    });
+  }
+
+  Future<dynamic> passwordAdmin(BuildContext context) async {
+    final c = Controller();
+    final r = await c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Password tv",
+            height: 420,
+            onSubmit: (mapTextField) async {
+              // print("object ${mapTextField["Nama"]}");
+              await login(mapTextField["Password"]!.con.text, context, true,
+                  () => null);
+
+              // changePage(6);
+            },
+            listTextParam: [
+              {
+                "label": "Password",
+                "hint": "Masukan password admin",
+                "obscure": true
+              },
+            ]));
+
+    return r;
+  }
+
+  Future<dynamic> setServer(BuildContext context) async {
+    final c = Controller();
+    final r = await c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Server backend tv",
+            height: 420,
+            onSubmit: (mapTextField) async {
+              // print("object ${mapTextField["Nama"]}");
+
+              final c = Controller();
+
+              ApiHelper.url = "${mapTextField["Server backend"]!.con.text}";
+
+              await login(null, context, true,
+                  () => c.saveSharedPref("antam.server", ApiHelper.url));
+            },
+            listTextParam: [
+              {
+                "label": "Server backend",
+                "hint": "Masukan server backend",
+                "value": "silver.best.antam.com"
+              },
+            ]));
+
+    return r;
+  }
+
   initToken() async {
-    if (ApiHelper.tokenMain.isEmpty) {
+    if (ApiHelper.tokenMain.isEmpty && widget.page != "tv") {
       final c = Controller();
       final encrypt = MyEncrtypt();
 
@@ -606,6 +762,38 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       }
 
       //  c.loadSharedPref("antam.data", encrypt.encrypt(tokensplit[0]));
+    } else {
+      // final c = Controller();
+      // final server = await c.loadSharedPref("antam.server", "String");
+
+      // if (server != null) {
+      //   ApiHelper.url = "http://$server:7003";
+      //   login(null, context, true, () => null);
+
+      //   return;
+      // }
+
+      Future.delayed(const Duration(seconds: 1), () async {
+        // page = const SizedBox(
+        //   width: 1200,
+        //   height: 500,
+        //   child: const Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       SizedBox(
+        //           width: 100,
+        //           height: 100,
+        //           child: CircularProgressIndicator(
+        //             color: MainStyle.primaryColor,
+        //           ))
+        //     ],
+        //   ),
+        // );
+
+        // setState(() {});
+        await setServer(context);
+      });
     }
   }
 
@@ -646,7 +834,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           menuItems.firstWhere(
               (element) => element["isActive"] == true)["isActive"] = false;
           menuItems[0]["isActive"] = true;
-          changePage(5);
+          changePage(6);
           break;
         case "home":
           menuItems.firstWhere(
@@ -900,57 +1088,111 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       }
     });
 
-    menuItems = [
-      {
-        "title": "Home",
-        "icon": Icons.home_outlined,
-        "isActive": true,
-        "function": () => changePage(0)
-      },
-      {
-        "title": "Data Logger",
-        "icon": Icons.description_outlined,
-        "isActive": false,
-        "function": () => changePage(1)
-      },
-      {
-        "title": "Diagnostic",
-        "icon": Icons.lan,
-        "isActive": false,
-        "function": () => changePage(2)
-      },
-      {
-        "title": "Emergency Call",
-        "icon": Icons.call_outlined,
-        "isActive": false,
-        "function": () => changePage(3)
-      },
-      {
-        "title": "Settings",
-        "icon": Icons.settings_outlined,
-        "isActive": false,
-        "function": () => changePage(4)
-      },
-    ];
+    if (widget.page == "tv") {
+      menuItems = [];
 
-    page = Content_home(
-      changePage: changePage,
-      isAdmin: isAdmin,
-      mqtt: mqtt,
-      scSel: ScrollController(),
-      selData: selData,
-    );
+      // page = Content_tv(
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   scSel: ScrollController(),
+      //   selData: selData,
+      // );
 
-    pageMobile = Content_home_mobile(
-      email: email,
-      page: 0,
-      changePage: changePage,
-      isAdmin: isAdmin,
-      mqtt: mqtt,
-      selData: selData,
-      scSel: ScrollController(),
-      menuItem: menuItems,
-    );
+      page = const SizedBox(
+        width: 1200,
+        height: 500,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(
+                  color: MainStyle.primaryColor,
+                ))
+          ],
+        ),
+      );
+
+      pageMobile = const SizedBox(
+        width: 1200,
+        height: 500,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(
+                  color: MainStyle.primaryColor,
+                ))
+          ],
+        ),
+      );
+
+      // pageMobile = Content_tv(
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   scSel: ScrollController(),
+      //   selData: selData,
+      // );
+    } else {
+      menuItems = [
+        {
+          "title": "Home",
+          "icon": Icons.home_outlined,
+          "isActive": true,
+          "function": () => changePage(0)
+        },
+        {
+          "title": "Data Logger",
+          "icon": Icons.description_outlined,
+          "isActive": false,
+          "function": () => changePage(1)
+        },
+        {
+          "title": "Diagnostic",
+          "icon": Icons.lan,
+          "isActive": false,
+          "function": () => changePage(2)
+        },
+        {
+          "title": "Emergency Call",
+          "icon": Icons.call_outlined,
+          "isActive": false,
+          "function": () => changePage(3)
+        },
+        {
+          "title": "Settings",
+          "icon": Icons.settings_outlined,
+          "isActive": false,
+          "function": () => changePage(4)
+        },
+      ];
+
+      page = Content_home(
+        changePage: changePage,
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        scSel: ScrollController(),
+        selData: selData,
+      );
+
+      pageMobile = Content_home_mobile(
+        email: email,
+        page: 0,
+        changePage: changePage,
+        isAdmin: isAdmin,
+        mqtt: mqtt,
+        selData: selData,
+        scSel: ScrollController(),
+        menuItem: menuItems,
+      );
+    }
 
     initPage();
 
@@ -1078,7 +1320,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         print(r["error"]);
       }
 
-      Navigator.pushNamedAndRemoveUntil(context, '/login', ((route) => false));
+      if (widget.page != "tv") {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/login', ((route) => false));
+      }
     }
   }
 
@@ -1094,7 +1339,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           HomeArgument(email: "", isAdmin: false)) as HomeArgument);
 
       if (args.email == "") {
-        checkAccess();
+        // checkAccess();
         // loadEmail();
         // loadIsAdmin();
       } else {
@@ -1106,28 +1351,31 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         }
       }
 
-      page = Content_home(
-        changePage: changePage,
-        isAdmin: isAdmin,
-        mqtt: mqtt,
-        scSel: ScrollController(),
-        selData: selData,
-      );
+      // page = Content_home(
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   scSel: ScrollController(),
+      //   selData: selData,
+      // );
 
-      pageMobile = Content_home_mobile(
-        email: email,
-        page: 0,
-        changePage: changePage,
-        isAdmin: isAdmin,
-        mqtt: mqtt,
-        selData: selData,
-        scSel: ScrollController(),
-        menuItem: menuItems,
-      );
+      // pageMobile = Content_home_mobile(
+      //   email: email,
+      //   page: 0,
+      //   changePage: changePage,
+      //   isAdmin: isAdmin,
+      //   mqtt: mqtt,
+      //   selData: selData,
+      //   scSel: ScrollController(),
+      //   menuItem: menuItems,
+      // );
     }
     // print(lheight);
     return WillPopScope(
       onWillPop: () {
+        if (widget.page == "tv") {
+          return Future.value(true);
+        }
         final c = Controller();
         c.goToDialog(
             context,
@@ -1171,7 +1419,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: lWidth < 900
+        body: lWidth < 900 && widget.page != "tv"
             ? Scrollbar(
                 controller: scMain,
                 thumbVisibility: true,
@@ -1221,6 +1469,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                                 child: SizedBox(
                                   width: (lWidth / lheight) < wide ? 400 : 250,
                                   child: Menu(
+                                    isTv: widget.page == "tv",
                                     menuItem: menuItems,
                                   ),
                                 ),

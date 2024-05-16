@@ -1,5 +1,6 @@
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -55,6 +56,17 @@ class _PanelNodeState extends State<PanelNode> {
     //   }
     // }
     return InkWell(
+      onHighlightChanged: (value) {
+        setState(() {
+          isHover = value;
+        });
+      },
+      onFocusChange: (value) {
+        setState(() {
+          isHover = value;
+        });
+        // isHovers[widget.menuItem.indexOf(e)] = value;
+      },
       onHover: (value) {
         setState(() {
           isHover = value;
@@ -68,7 +80,7 @@ class _PanelNodeState extends State<PanelNode> {
           width: widget.width,
           height: 125,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 2),
+              // border: Border.all(color: Colors.white, width: 2),
               borderRadius: BorderRadius.circular(10),
               color: MainStyle.thirdColor),
           child: Column(
@@ -77,7 +89,7 @@ class _PanelNodeState extends State<PanelNode> {
               AnimatedContainer(
                 width: widget.width,
                 duration: d,
-                padding: EdgeInsets.all(3),
+                padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(10)),
@@ -141,11 +153,11 @@ class _PanelNodeState extends State<PanelNode> {
                                         ? MainStyle.primaryColor.withOpacity(1)
                                         : widget.status
                                                 .toLowerCase()
-                                                .contains("alarm")
-                                            ? Colors.red.withOpacity(1)
+                                                .contains("alarmtegangan")
+                                            ? Colors.orange.withOpacity(1)
                                             : MainStyle.primaryColor
                                                 .withOpacity(1),
-                                    16,
+                                    14,
                                     weight: widget.status
                                             .toLowerCase()
                                             .contains("tegangan")
@@ -169,11 +181,15 @@ class _PanelNodeState extends State<PanelNode> {
                                         ? MainStyle.primaryColor.withOpacity(1)
                                         : widget.status
                                                 .toLowerCase()
-                                                .contains("alarm")
-                                            ? Colors.red.withOpacity(1)
+                                                .contains("alarmarus")
+                                            ? widget.status
+                                                    .toLowerCase()
+                                                    .contains("rendah")
+                                                ? Colors.orange
+                                                : Colors.red.withOpacity(1)
                                             : MainStyle.primaryColor
                                                 .withOpacity(1),
-                                    16,
+                                    14,
                                     weight: widget.status
                                             .toLowerCase()
                                             .contains("arus")
@@ -198,7 +214,7 @@ class _PanelNodeState extends State<PanelNode> {
                   child: AnimatedContainer(
                 duration: d,
                 width: widget.width,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                // padding: const EdgeInsets.symmetric(horizontal: 3),
                 decoration: BoxDecoration(
                     color: widget.status.toLowerCase() == "active"
                         ? MainStyle.primaryColor.withOpacity(
@@ -235,53 +251,60 @@ class _PanelNodeState extends State<PanelNode> {
                                   lWidth > 500 ? 13 : 12),
                             ),
                           )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                                Text(
-                                  "${widget.daya.toStringAsFixed(2)} W ",
-                                  textAlign: TextAlign.end,
-                                  style: MyTextStyle.defaultFontCustom(
-                                      widget.status.toLowerCase() == "inactive"
-                                          ? Colors.black
-                                          : Colors.white,
-                                      lWidth > 500 ? 13 : 12,
-                                      weight: widget.status
-                                              .toLowerCase()
-                                              .contains("power")
-                                          ? FontWeight.w900
-                                          : FontWeight.normal),
-                                ),
-                                Text(
-                                  " ${widget.energi.toStringAsFixed(2)} Whr ",
-                                  textAlign: TextAlign.end,
-                                  style: MyTextStyle.defaultFontCustom(
-                                      widget.status.toLowerCase() == "inactive"
-                                          ? Colors.black
-                                          : Colors.white,
-                                      lWidth > 500 ? 13 : 12,
-                                      weight: widget.status
-                                              .toLowerCase()
-                                              .contains("energi")
-                                          ? FontWeight.w900
-                                          : FontWeight.normal),
-                                ),
-                                Text(
-                                  " ${widget.suhu.toStringAsFixed(2)} \u00B0 C",
-                                  textAlign: TextAlign.end,
-                                  style: MyTextStyle.defaultFontCustom(
-                                      widget.status.toLowerCase() == "inactive"
-                                          ? Colors.black
-                                          : Colors.white,
-                                      lWidth > 500 ? 13 : 12,
-                                      weight: widget.status
-                                              .toLowerCase()
-                                              .contains("suhu")
-                                          ? FontWeight.w900
-                                          : FontWeight.normal),
-                                ),
-                              ]),
-                    SizedBox(
+                        : Padding(
+                            padding: const EdgeInsets.only(right: 3.0),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "${widget.daya.toStringAsFixed(2)} W ",
+                                    textAlign: TextAlign.end,
+                                    style: MyTextStyle.defaultFontCustom(
+                                        widget.status.toLowerCase() ==
+                                                "inactive"
+                                            ? Colors.black
+                                            : Colors.white,
+                                        lWidth > 500 ? 13 : 12,
+                                        weight: widget.status
+                                                .toLowerCase()
+                                                .contains("power")
+                                            ? FontWeight.w900
+                                            : FontWeight.normal),
+                                  ),
+                                  Text(
+                                    " ${widget.energi.toStringAsFixed(2)} Whr ",
+                                    textAlign: TextAlign.end,
+                                    style: MyTextStyle.defaultFontCustom(
+                                        widget.status.toLowerCase() ==
+                                                "inactive"
+                                            ? Colors.black
+                                            : Colors.white,
+                                        lWidth > 500 ? 13 : 12,
+                                        weight: widget.status
+                                                .toLowerCase()
+                                                .contains("energi")
+                                            ? FontWeight.w900
+                                            : FontWeight.normal),
+                                  ),
+                                  Text(
+                                    " ${widget.suhu.toStringAsFixed(2)} \u00B0 C",
+                                    textAlign: TextAlign.end,
+                                    style: MyTextStyle.defaultFontCustom(
+                                        widget.status.toLowerCase() ==
+                                                "inactive"
+                                            ? Colors.black
+                                            : Colors.white,
+                                        lWidth > 500 ? 13 : 12,
+                                        weight: widget.status
+                                                .toLowerCase()
+                                                .contains("suhu")
+                                            ? FontWeight.w900
+                                            : FontWeight.normal),
+                                  ),
+                                ]),
+                          ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       width: widget.width,
                       child: Text(
                         widget.isLoading ? "" : widget.lastUpdated,

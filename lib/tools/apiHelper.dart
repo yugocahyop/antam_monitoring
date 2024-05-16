@@ -15,7 +15,7 @@ class ApiHelper {
   static const needleRegex = r'{#}';
   static const needle = '{#}';
 
-  static const url = 'http://202.148.1.57:7003';
+  static String url = '202.148.1.57';
   // static const url = 'http://192.168.1.11:7003';
 
   final RegExp exp = RegExp(needleRegex);
@@ -75,7 +75,8 @@ class ApiHelper {
 
     try {
       final response = await client
-          .send(http.Request(method, Uri.parse(url + api))
+          .send(http.Request(
+              method, Uri.parse("http://${ApiHelper.url}:7003" + api))
             ..headers["authorization"] = "Bearer $refreshToken"
             ..headers["Content-Type"] = "application/json"
             ..body = data)
@@ -104,7 +105,8 @@ class ApiHelper {
 
     try {
       final response = await client
-          .send(http.Request(method, Uri.parse(url + api))
+          .send(http.Request(
+              method, Uri.parse("http://${ApiHelper.url}:7003" + api))
             ..headers["authorization"] = "Bearer $tokenMain"
             ..headers["Content-Type"] = "application/json"
             ..body = data)

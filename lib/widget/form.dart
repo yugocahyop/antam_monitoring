@@ -42,6 +42,10 @@ class _MyFormState extends State<MyForm> {
       mapTextField.putIfAbsent(val["label"], () => tf);
 
       mapTextField[val["label"]]!.con.text = (val["value"] ?? "");
+
+      if (i == 0) {
+        mapTextField[val["label"]]!.focusNode.requestFocus();
+      }
     }
   }
 
