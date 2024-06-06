@@ -129,7 +129,7 @@ class _PanelNodeState extends State<PanelNode> {
                         Visibility(
                           visible: !widget.isSensor,
                           child: Text(
-                            widget.isSensor ? "" : "#Anoda ${widget.sel}",
+                            widget.isSensor ? "" : "#Crossbar ${widget.sel}",
                             style: MyTextStyle.defaultFontCustom(
                                 widget.status.toLowerCase() == "inactive"
                                     ? MainStyle.primaryColor

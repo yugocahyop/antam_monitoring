@@ -72,7 +72,7 @@ class _HomeMobileState extends State<HomeMobile> {
   // var titleData = ["#Sel", "Celcius", "Volt", "Ampere"];
   var titleData = [
     "Sel",
-    "#Anoda",
+    "#Crossbar",
     "Suhu",
     "Tegangan",
     "Arus",
@@ -1600,12 +1600,12 @@ class _HomeMobileState extends State<HomeMobile> {
                                                               ),
                                                             ),
                                                             Text(
-                                                              "  Anoda ${e["sel"]}",
+                                                              "  Crossbar ${e["sel"]}",
                                                               style: MyTextStyle
                                                                   .defaultFontCustom(
                                                                       Colors
                                                                           .white,
-                                                                      20),
+                                                                      18),
                                                             ),
                                                           ],
                                                         ),
@@ -1897,8 +1897,9 @@ class _HomeMobileState extends State<HomeMobile> {
                                               child: Text(
                                                 (e["value"] as double)
                                                     .toStringAsFixed(2),
+                                                textAlign: TextAlign.end,
                                                 style: MyTextStyle
-                                                    .defaultFontCustom(
+                                                    .defaultFontCustomMono(
                                                         MainStyle.primaryColor,
                                                         25),
                                               ),

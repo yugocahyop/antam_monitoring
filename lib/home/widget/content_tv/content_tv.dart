@@ -63,7 +63,7 @@ class _Content_diagnosticState extends State<Content_tv> {
     {"title": "Alarm pH", "isActive": false, "isLower": false, "list": []},
   ];
 
-  var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = ["#Crossbar", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
@@ -688,37 +688,37 @@ class _Content_diagnosticState extends State<Content_tv> {
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
       final bVal = (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
 
       // print("aVal: $aVal");
@@ -737,50 +737,50 @@ class _Content_diagnosticState extends State<Content_tv> {
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
           // final bVal = b[dataNyataSortOrderList[i]
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
 
           final aVal = (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
           final bVal = (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
 
           // print("aVal: $aVal");
@@ -1003,13 +1003,14 @@ class _Content_diagnosticState extends State<Content_tv> {
 
         // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
+        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+
         if (diagnosticData[tangki - 1][sel - 1]["status"] != status
             // ||
             //     diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp
             ) {
           refresh = true;
           diagnosticData[tangki - 1][sel - 1]["status"] = status;
-          diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
         }
       } else if (topic == "antam/device") {
         selData.clear();
@@ -1414,8 +1415,11 @@ class _Content_diagnosticState extends State<Content_tv> {
     // TODO: implement initState
     super.initState();
 
-    timerRefreshDiagnostic = Timer(const Duration(minutes: 5), () {
-      getDiagnostiWidget(220);
+    timerRefreshDiagnostic = Timer(const Duration(minutes: 1), () {
+      // getDiagnostiWidget(220);
+      if (mounted) {
+        setState(() {});
+      }
     });
 
     filterTglHingga = FilterTgl(
@@ -1688,7 +1692,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   .circular(5),
                                                         ),
                                                         child: Text(
-                                                            "pH: ${(((selData[6][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)} ",
+                                                            "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)} ",
                                                             style: MyTextStyle.defaultFontCustom(
                                                                 (diagnosticData[6][0]["status"]
                                                                                 as String)
@@ -1731,7 +1735,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   .circular(5),
                                                         ),
                                                         child: Text(
-                                                          " Suhu: ${(((selData[6][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                          " Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
                                                           style: MyTextStyle.defaultFontCustom(
                                                               (diagnosticData[6][0]["status"]
                                                                               as String)

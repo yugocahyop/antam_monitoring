@@ -77,7 +77,7 @@ class MyButton extends StatelessWidget {
                   visible: text.isNotEmpty,
                   child: Text(
                     text,
-                    style: ts.defaultFontSmall(textColor),
+                    style: MyTextStyle.defaultFontCustom(textColor, 12),
                   ),
                 ),
               ],

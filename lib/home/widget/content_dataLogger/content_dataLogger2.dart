@@ -72,7 +72,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   var titleData = [
     "Sel",
-    "#Anoda",
+    "#Crossbar",
     "Suhu",
     "Tegangan",
     "Arus",
@@ -1536,6 +1536,287 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
   }
 
+  Future<void> download2() async {
+    // if (!setFilter) {
+
+    // if (dataLog.isEmpty) return;
+
+    // stopLoadmore = true;
+
+    // offset = 0;
+
+    // maxDataNum = 40;
+
+    // dataLog.clear();
+
+    if (mounted) {
+      setState(() {
+        // isLoading = true;
+        Content_dataLogger2.progress = 0.000001;
+      });
+    }
+
+    final dariTgl = filterTglDari.today;
+
+    final hinggaTgl = filterTglHingga.today;
+
+    // isAlarm = false;
+
+    if (dataLog.isEmpty) {
+      await getDataLog(0);
+    }
+
+    List<String> header = ["Tanggal"];
+
+    final dataLog0 = dataLog[0]["tangkiData"] as List<dynamic>;
+
+    for (var i = (currTangki == 0 ? 0 : currTangki - 1);
+        i < (currTangki == 0 ? 6 : currTangki);
+        i++) {
+      final dataList = dataLog0[i] as List<dynamic>;
+
+      // if (kDebugMode) {
+      //   print("dataList: $dataList");
+      // }
+
+      for (var ii = 0; ii < dataList.length; ii++) {
+        final val = dataList[ii];
+
+        // listTite
+
+        for (var iii = 2; iii < titleData.length; iii++) {
+          header.add("Sel ${i + 1} - ${val["sel"]} ${titleData[iii]}");
+        }
+      }
+    }
+
+    header.add("Sel Elektrolit suhu");
+
+    header.add("Sel Elektrolit pH");
+
+    // if (kDebugMode) {
+    //   print("header $header");
+    // }
+
+    // dataNum = 200;
+
+    MyExcel ex = MyExcel();
+
+    Excel excel = ex.create();
+
+    bool isPopulate = false;
+
+    List<Map<String, dynamic>> dataLog2 = [], dataFilter = [];
+
+    List<double> fSuhu = [0, 0, 0, 0, 0, 0, 0],
+        fArus = [0, 0, 0, 0, 0, 0, 0],
+        fTegangan = [0, 0, 0, 0, 0, 0, 0],
+        fDaya = [0, 0, 0, 0, 0, 0, 0],
+        fEnergi = [0, 0, 0, 0, 0, 0, 0];
+
+    int offset = 0,
+        offset2 = 0,
+        dataNum = 200,
+        maxDataNum2 = maxDataNum,
+        timeStampFilter = 0;
+
+    while ((offset + dataLog2.length) < maxDataNum2) {
+      if (Content_dataLogger2.isCancel) {
+        Content_dataLogger2.isCancel = false;
+        Content_dataLogger2.progress = 0;
+        if (mounted) {
+          setState(() {});
+        }
+
+        return;
+      }
+
+      if (!isPopulate) {
+        isPopulate = true;
+        await ex.populate(excel, header, ["data monitoring"], listAny: dataLog);
+
+        Content_dataLogger2.progress = (offset + dataLog.length) / maxDataNum2;
+
+        Content_dataLogger2.fileNum =
+            (maxDataNum2 / Content_dataLogger2.maxRowExcel).ceil();
+
+        if (mounted) {
+          setState(() {
+            // isLoading = true;
+            // Content_dataLogger2.progress = 0.1;
+          });
+        }
+      } else {
+        if (dataLog2.isEmpty) {
+          break;
+        }
+        Sheet sheetObject = excel["data monitoring"];
+
+        if (sheetObject.rows.length >= Content_dataLogger2.maxRowExcel) {
+          final tempExcel = excel;
+          await ex.save(tempExcel, "antam_monitoring");
+
+          excel = ex.create();
+
+          offset2 = 0;
+
+          await ex.populate(excel, header, ["data monitoring"],
+              listAny: dataLog2);
+        } else {
+          if (dataLog2.last["timeStamp_server"] >= timeStampFilter) {
+            timeStampFilter = 0;
+
+            final data = dataFilter.last["tangkiData"] as List<dynamic>;
+
+            for (var i = 0; i < data.length; i++) {
+              final sel = data[i] as List<dynamic>;
+              for (var ii = 0; ii < sel.length; ii++) {
+                final tangki = sel[ii];
+
+                // tangki["suhu"] = f;
+                // tangki["arus"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["arus"] +
+                //     element["tangkiData"][i][ii]["arus"]));
+                // tangki["tegangan"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["tegangan"] +
+                //     element["tangkiData"][i][ii]["tegangan"]));
+                // tangki["daya"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["daya"] +
+                //     element["tangkiData"][i][ii]["daya"]));
+                // tangki["energi"] = (dataLog2.reduce((value, element) =>
+                //         value["tangkiData"][i][ii]["energi"] +
+                //         element["tangkiData"][i][ii]["energi"])) /
+                //     dataLog2.length;
+              }
+            }
+
+            await ex.append(excel, header, ["data monitoring"], offset2,
+                listAny: dataFilter);
+          } else {
+            final data = dataLog0.last["tangkiData"] as List<dynamic>;
+
+            for (var i = 0; i < data.length; i++) {
+              final sel = data[i] as List<dynamic>;
+              for (var ii = 0; ii < sel.length; ii++) {
+                final tangki = sel[ii];
+
+                // tangki["suhu"] = f;
+                // tangki["arus"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["arus"] +
+                //     element["tangkiData"][i][ii]["arus"]));
+                // tangki["tegangan"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["tegangan"] +
+                //     element["tangkiData"][i][ii]["tegangan"]));
+                // tangki["daya"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["daya"] +
+                //     element["tangkiData"][i][ii]["daya"]));
+                // tangki["energi"] = (dataLog2.reduce((value, element) =>
+                //         value["tangkiData"][i][ii]["energi"] +
+                //         element["tangkiData"][i][ii]["energi"])) /
+                //     dataLog2.length;
+              }
+            }
+            for (var i = 0; i < data.length; i++) {
+              final sel = data[i] as List<dynamic>;
+              for (var ii = 0; ii < sel.length; ii++) {
+                final tangki = sel[ii];
+
+                // tangki["suhu"] = f;
+                // tangki["arus"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["arus"] +
+                //     element["tangkiData"][i][ii]["arus"]));
+                // tangki["tegangan"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["tegangan"] +
+                //     element["tangkiData"][i][ii]["tegangan"]));
+                // tangki["daya"] = (dataLog2.reduce((value, element) =>
+                //     value["tangkiData"][i][ii]["daya"] +
+                //     element["tangkiData"][i][ii]["daya"]));
+                // tangki["energi"] = (dataLog2.reduce((value, element) =>
+                //         value["tangkiData"][i][ii]["energi"] +
+                //         element["tangkiData"][i][ii]["energi"])) /
+                //     dataLog2.length;
+              }
+            }
+          }
+        }
+
+        Content_dataLogger2.progress = (offset + dataLog2.length) / maxDataNum2;
+
+        if (mounted) {
+          setState(() {
+            // isLoading = true;
+            // Content_dataLogger2.progress = 0.1;
+          });
+        }
+      }
+      // await loadMore();
+
+      offset += (dataLog2.isEmpty ? dataLog.length : dataLog2.length);
+      offset2 += (dataLog2.isEmpty ? dataLog.length : dataLog2.length);
+
+      dataLog2.clear();
+
+      final api = ApiHelper();
+
+      final r = await api.callAPI(
+          "/${isAlarm ? "alarm" : "monitoring"}/find?offset=$offset&limit=$dataNum",
+          "POST",
+          jsonEncode({"from": dariTgl, "to": hinggaTgl}),
+          true);
+
+      if (r["error"] == null) {
+        List<dynamic> data = r['data'] as List<dynamic>;
+
+        maxDataNum2 = r["count"];
+
+        for (var i = 0; i < data.length; i++) {
+          final val = data[i];
+
+          dataLog2.add({
+            "isClicked": false,
+            "isHover": false,
+            "timeStamp_server": val["timeStamp_server"],
+            "msg": "",
+            "tangkiData": (val["tangkiData"] ?? []) as List<dynamic>
+          });
+
+          if (i == 0 && timeStampFilter == 0) {
+            timeStampFilter =
+                dataLog2.last["timeStamp_server"] + (60000 * 60 * 2);
+            dataFilter.add({
+              "isClicked": false,
+              "isHover": false,
+              "timeStamp_server": val["timeStamp_server"],
+              "msg": "",
+              "tangkiData": (val["tangkiData"] ?? []) as List<dynamic>
+            });
+          }
+        }
+      }
+
+      // await Future.delayed(const Duration(microseconds: 1));
+      // if (kDebugMode) {
+      //   print("dataLog: ${dataLog.length}");
+      // }
+    }
+
+    // dataNum = 20;
+
+    // offset = dataLog.length;
+
+    await ex.save(excel, "antam_monitoring");
+
+    Content_dataLogger2.progress = 0;
+
+    if (mounted) {
+      setState(() {
+        // isLoading = false;
+        // Content_dataLogger2.progress = 0;
+        // stopLoadmore = false;
+      });
+    }
+  }
+
   Future<void> getDataLog(int offsetNum,
       {bool setFilter = false, bool islimit = true}) async {
     // if (!setFilter) {
@@ -1748,37 +2029,37 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
       final bVal = (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
 
       // print("aVal: $aVal");
@@ -1797,50 +2078,50 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
           // final bVal = b[dataNyataSortOrderList[i]
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
 
           final aVal = (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
           final bVal = (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
 
           // print("aVal: $aVal");

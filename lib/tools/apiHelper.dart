@@ -16,7 +16,9 @@ class ApiHelper {
   static const needle = '{#}';
 
   static String url = '202.148.1.57';
-  // static const url = 'http://192.168.1.11:7003';
+  // static String url = '172.24.7.110';
+  // static String url = "silver.best.antam.com";
+  // static String url = 'localhost';
 
   final RegExp exp = RegExp(needleRegex);
 

@@ -54,7 +54,7 @@ class _Content_callState extends State<Content_call> {
     {"title": "Alarm pH", "isActive": false, "isLower": false, "list": []},
   ];
 
-  var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = ["#Crossbar", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
@@ -445,37 +445,37 @@ class _Content_callState extends State<Content_call> {
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
       final bVal = (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
 
       // print("aVal: $aVal");
@@ -494,50 +494,50 @@ class _Content_callState extends State<Content_call> {
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
           // final bVal = b[dataNyataSortOrderList[i]
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
 
           final aVal = (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
           final bVal = (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
 
           // print("aVal: $aVal");
@@ -1578,7 +1578,7 @@ class _Content_callState extends State<Content_call> {
                                                                     Text(
                                                                       currTangki ==
                                                                               0
-                                                                          ? e.contains("Anoda")
+                                                                          ? e.contains("Crossbar")
                                                                               ? "Sel"
                                                                               : e
                                                                           : e,
@@ -1734,7 +1734,7 @@ class _Content_callState extends State<Content_call> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "Anoda " + (value as int).toString(),
+                                                                                "Crossbar " + (value as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

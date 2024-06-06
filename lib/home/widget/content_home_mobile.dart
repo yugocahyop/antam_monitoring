@@ -127,9 +127,9 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
 
     // pc.jumpToPage(widget.page);
 
-    Future.delayed(const Duration(seconds: 1), () {
-      changePage2(widget.page);
-    });
+    // Future.delayed(const Duration(seconds: 1), () {
+    //   changePage2(widget.page);
+    // });
   }
 
   @override

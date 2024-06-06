@@ -61,7 +61,7 @@ class _Content_homeState extends State<Content_home> {
 
   var titleData = [
     "Sel",
-    "#Anoda",
+    "#Crossbar",
     "Suhu",
     "Tegangan",
     "Arus",
@@ -267,7 +267,7 @@ class _Content_homeState extends State<Content_home> {
         return aVal.compareTo(bVal);
       }));
 
-      for (var i = 3; i < 5; i++) {
+      for (var i = 0; i < 2; i++) {
         final val = selData[0][i] as Map<String, dynamic>;
         listZero.add(
           {
@@ -1364,37 +1364,37 @@ class _Content_homeState extends State<Content_home> {
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
       final bVal = (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
 
       // print("aVal: $aVal");
@@ -1413,50 +1413,50 @@ class _Content_homeState extends State<Content_home> {
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
           // final bVal = b[dataNyataSortOrderList[i]
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
 
           final aVal = (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
           final bVal = (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
 
           // print("aVal: $aVal");

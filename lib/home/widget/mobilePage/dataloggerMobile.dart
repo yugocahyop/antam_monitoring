@@ -86,7 +86,7 @@ class _HomeMobileState extends State<DataLogger> {
 
   var titleData = [
     "Sel",
-    "#Anoda",
+    "#Crossbar",
     "Suhu",
     "Tegangan",
     "Arus",
@@ -207,6 +207,10 @@ class _HomeMobileState extends State<DataLogger> {
 
   filterChange() {
     dataLog.clear();
+
+    //  if (offsetNum == 0) {
+    offset = 0;
+    // dataLog.clear();
     getDataLog(0);
   }
 
@@ -940,14 +944,14 @@ class _HomeMobileState extends State<DataLogger> {
     filterTglHingga = FilterTgl(
       title: "Hingga",
       lastValue: true,
-      today: widget.hingga ?? 0,
+      today: widget.hingga,
       changePage: () => filterChange(),
     );
 
     filterTglDari = FilterTgl(
       title: "Dari",
       lastValue: false,
-      today: widget.dari ?? 0,
+      today: widget.dari,
       changePage: () => filterChange(),
     );
 
@@ -973,12 +977,23 @@ class _HomeMobileState extends State<DataLogger> {
 
     isLoading = true;
 
+    offset = 0;
+
+    // print("change isAlarm");
+
+    dataLog.clear();
+
+    setState(() {});
+
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         initStatus();
-        initSelData();
+        // initSelData();
 
-        initTotalDataStatistic();
+        // initTotalDataStatistic();
+        if (kDebugMode) {
+          print("timed ");
+        }
         getDataLog(0);
       }
     });
@@ -1109,7 +1124,7 @@ class _HomeMobileState extends State<DataLogger> {
     });
   }
 
-  bool isLoading = false;
+  bool isLoading = true, isFirstLoading = true;
   int dataNum = 20;
 
   var progress = 0.0;
@@ -1302,6 +1317,7 @@ class _HomeMobileState extends State<DataLogger> {
   }
 
   Future<bool> loadMore() async {
+    if (isFirstLoading) return false;
     offset += dataNum;
 
     await getDataLog(offset);
@@ -1326,7 +1342,10 @@ class _HomeMobileState extends State<DataLogger> {
     //   await Future.delayed(const Duration(seconds: 1));
     // }
 
-    // print("is alarm: $isAlarm");
+    if (kDebugMode) {
+      print(
+          "hingga: ${filterTglHingga.today} now: ${DateTime.now().millisecondsSinceEpoch < filterTglHingga.today}");
+    }
 
     final r = await api.callAPI(
         "/${isAlarm ? "alarm" : "monitoring"}/find?limit=$dataNum&offset=$offsetNum",
@@ -1386,6 +1405,7 @@ class _HomeMobileState extends State<DataLogger> {
     if (mounted) {
       setState(() {
         isLoading = false;
+        isFirstLoading = false;
       });
     }
   }
@@ -1543,18 +1563,25 @@ class _HomeMobileState extends State<DataLogger> {
                           // ]
                         ),
                         child: Center(
-                          child: PanelTable(
-                              fileNum: Content_dataLogger2.fileNum,
-                              progress: Content_dataLogger2.progress,
-                              download: () => download(),
-                              isLoading: isLoading,
-                              changeIsAlarm: changeIsAlarm,
-                              loadmore: loadMore,
-                              dataLog: dataLog,
-                              onTap: ((index) {
-                                changeData(index);
-                              }),
-                              max: maxDataNum),
+                          child: isFirstLoading
+                              ? SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: CircularProgressIndicator(
+                                    color: MainStyle.primaryColor,
+                                  ))
+                              : PanelTable(
+                                  fileNum: Content_dataLogger2.fileNum,
+                                  progress: Content_dataLogger2.progress,
+                                  download: () => download(),
+                                  isLoading: isLoading,
+                                  changeIsAlarm: changeIsAlarm,
+                                  loadmore: loadMore,
+                                  dataLog: dataLog,
+                                  onTap: ((index) {
+                                    changeData(index);
+                                  }),
+                                  max: maxDataNum),
                         )),
                     // const SizedBox(
                     //   width: 30,
@@ -1792,11 +1819,11 @@ class _HomeMobileState extends State<DataLogger> {
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      "  Anoda ${e["sel"]}",
+                                                                      "  Crossbar ${e["sel"]}",
                                                                       style: MyTextStyle.defaultFontCustom(
                                                                           Colors
                                                                               .white,
-                                                                          20),
+                                                                          18),
                                                                     ),
                                                                   ],
                                                                 ),

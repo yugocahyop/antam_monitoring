@@ -68,7 +68,7 @@ class MyBarChart extends StatelessWidget {
           getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
               tangkiMaxData.isNotEmpty
                   ? "Sel ${tangkiMaxData[(group.x ~/ 1)][title!.toLowerCase()]} - ${tangkiMaxData[(group.x ~/ 1)]["sel"]} :\n"
-                  : "Anoda ${group.x}:\n",
+                  : "Crossbar ${group.x}:\n",
               MyTextStyle.defaultFontCustom(Colors.white, 16,
                   weight: FontWeight.bold),
               children: [
@@ -138,10 +138,13 @@ class MyBarChart extends StatelessWidget {
                       offset: Offset(tangkiMaxData.isEmpty ? 0 : 10, 0),
                       child: Text(
                         tangkiMaxData.isEmpty
-                            ? "Anoda ${value.toInt()}"
+                            ? "Crossbar ${value.toInt()}"
                             : "Sel ${tangkiMaxData[(value ~/ 1)][title!.toLowerCase()]}",
                         style: MyTextStyle.defaultFontCustom(
-                            Colors.black, lWidth <= 500 ? 10 : 14),
+                            Colors.black,
+                            lWidth <= 500
+                                ? (tangkiMaxData.isEmpty ? 9 : 10)
+                                : (tangkiMaxData.isEmpty ? 10 : 14)),
                       ),
                     ),
                     Transform.translate(
@@ -164,10 +167,10 @@ class MyBarChart extends StatelessWidget {
                               Text(
                                 tangkiMaxData.isEmpty
                                     ? ""
-                                    : "Anoda ${tangkiMaxData[(value ~/ 1)]["sel"]} ",
+                                    : "Crossbar ${tangkiMaxData[(value ~/ 1)]["sel"]} ",
                                 style: MyTextStyle.defaultFontCustom(
                                     value > 2 ? Colors.black : Colors.white,
-                                    lWidth <= 500 ? 8 : 12,
+                                    lWidth <= 500 ? 6 : 10,
                                     weight: FontWeight.w700),
                               ),
                             ],

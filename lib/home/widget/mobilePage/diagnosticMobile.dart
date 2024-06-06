@@ -14,6 +14,7 @@ import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
@@ -785,31 +786,36 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                                 lWidth <= 400 ? 60 : 70, lWidth),
                           ),
                           MainStyle.sizedBoxH20,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                width: 120,
-                                child: MyButton(
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: MyButton(
+                                      color: MainStyle.primaryColor,
+                                      text: "Reset energi",
+                                      onPressed: () => promptToggle(
+                                          15, 15, false,
+                                          isResetEnergi: true),
+                                      textColor: Colors.white),
+                                ),
+                                MainStyle.sizedBoxW5,
+                                MyButton(
                                     color: MainStyle.primaryColor,
-                                    text: "Reset energi",
-                                    onPressed: () => promptToggle(15, 15, false,
-                                        isResetEnergi: true),
+                                    text: "Matikan semua",
+                                    onPressed: () => promptToggle(15, 15, true),
                                     textColor: Colors.white),
-                              ),
-                              MainStyle.sizedBoxW5,
-                              MyButton(
-                                  color: MainStyle.primaryColor,
-                                  text: "Matikan semua",
-                                  onPressed: () => promptToggle(15, 15, true),
-                                  textColor: Colors.white),
-                              MainStyle.sizedBoxW5,
-                              MyButton(
-                                  color: MainStyle.primaryColor,
-                                  text: "Nyalakan semua",
-                                  onPressed: () => promptToggle(15, 15, false),
-                                  textColor: Colors.white),
-                            ],
+                                MainStyle.sizedBoxW5,
+                                MyButton(
+                                    color: MainStyle.primaryColor,
+                                    text: "Nyalakan semua",
+                                    onPressed: () =>
+                                        promptToggle(15, 15, false),
+                                    textColor: Colors.white),
+                              ],
+                            ),
                           ),
                         ],
                       )),

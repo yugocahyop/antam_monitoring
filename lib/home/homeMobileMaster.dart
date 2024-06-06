@@ -732,7 +732,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               {
                 "label": "Server backend",
                 "hint": "Masukan server backend",
-                "value": "silver.best.antam.com"
+                "value": ApiHelper.url
               },
             ]));
 
@@ -772,6 +772,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
       //   return;
       // }
+
+      if (widget.page != "tv") return;
 
       Future.delayed(const Duration(seconds: 1), () async {
         // page = const SizedBox(
@@ -821,6 +823,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         final raw = await c.loadSharedPref("antam.access", "String");
 
         p = raw != null ? encrypt.decrypt(raw) : "";
+
+        // if (p == "tv") {
+        //   p = "home";
+        // }
       } else {
         p = widget.page;
       }
@@ -1194,7 +1200,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       );
     }
 
-    initPage();
+    if (widget.page != "tv") {
+      initPage();
+    }
 
     // for (var i = 0; i < selData.length; i++) {
     //   final v = selData[i];

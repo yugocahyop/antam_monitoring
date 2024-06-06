@@ -35,23 +35,24 @@ class _AlarmMsgState extends State<AlarmMsg> {
           .toList();
       if (dataString.isEmpty) {
         warningMsg.insert(0, msg);
-      } else {
-        warningMsg.remove(dataString.first);
 
-        warningMsg.insert(0, msg);
+        setState(() {
+          isMsgVisible = true;
+        });
+
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (mounted) {
+            setState(() {
+              msgOpacity = 1;
+            });
+          }
+        });
       }
+      // else {
+      // warningMsg.remove(dataString.first);
 
-      setState(() {
-        isMsgVisible = true;
-      });
-
-      Future.delayed(const Duration(milliseconds: 200), () {
-        if (mounted) {
-          setState(() {
-            msgOpacity = 1;
-          });
-        }
-      });
+      // warningMsg.insert(0, msg);
+      // }
     }
   }
 
@@ -109,6 +110,8 @@ class _AlarmMsgState extends State<AlarmMsg> {
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
       final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+      final listAlarmSuhu = data["listAlarmSuhu"] as List<dynamic>;
+      final listAlarmPh = data["listAlarmPh"] as List<dynamic>;
 
       if (listAlarmArus.isNotEmpty) {
         for (var i = 0; i < listAlarmArus.length; i++) {
@@ -116,9 +119,22 @@ class _AlarmMsgState extends State<AlarmMsg> {
 
           final aT = listAlarmTegangan
               .where((element) => element[0] == e[0] && element[1] == e[1]);
+          final aS = listAlarmSuhu
+              .where((element) => element[0] == e[0] && element[1] == e[1]);
+          final aP = listAlarmPh
+              .where((element) => element[0] == e[0] && element[1] == e[1]);
+
+          if (aS.isNotEmpty) {
+            listAlarmSuhu.remove(aS.first);
+          }
+
+          if (aP.isNotEmpty) {
+            listAlarmPh.remove(aP.first);
+          }
 
           if (aT.isNotEmpty) {
             listAlarmTegangan.remove(aT.first);
+
             showMsg(e[0], e[1], "Terjadi masalah pada sel ${e[0]} - ${e[1]}");
           } else {
             showMsg(e[0], e[1],
@@ -133,6 +149,24 @@ class _AlarmMsgState extends State<AlarmMsg> {
 
           showMsg(e[0], e[1],
               "Batas Tegangan telah di lewati pada sel ${e[0]} - ${e[1]}");
+        }
+      }
+
+      if (listAlarmSuhu.isNotEmpty) {
+        for (var i = 0; i < listAlarmSuhu.length; i++) {
+          final List<dynamic> e = listAlarmSuhu[i] as List<dynamic>;
+
+          showMsg(e[0], e[1],
+              "Batas Suhu telah di lewati pada sel ${e[0]} - ${e[1]}");
+        }
+      }
+
+      if (listAlarmPh.isNotEmpty) {
+        for (var i = 0; i < listAlarmPh.length; i++) {
+          final List<dynamic> e = listAlarmPh[i] as List<dynamic>;
+
+          showMsg(e[0], e[1],
+              "Batas pH telah di lewati pada sel ${e[0]} - ${e[1]}");
         }
       }
     }

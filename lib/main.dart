@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
               secondary: MainStyle.primaryColor,
               onSecondary: MainStyle.secondaryColor,
               error: Colors.red,
-              onError: Colors.red,
+              onError: Colors.white,
               background: Colors.white,
               onBackground: MainStyle.primaryColor,
               surface: Colors.white,
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         );
       },
-      initialRoute: "/tv",
+      initialRoute: "/login",
       routes: {
         "/login": (context) => Login(),
         "/home": (context) => Home(),

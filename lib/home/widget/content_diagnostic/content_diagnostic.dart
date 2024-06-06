@@ -58,7 +58,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     {"title": "Alarm pH", "isActive": false, "isLower": false, "list": []},
   ];
 
-  var titleData = ["#Anoda", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
+  var titleData = ["#Crossbar", "Suhu", "Tegangan", "Arus", "Daya", "Energi"];
 
   // final selScrollController = ScrollController();
 
@@ -640,37 +640,37 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (a[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
       final bVal = (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) is int
           ? (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as int
           : (b[dataNyataSortOrderList[0]
                   .toLowerCase()
                   .replaceAll("#", "")
                   .replaceAll("sel", "tangki")
-                  .replaceAll("anoda", "sel")] ??
+                  .replaceAll("crossbar", "sel")] ??
               0) as double;
 
       // print("aVal: $aVal");
@@ -689,50 +689,50 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
           // final bVal = b[dataNyataSortOrderList[i]
           //         .toLowerCase()
           //         .replaceAll("#", "")
           //         .replaceAll("sel", "tangki")
-          //         .replaceAll("anoda", "sel")] ??
+          //         .replaceAll("crossbar", "sel")] ??
           //     0 as double;
 
           final aVal = (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (a[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
           final bVal = (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) is int
               ? (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as int
               : (b[dataNyataSortOrderList[i]
                       .toLowerCase()
                       .replaceAll("#", "")
                       .replaceAll("sel", "tangki")
-                      .replaceAll("anoda", "sel")] ??
+                      .replaceAll("crossbar", "sel")] ??
                   0) as double;
 
           // print("aVal: $aVal");
@@ -945,13 +945,15 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
         // DateTime date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
 
+        diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+
         if (diagnosticData[tangki - 1][sel - 1]["status"] != status
             // ||
             //     diagnosticData[tangki - 1][sel - 1]["lastUpdated"] != timeStamp
             ) {
           refresh = true;
           diagnosticData[tangki - 1][sel - 1]["status"] = status;
-          diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
+          // diagnosticData[tangki - 1][sel - 1]["lastUpdated"] = timeStamp;
         }
       } else if (topic == "antam/device") {
         selData.clear();
@@ -1356,8 +1358,11 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
     // TODO: implement initState
     super.initState();
 
-    timerRefreshDiagnostic = Timer(const Duration(minutes: 5), () {
-      getDiagnostiWidget(70);
+    timerRefreshDiagnostic = Timer(const Duration(minutes: 1), () {
+      // getDiagnostiWidget(70);
+      if (mounted) {
+        setState(() {});
+      }
     });
 
     filterTglHingga = FilterTgl(
@@ -1815,7 +1820,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                   children: [
                                                                     Text(
                                                                       e.contains(
-                                                                              "Anoda")
+                                                                              "Crossbar")
                                                                           ? currTangki == 0
                                                                               ? "Sel"
                                                                               : e
@@ -1972,7 +1977,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                                                               padding: const EdgeInsets.all(2),
                                                                               decoration: BoxDecoration(color: MainStyle.secondaryColor, borderRadius: BorderRadius.circular(5)),
                                                                               child: Text(
-                                                                                "Anoda " + (value ~/ 1 as int).toString(),
+                                                                                "Crossbar " + (value ~/ 1 as int).toString(),
                                                                                 style: MainStyle.textStyleDefault12PrimaryW600,
                                                                                 textAlign: TextAlign.center,
                                                                               ),

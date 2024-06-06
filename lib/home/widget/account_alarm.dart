@@ -53,8 +53,7 @@ class _Account_alarmState extends State<Account_alarm> {
 
     date = df.format(dateTime);
 
-    time =
-        "${addZero(dateTime.hour % 12)}:${addZero(dateTime.minute)} ${dateTime.hour >= 12 ? "PM" : "AM"}";
+    time = "${addZero(dateTime.hour)}:${addZero(dateTime.minute)} ";
 
     setState(() {});
 
@@ -63,8 +62,7 @@ class _Account_alarmState extends State<Account_alarm> {
 
       date = df.format(dateTime);
 
-      time =
-          "${addZero(dateTime.hour % 12)}:${addZero(dateTime.minute)} ${dateTime.hour > 12 ? "PM" : "AM"}";
+      time = "${addZero(dateTime.hour)}:${addZero(dateTime.minute)} ";
 
       if (mounted) setState(() {});
     });
@@ -129,45 +127,97 @@ class _Account_alarmState extends State<Account_alarm> {
             clipBehavior: Clip.none,
             width: (lWidth < 900
                 ? lWidth < 800
-                    ? 500
+                    ? 300
                     : lWidth * 0.4
-                : 500),
+                : 300),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
-              child: Row(
-                children: widget.alarm
-                    .map((e) => Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              color: ((e["isActive"] as bool)
-                                  ? Colors.red
-                                  : Colors.grey),
-                              size: 15,
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: widget.isTv && lWidth < 900,
+                    child: SizedBox(
+                      width: (lWidth / lheight) < wide ? 430 : 300,
+                      child: Row(
+                        children: [
+                          Text(
+                            time,
+                            style: (lWidth / lheight) < wide
+                                ? textStyle26BlackBold
+                                : textStyle16BlackBold,
+                          ),
+                          // const SizedBox(
+                          //   width: 20,
+                          // ),
+                          MainStyle.sizedBoxW20,
+                          Text(
+                            date,
+                            style: (lWidth / lheight) < wide
+                                ? textStyle26Black
+                                : textStyle16Black,
+                          ),
+                          // const SizedBox(
+                          //   width: 20,
+                          // ),
+                          MainStyle.sizedBoxW20,
+                          // SvgPicture.asset(
+                          //   "assets/user.svg",
+                          //   width: 30,
+                          // ),
+                          userSvg,
+                          // const SizedBox(
+                          //   width: 5,
+                          // ),
+                          MainStyle.sizedBoxW5,
+                          Expanded(
+                            child: Text(
+                              widget.isAdmin ? "Admin" : "User",
+                              style: (lWidth / lheight) < wide
+                                  ? textStyle24Primary
+                                  : textStyle14Primary,
                             ),
-                            SizedBox(
-                              width: (lWidth / lheight) < wide ? 3 : 2,
-                            ),
-                            Text(
-                              e["title"] as String,
-                              style: (lWidth / lheight) < wide && lWidth > 900
-                                  ? textStyle24Grey
-                                  : textStyle16Grey,
-                            ),
-                            // const SizedBox(
-                            //   width: 10,
-                            // )
-                            MainStyle.sizedBoxW10,
-                          ],
-                        ))
-                    .toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: widget.alarm
+                        .map((e) => Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  color: ((e["isActive"] as bool)
+                                      ? Colors.red
+                                      : Colors.grey),
+                                  size: 15,
+                                ),
+                                SizedBox(
+                                  width: (lWidth / lheight) < wide ? 3 : 2,
+                                ),
+                                Text(
+                                  e["title"] as String,
+                                  style:
+                                      (lWidth / lheight) < wide && lWidth > 900
+                                          ? textStyle24Grey
+                                          : textStyle16Grey,
+                                ),
+                                // const SizedBox(
+                                //   width: 10,
+                                // )
+                                MainStyle.sizedBoxW10,
+                              ],
+                            ))
+                        .toList(),
+                  ),
+                ],
               ),
             ),
           ),
           Visibility(
-            visible: lWidth >= 900 || widget.isTv,
+            visible: lWidth >= 900,
             child: SizedBox(
               width: (lWidth / lheight) < wide ? 430 : 300,
               child: Row(
