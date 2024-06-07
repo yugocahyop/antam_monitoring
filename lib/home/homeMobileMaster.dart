@@ -1396,7 +1396,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       color: MainStyle.primaryColor,
                       textColor: Colors.white,
                       onPressed: () {
-                        resetDispose();
                         Navigator.pop(context);
                       },
                       text: "No"),
@@ -1409,6 +1408,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                       textColor: Colors.white,
                       onPressed: () {
                         // dispose();
+
+                        resetDispose();
 
                         Navigator.pop(context);
 
