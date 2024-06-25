@@ -157,7 +157,7 @@ class MyMqtt {
     client.setProtocolV311();
 
     /// If you intend to use a keep alive you must set it here otherwise keep alive will be disabled.
-    client.keepAlivePeriod = 10;
+    client.keepAlivePeriod = 60;
 
     /// The connection timeout period can be set if needed, the default is 5 seconds.
     client.connectTimeoutPeriod = 10000; // milliseconds

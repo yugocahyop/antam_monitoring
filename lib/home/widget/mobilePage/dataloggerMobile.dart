@@ -1087,6 +1087,10 @@ class _HomeMobileState extends State<DataLogger> {
 
       // print("aVal: $aVal bBal: $bVal");
 
+      if (a["tangki"] == 7 || b["tangki"] == 7) {
+        return 0;
+      }
+
       int r = ascDesc == "Desc" ? bVal.compareTo(aVal) : aVal.compareTo(bVal);
 
       return r;

@@ -684,6 +684,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   Future<void> initPage() async {
     await Future.delayed(const Duration(milliseconds: 1000));
+
+    await checkAccess();
     try {
       String p = "";
       if (widget.page.isEmpty) {
@@ -1011,7 +1013,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
       page = Content_home(
         changePage: changePage,
-        isAdmin: isAdmin,
+        isAdmin: Home.isAdmin,
         mqtt: mqtt,
         scSel: ScrollController(),
         selData: selData,

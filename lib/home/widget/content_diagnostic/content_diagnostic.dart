@@ -1595,7 +1595,7 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                               width: 120,
                                               child: MyButton(
                                                   color: MainStyle.primaryColor,
-                                                  text: "Reset energi",
+                                                  text: "Reset semua",
                                                   onPressed: () => promptToggle(
                                                       15, 15, false,
                                                       isResetEnergi: true),

@@ -231,6 +231,9 @@ class _Content_homeState extends State<Content_home> {
       final listZero = [];
 
       (selData[0] as List<dynamic>).sort(((a, b) {
+        if (a["tangki"] == 7 || b["tangki"] == 7) {
+          return 0;
+        }
         final aVal = a["arus"] / 1 as double;
         final bVal = b["arus"] / 1 as double;
 
@@ -261,6 +264,9 @@ class _Content_homeState extends State<Content_home> {
       resetSelDataSort();
 
       (selData[0] as List<dynamic>).sort(((a, b) {
+        if (a["tangki"] == 7 || b["tangki"] == 7) {
+          return 0;
+        }
         final aVal = a["arus"] / 1 as double;
         final bVal = b["arus"] / 1 as double;
 
@@ -666,6 +672,8 @@ class _Content_homeState extends State<Content_home> {
 
       selData.addAll(r["data"][0]["tangkiData"] ?? []);
 
+      // selData = selData.getRange(0, 5).toList();
+
       // selData[7][1] = {"pH": 0.0, "suhu": 0.0};
     }
 
@@ -784,6 +792,8 @@ class _Content_homeState extends State<Content_home> {
           },
         ]);
         selData.addAll(data["tangkiData"]);
+
+        // selData = selData.getRange(0, 5).toList();
 
         getMax2();
 
@@ -1398,6 +1408,10 @@ class _Content_homeState extends State<Content_home> {
               0) as double;
 
       // print("aVal: $aVal");
+
+      if (a["tangki"] == 7 || b["tangki"] == 7) {
+        return 0;
+      }
 
       int r = dataNyataSortOrder[dataNyataSortOrderList[0]]!
           ? bVal.compareTo(aVal)

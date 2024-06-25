@@ -2064,6 +2064,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
       // print("aVal: $aVal");
 
+      if (a["tangki"] == 7 || b["tangki"] == 7) {
+        return 0;
+      }
+
       int r = dataNyataSortOrder[dataNyataSortOrderList[0]]!
           ? bVal.compareTo(aVal)
           : aVal.compareTo(bVal);

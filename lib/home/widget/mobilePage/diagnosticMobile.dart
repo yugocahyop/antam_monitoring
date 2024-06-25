@@ -458,6 +458,8 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
       final listAlarmTegangan = data["listAlarmTegangan"] as List<dynamic>;
+      final listAlarmSuhu = (data["listAlarmSuhu"] ?? []) as List<dynamic>;
+      final listAlarmPh = (data["listAlarmPh"] ?? []) as List<dynamic>;
 
       if (listAlarmArus.isNotEmpty) {
         alarm.firstWhere(
@@ -468,6 +470,16 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
         alarm.firstWhere(
                 (element) => element["title"] == "Alarm Tegangan")["isActive"] =
             true;
+      }
+
+      if (listAlarmSuhu.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm Suhu")["isActive"] = true;
+      }
+
+      if (listAlarmPh.isNotEmpty) {
+        alarm.firstWhere(
+            (element) => element["title"] == "Alarm pH")["isActive"] = true;
       }
 
       account_alarm.setState!();
@@ -795,7 +807,7 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                                   width: 120,
                                   child: MyButton(
                                       color: MainStyle.primaryColor,
-                                      text: "Reset energi",
+                                      text: "Reset semua",
                                       onPressed: () => promptToggle(
                                           15, 15, false,
                                           isResetEnergi: true),

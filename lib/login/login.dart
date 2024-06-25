@@ -8,6 +8,8 @@ import 'package:antam_monitoring/login/widget/message.dart';
 import 'package:antam_monitoring/login/widget/message_mobile.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:antam_monitoring/tools/apiHelper.dart';
+import 'package:antam_monitoring/widget/form.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:antam_monitoring/widget/myTextField.dart';
 import 'package:flare_flutter/flare_cache.dart';
@@ -82,6 +84,36 @@ class _LoginState extends State<Login> {
     );
   }
 
+  Future<dynamic> setServer(BuildContext context) async {
+    final c = Controller();
+    final r = await c.heroPageRoute(
+        context,
+        MyForm(
+            title: "Alamat Server backend ",
+            height: 420,
+            onSubmit: (mapTextField) async {
+              // print("object ${mapTextField["Nama"]}");
+
+              // final c = Controller();
+
+              ApiHelper.url = "${mapTextField["Server backend"]!.con.text}";
+
+              Navigator.pop(context);
+
+              // await login(null, context, true,
+              //     () => c.saveSharedPref("antam.server", ApiHelper.url));
+            },
+            listTextParam: [
+              {
+                "label": "Server backend",
+                "hint": "Masukan server backend",
+                "value": ApiHelper.url
+              },
+            ]));
+
+    return r;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -99,6 +131,10 @@ class _LoginState extends State<Login> {
     c.saveSharedPref("antam.access", "");
 
     preCache(rootBundle);
+
+    //setServer
+
+    // Future.delayed(const Duration(seconds: 1), () => setServer(context));
   }
 
   @override
