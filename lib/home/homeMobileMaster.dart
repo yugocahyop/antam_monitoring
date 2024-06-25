@@ -1474,7 +1474,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                           child: Row(
                             children: [
                               Visibility(
-                                visible: lWidth >= 900,
+                                visible:
+                                    !(widget.page == "tv") || lWidth >= 900,
                                 child: SizedBox(
                                   width: (lWidth / lheight) < wide ? 400 : 250,
                                   child: Menu(

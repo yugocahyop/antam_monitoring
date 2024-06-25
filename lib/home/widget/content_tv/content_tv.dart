@@ -1684,7 +1684,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                           "alarm")
                                                                   ? (diagnosticData[6][0]["status"] as String).toLowerCase().contains("tegangan") ||
                                                                           (diagnosticData[6][0]["status"] as String).toLowerCase().contains("rendah")
-                                                                      ? Colors.orange.withOpacity((diagnosticData[6][0]["lastUpdatde"] as int) > (60000 * 5) ? 0.5 : 1)
+                                                                      ? Colors.orange.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
                                                                       : Colors.red.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
                                                                   : MainStyle.thirdColor.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
                                                           borderRadius:
@@ -1727,7 +1727,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                           "alarm")
                                                                   ? (diagnosticData[6][0]["status"] as String).toLowerCase().contains("tegangan") ||
                                                                           (diagnosticData[6][0]["status"] as String).toLowerCase().contains("rendah")
-                                                                      ? Colors.orange.withOpacity((diagnosticData[6][0]["lastUpdatde"] as int) > (60000 * 5) ? 0.5 : 1)
+                                                                      ? Colors.orange.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
                                                                       : Colors.red.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
                                                                   : MainStyle.thirdColor.withOpacity((diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
                                                           borderRadius:
