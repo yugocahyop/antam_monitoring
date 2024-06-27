@@ -1469,11 +1469,7 @@ class _Content_diagnosticState extends State<Content_tv> {
     // }
 
     return SizedBox(
-      width: (lWidth / lheight) < wide
-          ? 1800
-          : lWidth >= 1920
-              ? lWidth - 300
-              : 1270,
+      width: lWidth,
       height: (lWidth / lheight) < wide
           ? 1400
           : lWidth >= 1920
@@ -1482,12 +1478,10 @@ class _Content_diagnosticState extends State<Content_tv> {
       child: Stack(
         children: [
           Container(
+              clipBehavior: Clip.none,
+              decoration: BoxDecoration(),
               padding: const EdgeInsets.fromLTRB(45, 30, 30, 10),
-              width: (lWidth / lheight) < wide
-                  ? 1800
-                  : lWidth >= 1920
-                      ? lWidth
-                      : 1270,
+              width: lWidth,
               height: (lWidth / lheight) < wide
                   ? 1400
                   : lWidth >= 1920
@@ -1539,17 +1533,18 @@ class _Content_diagnosticState extends State<Content_tv> {
                   // MainStyle.sizedBoxH20,
                   Expanded(
                     child: SizedBox(
-                      width: (lWidth / lheight) < wide
-                          ? 2200
-                          : lWidth >= 1920
-                              ? lWidth + 500 //set width here
-                              : lWidth,
+                      width: lWidth,
                       child: Transform.scale(
-                        scale: (lWidth / lheight) < wide
+                        scaleY: (lWidth / lheight) < wide
                             ? 1.2
                             : lWidth >= 1920
                                 ? 1.1
-                                : 0.92, //set scale here
+                                : 0.92,
+                        scaleX: (lWidth / lheight) < wide
+                            ? 1.2
+                            : lWidth >= 1920
+                                ? 1.18
+                                : 1.16, //set scale here
                         origin: Offset(
                             (lWidth / lheight) < wide
                                 ? -1010

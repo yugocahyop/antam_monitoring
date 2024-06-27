@@ -1390,7 +1390,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 fit: lWidth < 1000 ? BoxFit.fitWidth : BoxFit.fitHeight,
                 // scaleY: lheight / ,
                 child: Container(
-                  // clipBehavior: Clip.antiAlias,
+                  clipBehavior: Clip.none,
                   decoration: BoxDecoration(),
                   // width: lWidth,
                   // height: lheight,
@@ -1424,7 +1424,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                               Visibility(
                                 visible: lWidth >= 900,
                                 child: SizedBox(
-                                  width: (lWidth / lheight) < wide ? 400 : 250,
+                                  width: widget.page == "tv"
+                                      ? 0
+                                      : (lWidth / lheight) < wide
+                                          ? 400
+                                          : 250,
                                   child: Menu(
                                     isTv: widget.page == "tv",
                                     menuItem: menuItems,

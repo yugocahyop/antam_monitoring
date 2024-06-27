@@ -4,6 +4,7 @@ import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
@@ -182,35 +183,45 @@ class _Account_alarmState extends State<Account_alarm> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: widget.alarm
-                        .map((e) => Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: ((e["isActive"] as bool)
-                                      ? Colors.red
-                                      : Colors.grey),
-                                  size: 15,
-                                ),
-                                SizedBox(
-                                  width: (lWidth / lheight) < wide ? 3 : 2,
-                                ),
-                                Text(
-                                  e["title"] as String,
-                                  style:
-                                      (lWidth / lheight) < wide && lWidth > 900
-                                          ? textStyle24Grey
-                                          : textStyle16Grey,
-                                ),
-                                // const SizedBox(
-                                //   width: 10,
-                                // )
-                                MainStyle.sizedBoxW10,
-                              ],
-                            ))
-                        .toList(),
+                  Visibility(
+                    visible: widget.isTv,
+                    child: SvgPicture.asset(
+                      "assets/logo_antam.svg",
+                      width: 150,
+                    ),
+                  ),
+                  Visibility(
+                    visible: !widget.isTv,
+                    child: Row(
+                      children: widget.alarm
+                          .map((e) => Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    color: ((e["isActive"] as bool)
+                                        ? Colors.red
+                                        : Colors.grey),
+                                    size: 15,
+                                  ),
+                                  SizedBox(
+                                    width: (lWidth / lheight) < wide ? 3 : 2,
+                                  ),
+                                  Text(
+                                    e["title"] as String,
+                                    style: (lWidth / lheight) < wide &&
+                                            lWidth > 900
+                                        ? textStyle24Grey
+                                        : textStyle16Grey,
+                                  ),
+                                  // const SizedBox(
+                                  //   width: 10,
+                                  // )
+                                  MainStyle.sizedBoxW10,
+                                ],
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ],
               ),
