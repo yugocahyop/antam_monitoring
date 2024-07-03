@@ -118,26 +118,26 @@ class _PanelNodeState extends State<PanelNode> {
                         Text(
                           widget.isSensor
                               ? "Elektrolit"
-                              : "Sel ${widget.tangki}",
+                              : "${widget.tangki} -  ${widget.sel} ",
                           style: MyTextStyle.defaultFontCustom(
                               widget.status.toLowerCase() == "inactive"
                                   ? MainStyle.primaryColor
                                   : Colors.white,
-                              lWidth > 500 ? 12 : 10,
+                              lWidth > 500 ? 14 : 12,
                               weight: FontWeight.w700),
                         ),
-                        Visibility(
-                          visible: !widget.isSensor,
-                          child: Text(
-                            widget.isSensor ? "" : "#Crossbar ${widget.sel}",
-                            style: MyTextStyle.defaultFontCustom(
-                                widget.status.toLowerCase() == "inactive"
-                                    ? MainStyle.primaryColor
-                                    : Colors.white,
-                                lWidth > 500 ? 12 : 10,
-                                weight: FontWeight.w700),
-                          ),
-                        ),
+                        // Visibility(
+                        //   visible: !widget.isSensor,
+                        //   child: Text(
+                        //     widget.isSensor ? "" : "#Crossbar ${widget.sel}",
+                        //     style: MyTextStyle.defaultFontCustom(
+                        //         widget.status.toLowerCase() == "inactive"
+                        //             ? MainStyle.primaryColor
+                        //             : Colors.white,
+                        //         lWidth > 500 ? 12 : 10,
+                        //         weight: FontWeight.w700),
+                        //   ),
+                        // ),
                       ],
                     ),
                     Expanded(
@@ -193,6 +193,38 @@ class _PanelNodeState extends State<PanelNode> {
                                     weight: widget.status
                                             .toLowerCase()
                                             .contains("arus")
+                                        ? FontWeight.w900
+                                        : FontWeight.normal),
+                              ),
+                            ),
+                            width: 55,
+                            height: 30,
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5)),
+                          ),
+                          Container(
+                            child: Center(
+                              child: Text(
+                                "${widget.suhu.toStringAsFixed(1)}\u00B0 C",
+                                style: MyTextStyle.defaultFontCustom(
+                                    widget.status.toLowerCase() == "active"
+                                        ? MainStyle.primaryColor.withOpacity(1)
+                                        : widget.status
+                                                .toLowerCase()
+                                                .contains("alarmsuhu")
+                                            ? widget.status
+                                                    .toLowerCase()
+                                                    .contains("rendah")
+                                                ? Colors.orange
+                                                : Colors.red.withOpacity(1)
+                                            : MainStyle.primaryColor
+                                                .withOpacity(1),
+                                    14,
+                                    weight: widget.status
+                                            .toLowerCase()
+                                            .contains("suhu")
                                         ? FontWeight.w900
                                         : FontWeight.normal),
                               ),
@@ -286,21 +318,21 @@ class _PanelNodeState extends State<PanelNode> {
                                             ? FontWeight.w900
                                             : FontWeight.normal),
                                   ),
-                                  Text(
-                                    " ${widget.suhu.toStringAsFixed(2)} \u00B0 C",
-                                    textAlign: TextAlign.end,
-                                    style: MyTextStyle.defaultFontCustom(
-                                        widget.status.toLowerCase() ==
-                                                "inactive"
-                                            ? Colors.black
-                                            : Colors.white,
-                                        lWidth > 500 ? 13 : 12,
-                                        weight: widget.status
-                                                .toLowerCase()
-                                                .contains("suhu")
-                                            ? FontWeight.w900
-                                            : FontWeight.normal),
-                                  ),
+                                  // Text(
+                                  //   " ${widget.suhu.toStringAsFixed(2)} \u00B0 C",
+                                  //   textAlign: TextAlign.end,
+                                  //   style: MyTextStyle.defaultFontCustom(
+                                  //       widget.status.toLowerCase() ==
+                                  //               "inactive"
+                                  //           ? Colors.black
+                                  //           : Colors.white,
+                                  //       lWidth > 500 ? 13 : 12,
+                                  //       weight: widget.status
+                                  //               .toLowerCase()
+                                  //               .contains("suhu")
+                                  //           ? FontWeight.w900
+                                  //           : FontWeight.normal),
+                                  // ),
                                 ]),
                           ),
                     Container(

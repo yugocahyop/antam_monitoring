@@ -231,6 +231,44 @@ class _Content_diagnosticState extends State<Content_tv> {
         ));
   }
 
+  String lastUpdateElektrolit(){
+     DateTime now = DateTime.now();
+        DateTime date =
+            DateTime.fromMillisecondsSinceEpoch(diagnosticData[6][0]["lastUpdated"] as int);
+        // String status = sel[ii]["status"] as String;
+
+        String lastUpdated = "";
+
+
+        if (now.year == date.year) {
+          if (now.month == date.month) {
+            if (now.day == date.day) {
+              if (now.hour == date.hour) {
+                if (now.minute == date.minute) {
+                  if (now.second <= date.second) {
+                    lastUpdated = "baru";
+                  } else {
+                    lastUpdated = "${now.second - date.second} detik lalu";
+                  }
+                } else {
+                  lastUpdated = "${now.minute - date.minute} menit lalu";
+                }
+              } else {
+                lastUpdated = "${now.hour - date.hour} jam lalu";
+              }
+            } else {
+              lastUpdated = "${now.day - date.day} hari lalu";
+            }
+          } else {
+            lastUpdated = "${now.month - date.month} bulan lalu";
+          }
+        } else {
+          lastUpdated = "${now.year - date.year} tahun lalu";
+        }
+
+        return lastUpdated;
+  }
+
   List<Widget> getDiagnostiWidget(double width) {
     List<Widget> rows = [];
 
@@ -1560,7 +1598,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                   (lWidth / lheight) < wide ? -500 : 0, 0),
                               child: Transform.translate(
                                 offset: Offset(
-                                    0,
+                                    -20,
                                     lWidth >= 1920
                                         ? (lheight >= 1080 ? -45 : -15)
                                         : 0),
@@ -1626,9 +1664,10 @@ class _Content_diagnosticState extends State<Content_tv> {
                                             ),
                                             MainStyle.sizedBoxW20,
                                             Container(
-                                              width: 225,
+                                              // width: 225,
                                               padding: EdgeInsets.all(5),
                                               decoration: BoxDecoration(
+                                                 border: Border.all(),
                                                   color:
                                                       MainStyle.secondaryColor,
                                                   borderRadius:
@@ -1742,6 +1781,8 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                               16),
                                                         ),
                                                       ),
+                                                      MainStyle.sizedBoxW5,
+                                                      Text(lastUpdateElektrolit(), style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12),)
                                                     ],
                                                   ),
                                                 ],
