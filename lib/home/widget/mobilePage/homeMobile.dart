@@ -232,6 +232,10 @@ class _HomeMobileState extends State<HomeMobile> {
       final listZero = [];
 
       (selData[0] as List<dynamic>).sort(((a, b) {
+         if (a["tangki"] == 7 || b["tangki"] == 7) {
+          return 0;
+        }
+
         final aVal = a["arus"] / 1 as double;
         final bVal = b["arus"] / 1 as double;
 
@@ -262,13 +266,17 @@ class _HomeMobileState extends State<HomeMobile> {
       resetSelDataSort();
 
       (selData[0] as List<dynamic>).sort(((a, b) {
+         if (a["tangki"] == 7 || b["tangki"] == 7) {
+          return 0;
+        }
+
         final aVal = a["arus"] / 1 as double;
         final bVal = b["arus"] / 1 as double;
 
         return aVal.compareTo(bVal);
       }));
 
-      for (var i = 3; i < 5; i++) {
+      for (var i = 0; i < 2; i++) {
         final val = selData[0][i] as Map<String, dynamic>;
         listZero.add(
           {
