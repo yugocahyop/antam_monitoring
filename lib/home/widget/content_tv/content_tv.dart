@@ -1700,7 +1700,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                               ? MainStyle
                                                                   .primaryColor
                                                                   .withOpacity(
-                                                                      (diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5)
+                                                                      (DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5)
                                                                           ? 0.5
                                                                           : 1)
                                                               : (diagnosticData[6][0]["status"]
@@ -1710,9 +1710,9 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                           "alarm")
                                                                   ? (diagnosticData[6][0]["status"] as String).toLowerCase().contains("tegangan") ||
                                                                           (diagnosticData[6][0]["status"] as String).toLowerCase().contains("rendah")
-                                                                      ? Colors.orange.withOpacity(DateTime.now().millisecondsSinceEpoch - (diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
-                                                                      : Colors.red.withOpacity(DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
-                                                                  : MainStyle.thirdColor.withOpacity(DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
+                                                                      ? Colors.orange.withOpacity((DateTime.now().millisecondsSinceEpoch - (diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5) ? 0.5 : 1)
+                                                                      : Colors.red.withOpacity((DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5) ? 0.5 : 1)
+                                                                  : MainStyle.thirdColor.withOpacity((DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int) )> (60000 * 5) ? 0.5 : 1),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5),
@@ -1743,7 +1743,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                               ? MainStyle
                                                                   .primaryColor
                                                                   .withOpacity(
-                                                                      (diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5)
+                                                                      (DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5)
                                                                           ? 0.5
                                                                           : 1)
                                                               : (diagnosticData[6][0]["status"]
@@ -1753,9 +1753,9 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                           "alarm")
                                                                   ? (diagnosticData[6][0]["status"] as String).toLowerCase().contains("tegangan") ||
                                                                           (diagnosticData[6][0]["status"] as String).toLowerCase().contains("rendah")
-                                                                      ? Colors.orange.withOpacity(DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
-                                                                      : Colors.red.withOpacity(DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1)
-                                                                  : MainStyle.thirdColor.withOpacity(DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int) > (60000 * 5) ? 0.5 : 1),
+                                                                      ? Colors.orange.withOpacity((DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5) ? 0.5 : 1)
+                                                                      : Colors.red.withOpacity((DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5) ? 0.5 : 1)
+                                                                  : MainStyle.thirdColor.withOpacity((DateTime.now().millisecondsSinceEpoch -(diagnosticData[6][0]["lastUpdated"] as int)) > (60000 * 5) ? 0.5 : 1),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5),
