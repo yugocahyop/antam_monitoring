@@ -20,6 +20,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
+import '../content_diagnostic/content_diagnostic.dart';
 import 'widget/panelNode.dart';
 
 class Content_tv extends StatefulWidget {
@@ -291,31 +292,68 @@ class _Content_diagnosticState extends State<Content_tv> {
           print("now : ${df.format(now)} date: ${df.format(date)} ");
         }
 
-        if (now.year == date.year) {
-          if (now.month == date.month) {
-            if (now.day == date.day) {
-              if (now.hour == date.hour) {
-                if (now.minute == date.minute) {
-                  if (now.second <= date.second) {
-                    lastUpdated = "baru";
-                  } else {
-                    lastUpdated = "${now.second - date.second} detik lalu";
-                  }
-                } else {
-                  lastUpdated = "${now.minute - date.minute} menit lalu";
-                }
-              } else {
-                lastUpdated = "${now.hour - date.hour} jam lalu";
-              }
-            } else {
-              lastUpdated = "${now.day - date.day} hari lalu";
-            }
-          } else {
-            lastUpdated = "${now.month - date.month} bulan lalu";
-          }
-        } else {
-          lastUpdated = "${now.year - date.year} tahun lalu";
+        // if (now.year == date.year) {
+        //   if (now.month == date.month) {
+        //     if (now.day == date.day) {
+        //       if (now.hour == date.hour) {
+        //         if (now.minute == date.minute) {
+        //           if (now.second <= date.second) {
+        //             lastUpdated = "baru";
+        //           } else {
+        //             lastUpdated = "${now.second - date.second} detik lalu";
+        //           }
+        //         } else {
+        //           lastUpdated = "${now.minute - date.minute} menit lalu";
+        //         }
+        //       } else {
+        //         lastUpdated = "${now.hour - date.hour} jam lalu";
+        //       }
+        //     } else {
+        //       lastUpdated = "${now.day - date.day} hari lalu";
+        //     }
+        //   } else {
+        //     lastUpdated = "${now.month - date.month} bulan lalu";
+        //   }
+        // } else {
+        //   lastUpdated = "${now.year - date.year} tahun lalu";
+        // }
+
+
+        int difference = now.millisecondsSinceEpoch - date.millisecondsSinceEpoch;
+
+         if(difference >= Content_diagnostic.yearMillis ){
+           lastUpdated = "${difference ~/ Content_diagnostic.yearMillis} tahun lalu";
+        }else if(difference >= Content_diagnostic.monthMillis ){
+          lastUpdated = "${difference ~/ Content_diagnostic.monthMillis} bulan lalu";
+        }else if(difference >= Content_diagnostic.dayMillis){
+           lastUpdated = "${difference ~/ Content_diagnostic.dayMillis } hari lalu";
+        }else if(difference >= Content_diagnostic.hourMillis){
+          lastUpdated = "${difference ~/ Content_diagnostic.hourMillis} jam lalu";
+        }else if(difference >= Content_diagnostic.minuteMillis){
+           lastUpdated = "${difference ~/ Content_diagnostic.minuteMillis} menit lalu";
+        }else if(difference >= Content_diagnostic.secondMillis){
+           lastUpdated = "${difference ~/ Content_diagnostic.secondMillis} detik lalu";
+        }else if(difference < 1000){
+          lastUpdated = "baru";
         }
+
+        // if(difference >= 31556952000 ){
+        //    lastUpdated = "${now.year - date.year} tahun lalu";
+        // }else if(difference >= 2629746000 ){
+        //   lastUpdated = "${now.month - date.month} bulan lalu";
+        // }else if(difference >= 86400000){
+        //    lastUpdated = "${now.day - date.day} hari lalu";
+        // }else if(difference >= 3600000){
+        //   lastUpdated = "${now.hour - date.hour} jam lalu";
+        // }else if(difference >= 60000){
+        //    lastUpdated = "${now.minute - date.minute} menit lalu";
+        // }else if(difference >= 1000){
+        //    lastUpdated = "${now.second - date.second} detik lalu";
+        // }else if(difference < 1000){
+        //   lastUpdated = "baru";
+        // }
+
+        
 
         if (kDebugMode) {
           print("sel data get: $selData");

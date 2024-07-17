@@ -36,6 +36,13 @@ class Content_diagnostic extends StatefulWidget {
 
   Function(int index, {int? dari, int? hingga}) changePage;
 
+  static const int yearMillis = 31556952000;
+  static const int monthMillis = 2629746000;
+  static const int dayMillis = 86400000;
+  static const int hourMillis = 3600000;
+  static const int minuteMillis = 60000;  
+  static const int secondMillis = 1000;
+
   @override
   State<Content_diagnostic> createState() => _Content_diagnosticState();
 }
@@ -226,6 +233,9 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
         ));
   }
 
+  
+
+
   List<Widget> getDiagnostiWidget(double width) {
     List<Widget> rows = [];
 
@@ -243,36 +253,74 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
 
         String lastUpdated = "";
 
-        if (kDebugMode && i == 3 && ii == 0) {
+      
+        // if (now.year == date.year) {
+        //   if (now.month == date.month) {
+        //     if (now.day == date.day) {
+        //       if (now.hour == date.hour) {
+        //         if (now.minute == date.minute) {
+        //           if (now.second <= date.second) {
+        //             lastUpdated = "baru";
+        //           } else {
+        //             lastUpdated = "${now.second - date.second} detik lalu";
+        //           }
+        //         } else {
+        //           lastUpdated = "${now.minute - date.minute} menit lalu";
+        //         }
+        //       } else {
+        //         lastUpdated = "${now.hour - date.hour} jam lalu";
+        //       }
+        //     } else {
+        //       lastUpdated = "${now.day - date.day} hari lalu";
+        //     }
+        //   } else {
+        //     lastUpdated = "${now.month - date.month} bulan lalu";
+        //   }
+        // } else {
+        //   lastUpdated = "${now.year - date.year} tahun lalu";
+        // }
+
+        int difference = now.millisecondsSinceEpoch - date.millisecondsSinceEpoch;
+
+          if (kDebugMode && i == 5 && ii == 4) {
           DateFormat df = DateFormat("dd MMM yyyy HH:mm");
           print("now : ${df.format(now)} date: ${df.format(date)} ");
+          print("difference:  $difference");
         }
 
-        if (now.year == date.year) {
-          if (now.month == date.month) {
-            if (now.day == date.day) {
-              if (now.hour == date.hour) {
-                if (now.minute == date.minute) {
-                  if (now.second <= date.second) {
-                    lastUpdated = "baru";
-                  } else {
-                    lastUpdated = "${now.second - date.second} detik lalu";
-                  }
-                } else {
-                  lastUpdated = "${now.minute - date.minute} menit lalu";
-                }
-              } else {
-                lastUpdated = "${now.hour - date.hour} jam lalu";
-              }
-            } else {
-              lastUpdated = "${now.day - date.day} hari lalu";
-            }
-          } else {
-            lastUpdated = "${now.month - date.month} bulan lalu";
-          }
-        } else {
-          lastUpdated = "${now.year - date.year} tahun lalu";
+         if(difference >= Content_diagnostic.yearMillis ){
+           lastUpdated = "${difference ~/ Content_diagnostic.yearMillis} tahun lalu";
+        }else if(difference >= Content_diagnostic.monthMillis ){
+          lastUpdated = "${difference ~/ Content_diagnostic.monthMillis} bulan lalu";
+        }else if(difference >= Content_diagnostic.dayMillis){
+           lastUpdated = "${difference ~/ Content_diagnostic.dayMillis } hari lalu";
+        }else if(difference >= Content_diagnostic.hourMillis){
+          lastUpdated = "${difference ~/ Content_diagnostic.hourMillis} jam lalu";
+        }else if(difference >= Content_diagnostic.minuteMillis){
+           lastUpdated = "${difference ~/ Content_diagnostic.minuteMillis} menit lalu";
+        }else if(difference >= Content_diagnostic.secondMillis){
+           lastUpdated = "${difference ~/ Content_diagnostic.secondMillis} detik lalu";
+        }else if(difference < 1000){
+          lastUpdated = "baru";
         }
+
+
+        // if(difference >= 31556952000 ){
+        //    lastUpdated = "${now.year - date.year} tahun lalu";
+        // }else if(difference >= 2629746000 ){
+        //   lastUpdated = "${difference ~/ 2629746000} bulan lalu";
+        // }else if(difference >= 86400000){
+        //    lastUpdated = "${difference ~/86400000 } hari lalu";
+        // }else if(difference >= 3600000){
+        //   lastUpdated = "${now.hour - date.hour} jam lalu";
+        // }else if(difference >= 60000){
+        //    lastUpdated = "${now.minute - date.minute} menit lalu";
+        // }else if(difference >= 1000){
+        //    lastUpdated = "${now.second - date.second} detik lalu";
+        // }else if(difference < 1000){
+        //   lastUpdated = "baru";
+        // }
+
         pn.add(PanelNode(
           tapFunction: () => promptToggle(i + 1, ii + 1,
               status == "active" || status.contains("alarm") ? true : false),
