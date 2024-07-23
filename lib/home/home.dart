@@ -67,7 +67,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   List<dynamic> selData = [
     [
       {
-        "tangki": 1,
+        "tangki": 20,
         "sel": 1,
         "suhu": 0.0,
         "tegangan": 0.0,

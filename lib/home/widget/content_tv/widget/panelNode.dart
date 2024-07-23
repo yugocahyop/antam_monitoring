@@ -3,6 +3,7 @@ import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class PanelNode extends StatefulWidget {
   PanelNode(
@@ -44,10 +45,54 @@ class PanelNode extends StatefulWidget {
   State<PanelNode> createState() => _PanelNodeState();
 }
 
+class MyCalculate {
+  
+
+  static TextStyle getStyleText(int id, String value) {
+    value = value.toLowerCase();
+    Color colorText = value ==  "inactive" ? Colors.black : Colors.white;
+    // widget.status.toLowerCase() ==
+    //                                             "inactive"
+    //                                         ? Colors.black
+    //                                         : Colors.white
+    FontWeight fontText = FontWeight.normal;
+
+    switch(id){
+      case 0:
+        fontText = value.contains("tegangan")? FontWeight.w900 : FontWeight.normal;
+        break;
+      case 1:
+        fontText = value.contains("arus")? FontWeight.w900 : FontWeight.normal;
+        break;
+      case 2:
+        fontText = value.contains("suhu")? FontWeight.w900 : FontWeight.normal;
+        break;
+      default:
+        break;
+    }
+
+    return MyTextStyle.defaultFontCustom(colorText, 20, weight: fontText);
+  }
+
+  static TextStyle generateTextTemp(String value) {
+    // colorText = value == "active"? 
+    // Colors.white : value.contains("alarmsuhu")? 
+    // value.contains("rendah")? 
+    // Colors.orange : Colors.red.withOpacity(1) : Colors.white;
+    Color colorText = Colors.white;
+    FontWeight fontText = FontWeight.normal;
+    fontText = value.contains("suhu")? FontWeight.w900 : FontWeight.normal;
+
+    return MyTextStyle.defaultFontCustom(colorText, 14, weight: fontText);
+  }
+}
+
 class _PanelNodeState extends State<PanelNode> {
+
   final Duration d = const Duration(milliseconds: 200);
   bool isHover = false;
   @override
+
   Widget build(BuildContext context) {
     final lWidth = MediaQuery.of(context).size.width;
     // if (widget.dateDiff <= (60000 * 5) && widget.status == "alarm") {
@@ -55,6 +100,9 @@ class _PanelNodeState extends State<PanelNode> {
     //     print("datediff: ${widget.dateDiff}");
     //   }
     // }
+
+
+
     return InkWell(
       onHighlightChanged: (value) {
         setState(() {
@@ -146,94 +194,89 @@ class _PanelNodeState extends State<PanelNode> {
                         children: [
                           Container(
                             child: Center(
-                              child: Text(
-                                "${widget.tegangan.toStringAsFixed(2)}V",
-                                style: MyTextStyle.defaultFontCustom(
-                                    widget.status.toLowerCase() == "active"
-                                        ? MainStyle.primaryColor.withOpacity(1)
-                                        : widget.status
-                                                .toLowerCase()
-                                                .contains("alarmtegangan")
-                                            ? Colors.orange.withOpacity(1)
-                                            : MainStyle.primaryColor
-                                                .withOpacity(1),
-                                    14,
-                                    weight: widget.status
-                                            .toLowerCase()
-                                            .contains("tegangan")
-                                        ? FontWeight.w900
-                                        : FontWeight.normal),
-                              ),
+                              // child: Text(
+                              //   "${widget.tegangan.toStringAsFixed(2)} V",
+                              //   style: MyTextStyle.defaultFontCustom(
+                              //       widget.status.toLowerCase() == "active"
+                              //           ? MainStyle.primaryColor.withOpacity(1)
+                              //           : widget.status
+                              //                   .toLowerCase()
+                              //                   .contains("alarmtegangan")
+                              //               ? Colors.orange.withOpacity(1)
+                              //               : MainStyle.primaryColor
+                              //                   .withOpacity(1),
+                              //       14,
+                              //       weight: widget.status
+                              //               .toLowerCase()
+                              //               .contains("tegangan")
+                              //           ? FontWeight.w900
+                              //           : FontWeight.normal),
+                              // ),
+                              child: Text("${widget.tegangan.toStringAsFixed(2)} V", style: MyCalculate.getStyleText(0, widget.status)),
                             ),
                             width: 55,
                             height: 30,
                             padding: EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: MainStyle.primaryColor.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(5)),
                           ),
                           Container(
                             child: Center(
-                              child: Text(
-                                "${widget.arus.toStringAsFixed(1)}A",
-                                style: MyTextStyle.defaultFontCustom(
-                                    widget.status.toLowerCase() == "active"
-                                        ? MainStyle.primaryColor.withOpacity(1)
-                                        : widget.status
-                                                .toLowerCase()
-                                                .contains("alarmarus")
-                                            ? widget.status
-                                                    .toLowerCase()
-                                                    .contains("rendah")
-                                                ? Colors.orange
-                                                : Colors.red.withOpacity(1)
-                                            : MainStyle.primaryColor
-                                                .withOpacity(1),
-                                    14,
-                                    weight: widget.status
-                                            .toLowerCase()
-                                            .contains("arus")
-                                        ? FontWeight.w900
-                                        : FontWeight.normal),
-                              ),
+                              // child: Text(
+                              //   "${widget.arus.toStringAsFixed(0)} A",
+                              //   style: MyTextStyle.defaultFontCustom(
+                              //       widget.status.toLowerCase() == "active"
+                              //           ? MainStyle.primaryColor.withOpacity(1)
+                              //           : widget.status
+                              //                   .toLowerCase()
+                              //                   .contains("alarmarus")
+                              //               ? widget.status
+                              //                       .toLowerCase()
+                              //                       .contains("rendah")
+                              //                   ? Colors.orange
+                              //                   : Colors.red.withOpacity(1)
+                              //               : MainStyle.primaryColor
+                              //                   .withOpacity(1),
+                              //       14,
+                              //       weight: widget.status
+                              //               .toLowerCase()
+                              //               .contains("arus")
+                              //           ? FontWeight.w900
+                              //           : FontWeight.normal),
+                              // ),
+                              child: Text("${widget.arus.toStringAsFixed(0)} A", style: MyCalculate.getStyleText(1, widget.status)),
                             ),
                             width: 55,
                             height: 30,
                             padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5)),
+                            // decoration: BoxDecoration(
+                            //     color: MainStyle.primaryColor.withOpacity(0.5),
+                            //     borderRadius: BorderRadius.circular(5)),
                           ),
                           Container(
                             child: Center(
-                              child: Text(
-                                "${widget.suhu.toStringAsFixed(1)}\u00B0 C",
-                                style: MyTextStyle.defaultFontCustom(
-                                    widget.status.toLowerCase() == "active"
-                                        ? MainStyle.primaryColor.withOpacity(1)
-                                        : widget.status
-                                                .toLowerCase()
-                                                .contains("alarmsuhu")
-                                            ? widget.status
-                                                    .toLowerCase()
-                                                    .contains("rendah")
-                                                ? Colors.orange
-                                                : Colors.red.withOpacity(1)
-                                            : MainStyle.primaryColor
-                                                .withOpacity(1),
-                                    14,
-                                    weight: widget.status
-                                            .toLowerCase()
-                                            .contains("suhu")
-                                        ? FontWeight.w900
-                                        : FontWeight.normal),
-                              ),
+                              // child: Text(
+                              //   "${widget.suhu.toStringAsFixed(0)} \u00B0C",
+                              //   style: MyTextStyle.defaultFontCustom(widget.status.toLowerCase() == "active"? 
+                              //   Colors.white : widget.status.toLowerCase().contains("alarmsuhu") ? widget.status.toLowerCase().contains("rendah") ? 
+                              //   Colors.orange : Colors.red.withOpacity(1): // MainStyle.primaryColor.withOpacity(1)
+                              //               Colors.white, 14,
+                              //       weight: widget.status
+                              //               .toLowerCase()
+                              //               .contains("suhu")
+                              //           ? FontWeight.w900
+                              //           : FontWeight.normal),
+                              // ),
+                              // child: Text("${widget.suhu.toStringAsFixed(0)} \u00B0C", style: MyCalculate.getStyleText(2, widget.status)),
+                              child: Text("${widget.suhu.toStringAsFixed(0)} \u00B0C", 
+                              style: MyTextStyle.defaultFontCustom(Colors.white, 14, weight: widget.status.toLowerCase().contains("suhu")? FontWeight.w900 : FontWeight.normal)),
                             ),
                             width: 55,
                             height: 30,
                             padding: EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: MainStyle.primaryColor.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(5)),
                           ),
                         ],
@@ -289,7 +332,7 @@ class _PanelNodeState extends State<PanelNode> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                    "${widget.daya.toStringAsFixed(2)} W ",
+                                    "${widget.daya.toStringAsFixed(0)} W ",
                                     textAlign: TextAlign.end,
                                     style: MyTextStyle.defaultFontCustom(
                                         widget.status.toLowerCase() ==
@@ -304,7 +347,7 @@ class _PanelNodeState extends State<PanelNode> {
                                             : FontWeight.normal),
                                   ),
                                   Text(
-                                    " ${widget.energi.toStringAsFixed(2)} Whr ",
+                                    " ${widget.energi.toStringAsFixed(0)} Whr ",
                                     textAlign: TextAlign.end,
                                     style: MyTextStyle.defaultFontCustom(
                                         widget.status.toLowerCase() ==
