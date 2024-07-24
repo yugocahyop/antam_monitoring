@@ -3,6 +3,7 @@ import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 
 class PanelNode extends StatefulWidget {
@@ -71,7 +72,7 @@ class MyCalculate {
         break;
     }
 
-    return MyTextStyle.defaultFontCustom(colorText, 20, weight: fontText);
+    return MyTextStyle.defaultFontCustom(colorText, 18, weight: fontText);
   }
 
   static TextStyle generateTextTemp(String value) {
@@ -136,8 +137,9 @@ class _PanelNodeState extends State<PanelNode> {
             children: [
               AnimatedContainer(
                 width: widget.width,
+                height: 20,
                 duration: d,
-                padding: EdgeInsets.all(2),
+                padding: EdgeInsets.only(right: 10, left: 8, bottom: 0, top: 0),
                 decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(10)),
@@ -188,6 +190,74 @@ class _PanelNodeState extends State<PanelNode> {
                         // ),
                       ],
                     ),
+                    // SizedBox(
+                    //   width: widget.width -10,
+                    //   child: Text(
+                    //           widget.isLoading ? "" : widget.lastUpdated,
+                    //           textAlign: TextAlign.end,
+                    //           style: MyTextStyle.defaultFontCustom(
+                    //             widget.status.toLowerCase() == "inactive"
+                    //                 ? Colors.black
+                    //                 : Colors.white,
+                    //             lWidth > 500 ? 10 : 9,
+                    //           ),
+                    //         ),
+                    // ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(),
+                        // width: widget.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                                widget.isLoading ? "" : widget.lastUpdated,
+                                textAlign: TextAlign.end,
+                                style: MyTextStyle.defaultFontCustom(
+                                  widget.status.toLowerCase() == "inactive"
+                                      ? Colors.black
+                                      : Colors.white,
+                                  lWidth > 500 ? 10 : 9,
+                                ),
+                              ),
+                          ],
+                        )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: AnimatedContainer(
+                duration: d,
+                width: widget.width,
+                padding: EdgeInsets.only(),
+                // padding: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                    color: widget.status.toLowerCase() == "active"
+                        ? MainStyle.primaryColor.withOpacity(
+                            widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                        : widget.status.toLowerCase().contains("alarm")
+                            ? widget.status
+                                        .toLowerCase()
+                                        .contains("tegangan") ||
+                                    widget.status
+                                        .toLowerCase()
+                                        .contains("rendah")
+                                ? Colors.orange.withOpacity(
+                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                                : Colors.red.withOpacity(
+                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
+                            : MainStyle.thirdColor.withOpacity(
+                                widget.dateDiff > (60000 * 5) ? 0.5 : 1),
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(10))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  
+                  children: [ 
+                    //box sensor
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -213,13 +283,14 @@ class _PanelNodeState extends State<PanelNode> {
                               //           : FontWeight.normal),
                               // ),
                               child: Text("${widget.tegangan.toStringAsFixed(2)} V", style: MyCalculate.getStyleText(0, widget.status)),
+                              // child: Text("9.99 V", style: MyCalculate.getStyleText(0, widget.status)),
                             ),
-                            width: 55,
+                            width: 70,
                             height: 30,
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                color: MainStyle.primaryColor.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(5)),
+                            padding: EdgeInsets.only(left: 2),
+                            // decoration: BoxDecoration(
+                            //     color: MainStyle.primaryColor.withOpacity(0.5),
+                            //     borderRadius: BorderRadius.circular(5)),
                           ),
                           Container(
                             child: Center(
@@ -246,10 +317,11 @@ class _PanelNodeState extends State<PanelNode> {
                               //           : FontWeight.normal),
                               // ),
                               child: Text("${widget.arus.toStringAsFixed(0)} A", style: MyCalculate.getStyleText(1, widget.status)),
+                              // child: Text("999 A", style: MyCalculate.getStyleText(1, widget.status)),
                             ),
-                            width: 55,
-                            height: 30,
-                            padding: EdgeInsets.all(4),
+                            width: 70,
+                            height: 25,
+                            padding: EdgeInsets.only(right: 4, left: 4),
                             // decoration: BoxDecoration(
                             //     color: MainStyle.primaryColor.withOpacity(0.5),
                             //     borderRadius: BorderRadius.circular(5)),
@@ -268,51 +340,21 @@ class _PanelNodeState extends State<PanelNode> {
                               //           ? FontWeight.w900
                               //           : FontWeight.normal),
                               // ),
-                              // child: Text("${widget.suhu.toStringAsFixed(0)} \u00B0C", style: MyCalculate.getStyleText(2, widget.status)),
-                              child: Text("${widget.suhu.toStringAsFixed(0)} \u00B0C", 
-                              style: MyTextStyle.defaultFontCustom(Colors.white, 14, weight: widget.status.toLowerCase().contains("suhu")? FontWeight.w900 : FontWeight.normal)),
+                              child: Text("${widget.suhu.toStringAsFixed(0)} \u00B0C", style: MyCalculate.getStyleText(2, widget.status)),
+                              // child: Text("100 \u00B0C", style: MyCalculate.getStyleText(2, widget.status)),
+                              // child: Text("${widget.suhu.toStringAsFixed(0)} \u00B0C", 
+                              // style: MyTextStyle.defaultFontCustom(Colors.white, 14, weight: widget.status.toLowerCase().contains("suhu")? FontWeight.w900 : FontWeight.normal)),
                             ),
-                            width: 55,
+                            width: 60,
                             height: 30,
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                color: MainStyle.primaryColor.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(5)),
+                            padding: EdgeInsets.only(right: 4),
+                          //   decoration: BoxDecoration(
+                          //       color: MainStyle.primaryColor.withOpacity(0.5),
+                          //       borderRadius: BorderRadius.circular(5)),
                           ),
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: AnimatedContainer(
-                duration: d,
-                width: widget.width,
-                // padding: const EdgeInsets.symmetric(horizontal: 3),
-                decoration: BoxDecoration(
-                    color: widget.status.toLowerCase() == "active"
-                        ? MainStyle.primaryColor.withOpacity(
-                            widget.dateDiff > (60000 * 5) ? 0.5 : 1)
-                        : widget.status.toLowerCase().contains("alarm")
-                            ? widget.status
-                                        .toLowerCase()
-                                        .contains("tegangan") ||
-                                    widget.status
-                                        .toLowerCase()
-                                        .contains("rendah")
-                                ? Colors.orange.withOpacity(
-                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
-                                : Colors.red.withOpacity(
-                                    widget.dateDiff > (60000 * 5) ? 0.5 : 1)
-                            : MainStyle.thirdColor.withOpacity(
-                                widget.dateDiff > (60000 * 5) ? 0.5 : 1),
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(10))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                    ),
                     widget.isLoading
                         ? SizedBox(
                             width: widget.width - 10,
@@ -329,7 +371,7 @@ class _PanelNodeState extends State<PanelNode> {
                         : Padding(
                             padding: const EdgeInsets.only(right: 3.0),
                             child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
                                     "${widget.daya.toStringAsFixed(0)} W ",
@@ -378,20 +420,6 @@ class _PanelNodeState extends State<PanelNode> {
                                   // ),
                                 ]),
                           ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      width: widget.width,
-                      child: Text(
-                        widget.isLoading ? "" : widget.lastUpdated,
-                        textAlign: TextAlign.end,
-                        style: MyTextStyle.defaultFontCustom(
-                          widget.status.toLowerCase() == "inactive"
-                              ? Colors.black
-                              : Colors.white,
-                          lWidth > 500 ? 10 : 9,
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ))
