@@ -379,8 +379,8 @@ class _Content_diagnosticState extends State<Content_tv> {
               ? 0.0
               : (selData[i + 1][ii]["daya"] ?? 0.0) / 1,
           arus: selData.length <= 1
-              ? 0.0
-              : (selData[i + 1][ii]["arus"] ?? 0.0) / 1,
+              ? 0
+              : (selData[i + 1][ii]["arus"] ?? 0) / 1,
           tegangan: selData.length <= 1
               ? 0.0
               : (selData[i + 1][ii]["tegangan"] ?? 0.00) / 1,
@@ -395,7 +395,7 @@ class _Content_diagnosticState extends State<Content_tv> {
       }
 
       rows.add(Container(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.symmetric(horizontal: 7),
         height: 77,
         decoration: BoxDecoration(
             color: MainStyle.secondaryColor,
@@ -445,11 +445,19 @@ class _Content_diagnosticState extends State<Content_tv> {
   }
 
   var totalData = [
-    {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
-    {"title": "Tegangan Total", "value": 0.0, "unit": "Volt"},
-    {"title": "Arus Total", "value": 0.0, "unit": "Ampere"},
-    {"title": "Power", "value": 0.0, "unit": "Watt"},
-    {"title": "Energi", "value": 0.0, "unit": "kWh"},
+    {"id": 0,"title": "Total Waktu", "value": 0.0, "unit": "Jam", "subUnit": "Menit"},
+    {"id": 1,"title": "Tegangan Total", "value": 0.0, "unit": "V", "subUnit": ""},
+    {"id": 2,"title": "Arus Total", "value": 0, "unit": "A", "subUnit": ""},
+    {"id": 3,"title": "Daya", "value": 0.0, "unit": "W", "subUnit": ""},
+    {"id": 4,"title": "Energi", "value": 0, "unit": "kWh", "subUnit": ""},
+  ];
+
+  var idData = [
+    {"id": 0},
+    {"id": 1},
+    {"id": 2},
+    {"id": 3},
+    {"id": 4},
   ];
 
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -479,6 +487,38 @@ class _Content_diagnosticState extends State<Content_tv> {
     MainStyle.primaryColor.withAlpha(((255 * 0.3) * 0.3).toInt()),
     MainStyle.primaryColor.withAlpha(((255 * 0.1) * 0.3).toInt()),
   ];
+
+
+  String generateValueData(Map<String, dynamic> data) {
+    String result = "0";
+    int id = (data["id"] as int).toInt();
+    double value = data['value'] as double;
+    switch(id) {
+      case 0: {
+        result = value.toStringAsFixed(2);
+        int index = result.indexOf('.');
+        String text_1 = result.substring(0, index);
+        String text_2 = result.substring(index+1);
+        result = "$text_1 jam $text_2 menit";
+        break;
+      }
+      case 1: 
+        result = "${value.toStringAsFixed(2)} ${data['unit']}";
+        break;
+      case 2: 
+        result = "${value.toStringAsFixed(0)} ${data['unit']}";
+        break;
+      case 3: 
+        result = "${value.toStringAsFixed(0)} ${data['unit']}";
+        break;
+      case 4: 
+        result = "${value.toStringAsFixed(2)} ${data['unit']}";
+        break;
+      default:
+        break;
+    }
+    return result;
+  }
 
   String warningMsg = "Message";
 
@@ -1274,7 +1314,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                 (data["teganganTotal"] ?? 0.0) ||
             totalData.firstWhere(
                     (element) => element["title"] == "Arus Total")["value"] !=
-                (data["arusTotal"] ?? 0.0) ||
+                (data["arusTotal"] ?? 0) ||
             totalData.firstWhere(
                     (element) => element["title"] == "Power")["value"] !=
                 (data["power"] ?? 0.0) ||
@@ -1420,6 +1460,7 @@ class _Content_diagnosticState extends State<Content_tv> {
 
       var temp = [
         {
+          "id": 0,
           "title": "Total Waktu",
           "value": data["totalWaktu"] == null
               ? totalData
@@ -1431,6 +1472,7 @@ class _Content_diagnosticState extends State<Content_tv> {
           "unit": "Jam"
         },
         {
+          "id": 1,
           "title": "Tegangan Total",
           "value": data["teganganTotal"] == null
               ? totalData
@@ -1439,9 +1481,10 @@ class _Content_diagnosticState extends State<Content_tv> {
               : (data["teganganTotal"] is double
                   ? (data["teganganTotal"] as double)
                   : (data["teganganTotal"] as int).toDouble()),
-          "unit": "Volt"
+          "unit": "V"
         },
         {
+          "id": 2,
           "title": "Arus Total",
           "value": data["arusTotal"] == null
               ? totalData
@@ -1450,10 +1493,11 @@ class _Content_diagnosticState extends State<Content_tv> {
               : (data["arusTotal"] is double
                   ? (data["arusTotal"] as double)
                   : (data["arusTotal"] as int).toDouble()),
-          "unit": "Ampere"
+          "unit": "A"
         },
         {
-          "title": "Power",
+          "id": 3,
+          "title": "Daya",
           "value": data["power"] == null
               ? totalData
                   .where((element) => element["title"] == "Power")
@@ -1461,9 +1505,10 @@ class _Content_diagnosticState extends State<Content_tv> {
               : (data["power"] is double
                   ? (data["power"] as double)
                   : (data["power"] as int).toDouble()),
-          "unit": "Watt"
+          "unit": "W"
         },
         {
+          "id": 4,
           "title": "Energi",
           "value": data["energi"] == null
               ? totalData
@@ -1799,7 +1844,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   .circular(5),
                                                         ),
                                                         child: Text(
-                                                          " Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                          " Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(0)} \u00B0C",
                                                           style: MyTextStyle.defaultFontCustom(
                                                               (diagnosticData[6][0]["status"]
                                                                               as String)
@@ -1866,6 +1911,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                       ),
                                     ),
 
+                                    //Footer name
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -1938,7 +1984,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                       ),
 
                                                       child: SizedBox(
-                                                        width: 112,
+                                                        width: 125,
                                                         child: Row(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
@@ -1953,39 +1999,37 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                                   Clip.none,
                                                               decoration:
                                                                   const BoxDecoration(),
-                                                              width: 50,
+                                                              width: 115,
                                                               child: Text(
-                                                                (e["value"]
-                                                                        as double)
-                                                                    .toStringAsFixed(
-                                                                        2),
+                                                                // (e["id"] as int).toStringAsFixed(2)
+                                                                generateValueData(e)
+                                                                ,
                                                                 textAlign:
                                                                     TextAlign
                                                                         .end,
-                                                                style: MyTextStyle
+                                                                style: e['id'] as int == 0? MyTextStyle.defaultFontLight(MainStyle.primaryColor, 12.5) :  MyTextStyle
                                                                     .defaultFontCustomMono(
                                                                         MainStyle
-                                                                            .primaryColor,
-                                                                        16),
+                                                                            .primaryColor, 14),
                                                               ),
                                                             ),
-                                                            SizedBox(
-                                                              width: 60,
-                                                              child: Text(
-                                                                e["unit"]
-                                                                    as String,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .right,
-                                                                style: MyTextStyle
-                                                                    .defaultFontCustom(
-                                                                        Colors
-                                                                            .black,
-                                                                        14,
-                                                                        weight:
-                                                                            FontWeight.bold),
-                                                              ),
-                                                            ),
+                                                            // SizedBox(
+                                                            //   width: 60,
+                                                            //   child: Text(
+                                                            //     e["unit"]
+                                                            //         as String,
+                                                            //     textAlign:
+                                                            //         TextAlign
+                                                            //             .right,
+                                                            //     style: MyTextStyle
+                                                            //         .defaultFontCustom(
+                                                            //             Colors
+                                                            //                 .black,
+                                                            //             14,
+                                                            //             weight:
+                                                            //                 FontWeight.bold),
+                                                            //   ),
+                                                            // ),
                                                           ],
                                                         ),
                                                       ),

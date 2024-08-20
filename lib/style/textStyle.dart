@@ -30,6 +30,21 @@ class MyTextStyle {
         color: color);
   }
 
+  static TextStyle defaultFontLight(Color color, double size,
+      {FontWeight weight = FontWeight.normal, bool isStroke = false}) {
+    return GoogleFonts.inter(
+        textStyle: !isStroke
+            ? null
+            : TextStyle(
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 1
+                  ..color = Colors.black),
+        fontSize: size,
+        fontWeight: weight,
+        color: color);
+  }
+
   static TextStyle defaultFontCustomMono(Color color, double size,
       {FontWeight weight = FontWeight.normal, bool isStroke = false}) {
     return GoogleFonts.robotoMono(

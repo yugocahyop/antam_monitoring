@@ -4,8 +4,8 @@ import 'dart:math';
 
 // import 'package:antam_monitoring/home/home.dart';
 import 'package:antam_monitoring/sign-up/controller/sign-up-controller.dart';
-import 'package:antam_monitoring/sign-up/widget/content_SignUp.dart';
-import 'package:antam_monitoring/sign-up/widget/content_SignUp_mobile.dart';
+import 'package:antam_monitoring/sign-up/widget/content_signUp.dart';
+import 'package:antam_monitoring/sign-up/widget/content_signUp_mobile.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/widget/overlay.dart';
 import 'package:flutter/material.dart';
