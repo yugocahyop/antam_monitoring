@@ -72,7 +72,7 @@ class MyCalculate {
         break;
     }
 
-    return MyTextStyle.defaultFontCustom(colorText, 18, weight: fontText);
+    return MyTextStyle.defaultFontCustom(colorText, 22, weight: fontText);
   }
 
   static TextStyle generateTextTemp(String value) {
