@@ -1355,10 +1355,10 @@ class _Content_diagnosticState extends State<Content_tv> {
                     : (data["arusTotal"] as int).toDouble());
 
         totalData
-                .firstWhere((element) => element["title"] == "Power")["value"] =
+                .firstWhere((element) => element["title"] == "Daya")["value"] =
             data["power"] == null
                 ? totalData
-                    .where((element) => element["title"] == "Power")
+                    .where((element) => element["title"] == "Daya")
                     .first["value"]!
                 : (data["power"] is double
                     ? (data["power"] as double)
