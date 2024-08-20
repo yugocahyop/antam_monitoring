@@ -183,7 +183,7 @@ class _HomeMobileState extends State<HomeMobile> {
 
   bool isMsgVisible = false;
 
-  int currPage = 0;
+  int currPage = 0, currPage2 =-1;
 
   late FilterTangki filterTangki;
 
@@ -197,7 +197,23 @@ class _HomeMobileState extends State<HomeMobile> {
   }
 
   getTotal(int value, int tangki) {
+    if (kDebugMode) {
+      print("page changed $value");
+    }
+
+    if(value == 0 && currPage2 != -1){
+      currPage2 = -1;
+      pc.jumpToPage(currPage);
+      
+
+      return;
+    }
     currPage = value;
+
+    if(currPage2 != -1){
+      currPage2 = -1;
+    }
+    
     // final d = (selData[tangki] as List<dynamic>)
     //     .where((d) =>
     //         ((d["sel"] is double)
@@ -709,6 +725,8 @@ class _HomeMobileState extends State<HomeMobile> {
 
         final sData = Map.from(data["selData"]);
 
+        
+
         if (kDebugMode) {
           print((sData));
         }
@@ -943,7 +961,12 @@ class _HomeMobileState extends State<HomeMobile> {
       data.clear();
 
       if (mounted && refresh) {
+         currPage2 = currPage;
         setState(() {});
+
+        // pc.jumpToPage(cPage);
+
+        // Future.delayed(const Duration(milliseconds: 1000), ()=> pc.jumpToPage(cPage));
       }
 
       // Future.delayed(Duration(milliseconds: 500), () {

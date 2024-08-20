@@ -46,7 +46,7 @@ class Content_dataLogger2 extends StatefulWidget {
 
   static int fileNum = 0;
   static bool isCancel = false;
-  static const int maxRowExcel = 5000;
+  static const int maxRowExcel = 1000;
 
   @override
   State<Content_dataLogger2> createState() => _Content_dataLogger2State();
