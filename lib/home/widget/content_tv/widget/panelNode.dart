@@ -320,7 +320,7 @@ class _PanelNodeState extends State<PanelNode> {
                               // child: Text("999 A", style: MyCalculate.getStyleText(1, widget.status)),
                             ),
                             width: 70,
-                            height: 25,
+                            height: 30,
                             padding: EdgeInsets.only(right: 4, left: 4),
                             // decoration: BoxDecoration(
                             //     color: MainStyle.primaryColor.withOpacity(0.5),

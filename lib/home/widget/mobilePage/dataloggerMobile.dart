@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../style/mainStyle.dart';
 import '../../../style/textStyle.dart';
@@ -1135,6 +1136,48 @@ class _HomeMobileState extends State<DataLogger> {
 
   int fileNum = 0;
 
+  Future<void> downloadBackend()async{
+
+    
+    final api = ApiHelper();
+
+    PanelTable.maxDataNumDownload = 1;
+    Content_dataLogger2.fileNum =1;
+    Content_dataLogger2.progress = 0.001;
+
+    setState(() {
+      
+    });
+
+    final r = await api.callAPI(
+        "/monitoring/prepare",
+        "POST",
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki}),
+        true);
+
+    if(r["file"] != null){
+      final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
+
+      launchUrl(url);
+    }
+
+PanelTable.maxDataNumDownload = 1;
+     Content_dataLogger2.fileNum =1;
+    Content_dataLogger2.progress = 0;
+
+    setState(() {
+      
+    });
+
+    // final dio = Dio();
+    // dio.options.headers["authorization"] = "Bearer ${ApiHelper.tokenMain}";
+
+    // final response = await dio.download("http://${ApiHelper.url}:7003/monitoring/download?file=antam-monitoring-2024-08-27_00-00-00_to_2024-08-27_01-00-00-all.xlsx", (await getTemporaryDirectory())!.path + "excel.xlsx" );
+
+    
+
+  }
+
   Future<void> download() async {
     // if (!setFilter) {
 
@@ -1577,7 +1620,7 @@ class _HomeMobileState extends State<DataLogger> {
                               : PanelTable(
                                   fileNum: Content_dataLogger2.fileNum,
                                   progress: Content_dataLogger2.progress,
-                                  download: () => download(),
+                                  download: () => downloadBackend(),
                                   isLoading: isLoading,
                                   changeIsAlarm: changeIsAlarm,
                                   loadmore: loadMore,

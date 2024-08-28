@@ -345,33 +345,37 @@ class _PanelTableState extends State<PanelTable> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(
-                                      width: lWidth <= 500 ? 120 : 180,
-                                      height: 8,
-                                      child: LinearProgressIndicator(
-                                        backgroundColor:
-                                            MainStyle.secondaryColor,
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: MainStyle.primaryColor,
-                                        value: widget.progress,
-                                      ),
+                                      // width: lWidth <= 500 ? 120 : 180,
+                                      // height: 8,
+                                    width: 10,
+                                    height: 10,
+                                      child:
+                                      CircularProgressIndicator(color: MainStyle.primaryColor,)
+                                      //  LinearProgressIndicator(
+                                      //   backgroundColor:
+                                      //       MainStyle.secondaryColor,
+                                      //   borderRadius: BorderRadius.circular(10),
+                                      //   color: MainStyle.primaryColor,
+                                      //   value: widget.progress,
+                                      // ),
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        Content_dataLogger2.isCancel = true;
-                                      },
-                                      child: Container(
-                                          width: 18,
-                                          padding: EdgeInsets.all(2),
-                                          decoration: BoxDecoration(
-                                              color: MainStyle.primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Icon(
-                                            Icons.close,
-                                            size: 13,
-                                            color: Colors.white,
-                                          )),
-                                    )
+                                    // InkWell(
+                                    //   onTap: () {
+                                    //     Content_dataLogger2.isCancel = true;
+                                    //   },
+                                    //   child: Container(
+                                    //       width: 18,
+                                    //       padding: EdgeInsets.all(2),
+                                    //       decoration: BoxDecoration(
+                                    //           color: MainStyle.primaryColor,
+                                    //           borderRadius:
+                                    //               BorderRadius.circular(10)),
+                                    //       child: Icon(
+                                    //         Icons.close,
+                                    //         size: 13,
+                                    //         color: Colors.white,
+                                    //       )),
+                                    // )
                                   ],
                                 ),
                                 Expanded(
@@ -379,7 +383,7 @@ class _PanelTableState extends State<PanelTable> {
                                       alignment: WrapAlignment.end,
                                       children: [
                                         Text(
-                                            "${"downloading"} ${((widget.progress * (PanelTable.maxDataNumDownload / Content_dataLogger2.maxRowExcel))).ceil()} of ${widget.fileNum}"),
+                                            "downloading ${((widget.progress * (PanelTable.maxDataNumDownload / Content_dataLogger2.maxRowExcel))).ceil()} of ${widget.fileNum}"),
                                       ]),
                                 ),
                               ],

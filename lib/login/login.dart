@@ -134,7 +134,7 @@ class _LoginState extends State<Login> {
 
     //setServer
 
-    // Future.delayed(const Duration(seconds: 1), () => setServer(context));
+    Future.delayed(const Duration(seconds: 1), () => setServer(context));
   }
 
   @override

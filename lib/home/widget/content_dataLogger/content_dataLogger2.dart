@@ -12,12 +12,15 @@ import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/excel.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
+import 'package:dio/dio.dart';
 import 'package:excel/excel.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Content_dataLogger2 extends StatefulWidget {
   Content_dataLogger2(
@@ -46,7 +49,7 @@ class Content_dataLogger2 extends StatefulWidget {
 
   static int fileNum = 0;
   static bool isCancel = false;
-  static const int maxRowExcel = 1000;
+  static const int maxRowExcel = 1;
 
   @override
   State<Content_dataLogger2> createState() => _Content_dataLogger2State();
@@ -695,63 +698,63 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       if (kDebugMode) {
         print("mqtt topic $topic");
       }
-      if (topic == "antam/device") {
-        selData.clear();
-        // selData.add([]);
-        selData.add([
-          {
-            "tangki": 1,
-            "sel": 1,
-            "suhu": 0.0,
-            "tegangan": 0.0,
-            "arus": 0.0,
-            "daya": 0.0,
-            "energi": 0.0
-          },
-          {
-            "tangki": 1,
-            "sel": 2,
-            "suhu": 0.0,
-            "tegangan": 0.0,
-            "arus": 0.0,
-            "daya": 0.0,
-            "energi": 0.0
-          },
-          {
-            "tangki": 1,
-            "sel": 3,
-            "suhu": 0.0,
-            "tegangan": 0.0,
-            "arus": 0.0,
-            "daya": 0.0,
-            "energi": 0.0
-          },
-          {
-            "tangki": 1,
-            "sel": 4,
-            "suhu": 0.0,
-            "tegangan": 0.0,
-            "arus": 0.0,
-            "daya": 0.0,
-            "energi": 0.0
-          },
-          {
-            "tangki": 1,
-            "sel": 5,
-            "suhu": 0.0,
-            "tegangan": 0.0,
-            "arus": 0.0,
-            "daya": 0.0,
-            "energi": 0.0
-          },
-        ]);
-        selData.addAll(data["tangkiData"]);
+      if (topic == "antam/device/node") {
+        // selData.clear();
+        // // selData.add([]);
+        // selData.add([
+        //   {
+        //     "tangki": 1,
+        //     "sel": 1,
+        //     "suhu": 0.0,
+        //     "tegangan": 0.0,
+        //     "arus": 0.0,
+        //     "daya": 0.0,
+        //     "energi": 0.0
+        //   },
+        //   {
+        //     "tangki": 1,
+        //     "sel": 2,
+        //     "suhu": 0.0,
+        //     "tegangan": 0.0,
+        //     "arus": 0.0,
+        //     "daya": 0.0,
+        //     "energi": 0.0
+        //   },
+        //   {
+        //     "tangki": 1,
+        //     "sel": 3,
+        //     "suhu": 0.0,
+        //     "tegangan": 0.0,
+        //     "arus": 0.0,
+        //     "daya": 0.0,
+        //     "energi": 0.0
+        //   },
+        //   {
+        //     "tangki": 1,
+        //     "sel": 4,
+        //     "suhu": 0.0,
+        //     "tegangan": 0.0,
+        //     "arus": 0.0,
+        //     "daya": 0.0,
+        //     "energi": 0.0
+        //   },
+        //   {
+        //     "tangki": 1,
+        //     "sel": 5,
+        //     "suhu": 0.0,
+        //     "tegangan": 0.0,
+        //     "arus": 0.0,
+        //     "daya": 0.0,
+        //     "energi": 0.0
+        //   },
+        // ]);
+        // selData.addAll(data["tangkiData"]);
 
-        getMax2();
+        // getMax2();
 
-        getData(currTangki);
+        // getData(currTangki);
 
-        sortSelData();
+        // sortSelData();
 
         // List<String> items = [];
 
@@ -1348,6 +1351,48 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<void> downloadBackend()async{
+
+    
+    final api = ApiHelper();
+
+    PanelTable.maxDataNumDownload = 1;
+    Content_dataLogger2.fileNum =1;
+    Content_dataLogger2.progress = 0.001;
+
+    setState(() {
+      
+    });
+
+    final r = await api.callAPI(
+        "/monitoring/prepare",
+        "POST",
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki}),
+        true);
+
+    if(r["file"] != null){
+      final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
+
+      launchUrl(url);
+    }
+
+PanelTable.maxDataNumDownload = 1;
+     Content_dataLogger2.fileNum =1;
+    Content_dataLogger2.progress = 0;
+
+    setState(() {
+      
+    });
+
+    // final dio = Dio();
+    // dio.options.headers["authorization"] = "Bearer ${ApiHelper.tokenMain}";
+
+    // final response = await dio.download("http://${ApiHelper.url}:7003/monitoring/download?file=antam-monitoring-2024-08-27_00-00-00_to_2024-08-27_01-00-00-all.xlsx", (await getTemporaryDirectory())!.path + "excel.xlsx" );
+
+    
+
   }
 
   Future<void> download() async {
@@ -2252,7 +2297,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                                   child: PanelTable(
                                     fileNum: Content_dataLogger2.fileNum,
                                     progress: Content_dataLogger2.progress,
-                                    download: () => download(),
+                                    download: () => downloadBackend(),
                                     isLoading: isLoading,
                                     changeIsAlarm: changeIsAlarm,
                                     max: maxDataNum,

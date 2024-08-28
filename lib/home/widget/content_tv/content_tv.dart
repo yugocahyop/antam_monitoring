@@ -499,7 +499,12 @@ class _Content_diagnosticState extends State<Content_tv> {
         int index = result.indexOf('.');
         String text_1 = result.substring(0, index);
         String text_2 = result.substring(index+1);
-        result = "$text_1 jam $text_2 menit";
+
+        // double num_1 = double.tryParse(text_1) ?? 0;
+        double num_2 = ((double.tryParse(text_2)?? 0) /100 ) * 60 ;
+
+        
+        result = "$text_1 jam ${num_2.toStringAsFixed(0)} menit";
         break;
       }
       case 1: 
