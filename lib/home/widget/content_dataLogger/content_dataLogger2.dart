@@ -143,11 +143,11 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   ];
 
   var totalData = [
-    {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
-    {"title": "Tegangan Total", "value": 0.0, "unit": "Volt"},
-    {"title": "Arus Total", "value": 0.0, "unit": "Ampere"},
-    {"title": "Power", "value": 0.0, "unit": "Watt"},
-    {"title": "Energi", "value": 0.0, "unit": "Watt_Jam"},
+    {"title": "Total Waktu", "value": 0.0, "unit": "jam"},
+    {"title": "Tegangan Total", "value": 0.0, "unit": "volt"},
+    {"title": "Arus Total", "value": 0.0, "unit": "ampere"},
+    {"title": "Daya Total", "value": 0.0, "unit": "watt"},
+    {"title": "Energi", "value": 0.0, "unit": "kWh"},
   ];
 
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -894,7 +894,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                     (element) => element["title"] == "Arus Total")["value"] !=
                 (data["arusTotal"] ?? 0.0) ||
             totalData.firstWhere(
-                    (element) => element["title"] == "Power")["value"] !=
+                    (element) => element["title"] == "Daya Total")["value"] !=
                 (data["power"] ?? 0.0) ||
             totalData.firstWhere(
                     (element) => element["title"] == "Energi")["value"] !=
@@ -932,10 +932,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
                     : (data["arusTotal"] as int).toDouble());
 
         totalData
-                .firstWhere((element) => element["title"] == "Power")["value"] =
+                .firstWhere((element) => element["title"] == "Daya Total")["value"] =
             data["power"] == null
                 ? totalData
-                    .where((element) => element["title"] == "Power")
+                    .where((element) => element["title"] == "Daya Total")
                     .first["value"]!
                 : (data["power"] is double
                     ? (data["power"] as double)
@@ -986,10 +986,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
         //     "unit": "Ampere"
         //   },
         //   {
-        //     "title": "Power",
+        //     "title": "Daya Total",
         //     "value": data["power"] == null
         //         ? totalData
-        //             .where((element) => element["title"] == "Power")
+        //             .where((element) => element["title"] == "Daya Total")
         //             .first["value"]!
         //         : (data["power"] is double
         //             ? (data["power"] as double)
@@ -1052,7 +1052,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
               : (data["totalWaktu"] is double
                   ? (data["totalWaktu"] as double)
                   : (data["totalWaktu"] as int).toDouble()),
-          "unit": "Jam"
+          "unit": "jam"
         },
         {
           "title": "Tegangan Total",
@@ -1063,7 +1063,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
               : (data["teganganTotal"] is double
                   ? (data["teganganTotal"] as double)
                   : (data["teganganTotal"] as int).toDouble()),
-          "unit": "Volt"
+          "unit": "volt"
         },
         {
           "title": "Arus Total",
@@ -1074,18 +1074,18 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
               : (data["arusTotal"] is double
                   ? (data["arusTotal"] as double)
                   : (data["arusTotal"] as int).toDouble()),
-          "unit": "Ampere"
+          "unit": "ampere"
         },
         {
-          "title": "Power",
+          "title": "Daya Total",
           "value": data["power"] == null
               ? totalData
-                  .where((element) => element["title"] == "Power")
+                  .where((element) => element["title"] == "Daya Total")
                   .first["value"]!
               : (data["power"] is double
                   ? (data["power"] as double)
                   : (data["power"] as int).toDouble()),
-          "unit": "Watt"
+          "unit": "watt"
         },
         {
           "title": "Energi",
@@ -1096,7 +1096,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
               : (data["energi"] is double
                   ? (data["energi"] as double)
                   : (data["energi"] as int).toDouble()),
-          "unit": "Watt_Jam"
+          "unit": "kWh"
         },
       ];
 
@@ -2421,7 +2421,7 @@ PanelTable.maxDataNumDownload = 1;
                                                           .textStyleDefault15BlackBold,
                                                     ),
                                                     Text(
-                                                      "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                      "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(0)}\u00B0 C",
                                                       style: MainStyle
                                                           .textStyleDefault14Black,
                                                     )
@@ -2663,7 +2663,7 @@ PanelTable.maxDataNumDownload = 1;
                                                                         Center(
                                                                       child:
                                                                           Text(
-                                                                        ((value / 1) as double).toStringAsFixed(key == "tangki"
+                                                                        ((value / 1) as double).toStringAsFixed(key == "tangki" || key == "arus" || key =="suhu"
                                                                                 ? 0
                                                                                 : 2) +
                                                                             (key == "suhu" || key == "celcius"
@@ -2867,27 +2867,45 @@ PanelTable.maxDataNumDownload = 1;
                                                                   .translate(
                                                                 offset: Offset(
                                                                     0, -3),
-                                                                child: Text(
-                                                                  ((e["value"])
-                                                                          as double)
-                                                                      .toStringAsFixed(
-                                                                          2),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .right,
-                                                                  style: MainStyle
-                                                                      .textStyleDefault25Primary,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                  children: [
+                                                                    Text(
+                                                                      (e["value"]
+                                                                              as double)
+                                                                          .toStringAsFixed(
+                                                                            (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? 0:  2) ,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .right,
+                                                                      style: MainStyle
+                                                                          .textStyleDefault25Primary,
+                                                                    ),
+                                                                   (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? Opacity(
+                                                                      opacity: 0,
+                                                                      child: Text(
+                                                                       "000" ,
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .right,
+                                                                        style: MainStyle
+                                                                            .textStyleDefault25Primary,
+                                                                      ),
+                                                                    ) : SizedBox(width: 0,),
+                                                                  ],
+                                                                  
                                                                 ),
                                                               ),
                                                             ),
-                                                            SizedBox(
+                                                            Container(
+                                                              padding: EdgeInsets.symmetric(horizontal: 15),
                                                               width: 100,
                                                               child: Text(
                                                                 e["unit"]
                                                                     as String,
                                                                 textAlign:
                                                                     TextAlign
-                                                                        .right,
+                                                                        .left,
                                                                 style: MainStyle
                                                                     .textStyleDefault15BlackBold,
                                                               ),

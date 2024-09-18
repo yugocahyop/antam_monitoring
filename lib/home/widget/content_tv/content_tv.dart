@@ -1321,7 +1321,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                     (element) => element["title"] == "Arus Total")["value"] !=
                 (data["arusTotal"] ?? 0) ||
             totalData.firstWhere(
-                    (element) => element["title"] == "Power")["value"] !=
+                    (element) => element["title"] == "Daya")["value"] !=
                 (data["power"] ?? 0.0) ||
             totalData.firstWhere(
                     (element) => element["title"] == "Energi")["value"] !=

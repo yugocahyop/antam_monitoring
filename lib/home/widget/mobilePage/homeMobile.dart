@@ -10,6 +10,7 @@ import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
@@ -144,11 +145,11 @@ class _HomeMobileState extends State<HomeMobile> {
   ];
 
   var totalData = [
-    {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
-    {"title": "Tegangan Total", "value": 0.0, "unit": "Volt"},
-    {"title": "Arus Total", "value": 0.0, "unit": "Ampere"},
-    {"title": "Power", "value": 0.0, "unit": "Watt"},
-    {"title": "Energi", "value": 0.0, "unit": "Watt_Jam"},
+    {"title": "Total Waktu", "value": 0.0, "unit": "jam"},
+    {"title": "Tegangan Total", "value": 0.0, "unit": "volt"},
+    {"title": "Arus Total", "value": 0.0, "unit": "ampere"},
+    {"title": "Daya Total", "value": 0.0, "unit": "watt"},
+    {"title": "Energi", "value": 0.0, "unit": "kWh"},
   ];
 
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -838,7 +839,7 @@ class _HomeMobileState extends State<HomeMobile> {
                     (element) => element["title"] == "Arus Total")["value"] !=
                 (data["arusTotal"] ?? 0.0) ||
             totalData.firstWhere(
-                    (element) => element["title"] == "Power")["value"] !=
+                    (element) => element["title"] == "Daya Total")["value"] !=
                 (data["power"] ?? 0.0) ||
             totalData.firstWhere(
                     (element) => element["title"] == "Energi")["value"] !=
@@ -877,10 +878,10 @@ class _HomeMobileState extends State<HomeMobile> {
                     : (data["arusTotal"] as int).toDouble());
 
         totalData
-                .firstWhere((element) => element["title"] == "Power")["value"] =
+                .firstWhere((element) => element["title"] == "Daya Total")["value"] =
             data["power"] == null
                 ? totalData
-                    .where((element) => element["title"] == "Power")
+                    .where((element) => element["title"] == "Daya Total")
                     .first["value"]!
                 : (data["power"] is double
                     ? (data["power"] as double)
@@ -931,10 +932,10 @@ class _HomeMobileState extends State<HomeMobile> {
         //     "unit": "Ampere"
         //   },
         //   {
-        //     "title": "Power",
+        //     "title": "Daya Total",
         //     "value": data["power"] == null
         //         ? totalData
-        //             .where((element) => element["title"] == "Power")
+        //             .where((element) => element["title"] == "Daya Total")
         //             .first["value"]!
         //         : (data["power"] is double
         //             ? (data["power"] as double)
@@ -1003,7 +1004,7 @@ class _HomeMobileState extends State<HomeMobile> {
               : (data["totalWaktu"] is double
                   ? (data["totalWaktu"] as double)
                   : (data["totalWaktu"] as int).toDouble()),
-          "unit": "Jam"
+          "unit": "jam"
         },
         {
           "title": "Tegangan Total",
@@ -1014,7 +1015,7 @@ class _HomeMobileState extends State<HomeMobile> {
               : (data["teganganTotal"] is double
                   ? (data["teganganTotal"] as double)
                   : (data["teganganTotal"] as int).toDouble()),
-          "unit": "Volt"
+          "unit": "volt"
         },
         {
           "title": "Arus Total",
@@ -1025,18 +1026,18 @@ class _HomeMobileState extends State<HomeMobile> {
               : (data["arusTotal"] is double
                   ? (data["arusTotal"] as double)
                   : (data["arusTotal"] as int).toDouble()),
-          "unit": "Ampere"
+          "unit": "ampere"
         },
         {
-          "title": "Power",
+          "title": "Daya Total",
           "value": data["power"] == null
               ? totalData
-                  .where((element) => element["title"] == "Power")
+                  .where((element) => element["title"] == "Daya Total")
                   .first["value"]!
               : (data["power"] is double
                   ? (data["power"] as double)
                   : (data["power"] as int).toDouble()),
-          "unit": "Watt"
+          "unit": "watt"
         },
         {
           "title": "Energi",
@@ -1047,7 +1048,7 @@ class _HomeMobileState extends State<HomeMobile> {
               : (data["energi"] is double
                   ? (data["energi"] as double)
                   : (data["energi"] as int).toDouble()),
-          "unit": "Watt_Jam"
+          "unit": "kWh"
         },
       ];
 
@@ -1929,21 +1930,41 @@ class _HomeMobileState extends State<HomeMobile> {
                                               clipBehavior: Clip.none,
                                               decoration: const BoxDecoration(),
                                               width: 200,
-                                              child: Text(
-                                                (e["value"] as double)
-                                                    .toStringAsFixed(2),
-                                                textAlign: TextAlign.end,
-                                                style: MyTextStyle
-                                                    .defaultFontCustomMono(
-                                                        MainStyle.primaryColor,
-                                                        25),
-                                              ),
+                                              child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                  children: [
+                                                                    Text(
+                                                                      (e["value"]
+                                                                              as double)
+                                                                          .toStringAsFixed(
+                                                                            (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? 0:  2) ,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .right,
+                                                                      style: MainStyle
+                                                                          .textStyleDefault25Primary,
+                                                                    ),
+                                                                   (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? Opacity(
+                                                                      opacity: 0,
+                                                                      child: Text(
+                                                                       "000" ,
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .right,
+                                                                        style: MainStyle
+                                                                            .textStyleDefault25Primary,
+                                                                      ),
+                                                                    ) : SizedBox(width: 0,),
+                                                                  ],
+                                                                  
+                                                                ),
                                             ),
-                                            SizedBox(
+                                            Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 15),
                                               width: 100,
                                               child: Text(
                                                 e["unit"] as String,
-                                                textAlign: TextAlign.right,
+                                                textAlign: TextAlign.left,
                                                 style: MyTextStyle
                                                     .defaultFontCustom(
                                                         Colors.black, 15,

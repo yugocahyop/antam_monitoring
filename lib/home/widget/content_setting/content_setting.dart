@@ -11,6 +11,7 @@ import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Content_setting extends StatefulWidget {
@@ -86,11 +87,11 @@ class _Content_settingState extends State<Content_setting> {
   ];
 
   var totalData = [
-    {"title": "Total Waktu", "value": 0.0, "unit": "Jam"},
-    {"title": "Tegangan Total", "value": 0.0, "unit": "Volt"},
-    {"title": "Arus Total", "value": 0.0, "unit": "Ampere"},
-    {"title": "Power", "value": 0.0, "unit": "Watt"},
-    {"title": "Energi", "value": 0.0, "unit": "Watt_Jam"},
+    {"title": "Total Waktu", "value": 0.0, "unit": "jam"},
+    {"title": "Tegangan Total", "value": 0.0, "unit": "volt"},
+    {"title": "Arus Total", "value": 0.0, "unit": "ampere"},
+    {"title": "Daya Total", "value": 0.0, "unit": "watt"},
+    {"title": "Energi", "value": 0.0, "unit": "kWh"},
   ];
 
   var teganganSetting = [const FlSpot(0, 1), const FlSpot(6, 1)];
@@ -829,7 +830,7 @@ class _Content_settingState extends State<Content_setting> {
                     (element) => element["title"] == "Arus Total")["value"] !=
                 (data["arusTotal"] ?? 0.0) ||
             totalData.firstWhere(
-                    (element) => element["title"] == "Power")["value"] !=
+                    (element) => element["title"] == "Daya Total")["value"] !=
                 (data["power"] ?? 0.0) ||
             totalData.firstWhere(
                     (element) => element["title"] == "Energi")["value"] !=
@@ -868,10 +869,10 @@ class _Content_settingState extends State<Content_setting> {
                     : (data["arusTotal"] as int).toDouble());
 
         totalData
-                .firstWhere((element) => element["title"] == "Power")["value"] =
+                .firstWhere((element) => element["title"] == "Daya Total")["value"] =
             data["power"] == null
                 ? totalData
-                    .where((element) => element["title"] == "Power")
+                    .where((element) => element["title"] == "Daya Total")
                     .first["value"]!
                 : (data["power"] is double
                     ? (data["power"] as double)
@@ -922,10 +923,10 @@ class _Content_settingState extends State<Content_setting> {
         //     "unit": "Ampere"
         //   },
         //   {
-        //     "title": "Power",
+        //     "title": "Daya Total",
         //     "value": data["power"] == null
         //         ? totalData
-        //             .where((element) => element["title"] == "Power")
+        //             .where((element) => element["title"] == "Daya Total")
         //             .first["value"]!
         //         : (data["power"] is double
         //             ? (data["power"] as double)
@@ -981,7 +982,7 @@ class _Content_settingState extends State<Content_setting> {
               : (data["totalWaktu"] is double
                   ? (data["totalWaktu"] as double)
                   : (data["totalWaktu"] as int).toDouble()),
-          "unit": "Jam"
+          "unit": "jam"
         },
         {
           "title": "Tegangan Total",
@@ -992,7 +993,7 @@ class _Content_settingState extends State<Content_setting> {
               : (data["teganganTotal"] is double
                   ? (data["teganganTotal"] as double)
                   : (data["teganganTotal"] as int).toDouble()),
-          "unit": "Volt"
+          "unit": "volt"
         },
         {
           "title": "Arus Total",
@@ -1003,18 +1004,18 @@ class _Content_settingState extends State<Content_setting> {
               : (data["arusTotal"] is double
                   ? (data["arusTotal"] as double)
                   : (data["arusTotal"] as int).toDouble()),
-          "unit": "Ampere"
+          "unit": "ampere"
         },
         {
-          "title": "Power",
+          "title": "Daya Total",
           "value": data["power"] == null
               ? totalData
-                  .where((element) => element["title"] == "Power")
+                  .where((element) => element["title"] == "Daya Total")
                   .first["value"]!
               : (data["power"] is double
                   ? (data["power"] as double)
                   : (data["power"] as int).toDouble()),
-          "unit": "Watt"
+          "unit": "watt"
         },
         {
           "title": "Energi",
@@ -1025,7 +1026,7 @@ class _Content_settingState extends State<Content_setting> {
               : (data["energi"] is double
                   ? (data["energi"] as double)
                   : (data["energi"] as int).toDouble()),
-          "unit": "Watt_Jam"
+          "unit": "kWh"
         },
       ];
 
@@ -1329,7 +1330,7 @@ class _Content_settingState extends State<Content_setting> {
                                                         .textStyleDefault15BlackBold,
                                                   ),
                                                   Text(
-                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(2)} \u00B0 C",
+                                                    "pH: ${(((selData[7][0]["pH"] ?? 0) / 1.0) as double).toStringAsFixed(2)}   Suhu: ${(((selData[7][0]["suhu"] ?? 0) / 1.0) as double).toStringAsFixed(0)}\u00B0 C",
                                                     style: MainStyle
                                                         .textStyleDefault14Black,
                                                   )
@@ -1563,7 +1564,7 @@ class _Content_settingState extends State<Content_setting> {
                                                                             Center(
                                                                           child:
                                                                               Text(
-                                                                            (value / 1 as double).toStringAsFixed(key == "sel" ? 0 : 2) +
+                                                                            (value / 1 as double).toStringAsFixed(key == "sel" || key == "arus" || key =="suhu" ? 0 : 2) +
                                                                                 (key == "suhu" || key == "celcius" ? "\u00B0" : ""),
                                                                             style:
                                                                                 MainStyle.textStyleDefault16Black,
@@ -1761,27 +1762,45 @@ class _Content_settingState extends State<Content_setting> {
                                                                   .translate(
                                                                 offset: Offset(
                                                                     0, -3),
-                                                                child: Text(
-                                                                  (e["value"]
-                                                                          as double)
-                                                                      .toStringAsFixed(
-                                                                          2),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .right,
-                                                                  style: MainStyle
-                                                                      .textStyleDefault25Primary,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                  children: [
+                                                                    Text(
+                                                                      (e["value"]
+                                                                              as double)
+                                                                          .toStringAsFixed(
+                                                                            (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? 0:  2) ,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .right,
+                                                                      style: MainStyle
+                                                                          .textStyleDefault25Primary,
+                                                                    ),
+                                                                   (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? Opacity(
+                                                                      opacity: 0,
+                                                                      child: Text(
+                                                                       "000" ,
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .right,
+                                                                        style: MainStyle
+                                                                            .textStyleDefault25Primary,
+                                                                      ),
+                                                                    ) : SizedBox(width: 0,),
+                                                                  ],
+                                                                  
                                                                 ),
                                                               ),
                                                             ),
-                                                            SizedBox(
+                                                            Container(
+                                                              padding: EdgeInsets.symmetric(horizontal: 15),
                                                               width: 100,
                                                               child: Text(
                                                                 e["unit"]
                                                                     as String,
                                                                 textAlign:
                                                                     TextAlign
-                                                                        .right,
+                                                                        .left,
                                                                 style: MainStyle
                                                                     .textStyleDefault15BlackBold,
                                                               ),
