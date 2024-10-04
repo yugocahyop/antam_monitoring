@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:antam_monitoring/home/widget/menu.dart';
 import 'package:antam_monitoring/home/widget/myDropDown.dart';
+import 'package:antam_monitoring/home/widget/popupTgl.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
+import 'package:flutter/cupertino.dart';
 // import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +54,7 @@ class _FilterTglState extends State<FilterTgl> {
 
   int dayNow = -1;
 
-  DateFormat df1 = DateFormat("dd/MM/yyyy", 'id_ID');
+  DateFormat df1 = DateFormat("dd/MM/yyyy HH:mm", 'id_ID');
 
   void setDay() {
     hari.clear();
@@ -177,7 +179,7 @@ class _FilterTglState extends State<FilterTgl> {
         ),
       ),
       child: SizedBox(
-        width: lWidth < 900 ? 190 : 450,
+        width: lWidth < 900 ? 190 : 350,
         child: Row(
           children: [
             Container(
@@ -220,98 +222,107 @@ class _FilterTglState extends State<FilterTgl> {
                       )),
                   InkWell(
                     onTap: () async {
-                      final now = DateTime.now();
-                      final date = await showDatePicker(
-                        context: context,
-                        currentDate: DateTime.fromMillisecondsSinceEpoch(0),
-                        initialDate:
-                            DateTime.fromMillisecondsSinceEpoch(widget.today),
-                        firstDate: DateTime.fromMillisecondsSinceEpoch(
-                            now.millisecondsSinceEpoch - (2419200000 * 2)),
-                        lastDate: now,
-                        builder: (BuildContext context, Widget? child) {
-                          return Theme(
-                            // The below-written code will only affect the pop-up window.
-                            data: ThemeData(
-                              // I tried to match my picker with your photo.
-                              useMaterial3: true,
-                              brightness: Brightness.light,
-                              colorSchemeSeed: MainStyle.primaryColor,
-                              // // Write your own code for customizing the date picker theme.
-                              // indicatorColor: MainStyle.primaryColor,
-                              // colorScheme: ColorScheme(
-                              //     brightness: Brightness.light,
-                              //     primary: MainStyle.primaryColor,
-                              //     onPrimary: MainStyle.secondaryColor,
-                              //     secondary: MainStyle.primaryColor,
-                              //     onSecondary: MainStyle.secondaryColor,
-                              //     error: Colors.red,
-                              //     onError: Colors.red,
-                              //     background: MainStyle.primaryColor,
-                              //     onBackground: MainStyle.secondaryColor,
-                              //     surface: MainStyle.secondaryColor,
-                              //     onSurface: MainStyle.primaryColor),
+                      // final now = DateTime.now();
+                      // final time = await showTimePicker(context: context,
+                      //  initialTime: TimeOfDay(hour: 0, minute: 0),
+                      //       builder: (context, Widget? child) {
+                      //         return MediaQuery(
+                      //           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                      //           child: child!,
+                      //         );
+                      //       },
+                      //   );
+                      // final date = await showDatePicker(
+                      //   context: context,
+                      //   currentDate: DateTime.fromMillisecondsSinceEpoch(0),
+                      //   initialDate:
+                      //       DateTime.fromMillisecondsSinceEpoch(widget.today),
+                      //   firstDate: DateTime.fromMillisecondsSinceEpoch(
+                      //       now.millisecondsSinceEpoch - (2419200000 * 2)),
+                      //   lastDate: now,
+                      //   builder: (BuildContext context, Widget? child) {
+                      //     return Theme(
+                      //       // The below-written code will only affect the pop-up window.
+                      //       data: ThemeData(
+                      //         // I tried to match my picker with your photo.
+                      //         useMaterial3: true,
+                      //         brightness: Brightness.light,
+                      //         colorSchemeSeed: MainStyle.primaryColor,
+                      //         // // Write your own code for customizing the date picker theme.
+                      //         // indicatorColor: MainStyle.primaryColor,
+                      //         // colorScheme: ColorScheme(
+                      //         //     brightness: Brightness.light,
+                      //         //     primary: MainStyle.primaryColor,
+                      //         //     onPrimary: MainStyle.secondaryColor,
+                      //         //     secondary: MainStyle.primaryColor,
+                      //         //     onSecondary: MainStyle.secondaryColor,
+                      //         //     error: Colors.red,
+                      //         //     onError: Colors.red,
+                      //         //     background: MainStyle.primaryColor,
+                      //         //     onBackground: MainStyle.secondaryColor,
+                      //         //     surface: MainStyle.secondaryColor,
+                      //         //     onSurface: MainStyle.primaryColor),
 
-                              datePickerTheme: DatePickerThemeData(
-                                  backgroundColor: Colors.white,
-                                  surfaceTintColor: Colors.transparent,
-                                  headerForegroundColor: MainStyle.primaryColor,
-                                  yearForegroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) {
-                                    if (states
-                                        .contains(MaterialState.selected)) {
-                                      return MainStyle.primaryColor;
-                                    }
-                                    return Colors.black;
-                                  }),
-                                  dayForegroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) {
-                                    if (states
-                                        .contains(MaterialState.selected)) {
-                                      return MainStyle.primaryColor;
-                                    } else if (states
-                                        .contains(MaterialState.disabled)) {
-                                      return Colors.black.withAlpha(55);
-                                    }
-                                    return Colors.black;
-                                  }),
-                                  yearBackgroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) {
-                                    if (states
-                                        .contains(MaterialState.selected)) {
-                                      return MainStyle.secondaryColor;
-                                    }
-                                    return Colors.transparent;
-                                  }),
-                                  dayBackgroundColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) {
-                                    if (states
-                                        .contains(MaterialState.selected)) {
-                                      return MainStyle.secondaryColor;
-                                    }
-                                    return Colors.transparent;
-                                  })),
-                              textButtonTheme: TextButtonThemeData(
-                                style: TextButton.styleFrom(
-                                  foregroundColor: MainStyle
-                                      .primaryColor, // button text color
-                                ),
-                              ),
-                              textSelectionTheme: TextSelectionThemeData(
-                                cursorColor: MainStyle.primaryColor,
-                                selectionColor:
-                                    MainStyle.primaryColor.withAlpha(155),
-                                selectionHandleColor: MainStyle.primaryColor,
-                              ),
-                            ),
-                            child: child ?? const SizedBox(),
-                          );
-                        },
-                      );
+                      //         datePickerTheme: DatePickerThemeData(
+                      //             backgroundColor: Colors.white,
+                      //             surfaceTintColor: Colors.transparent,
+                      //             headerForegroundColor: MainStyle.primaryColor,
+                      //             yearForegroundColor:
+                      //                 MaterialStateProperty.resolveWith(
+                      //                     (states) {
+                      //               if (states
+                      //                   .contains(MaterialState.selected)) {
+                      //                 return MainStyle.primaryColor;
+                      //               }
+                      //               return Colors.black;
+                      //             }),
+                      //             dayForegroundColor:
+                      //                 MaterialStateProperty.resolveWith(
+                      //                     (states) {
+                      //               if (states
+                      //                   .contains(MaterialState.selected)) {
+                      //                 return MainStyle.primaryColor;
+                      //               } else if (states
+                      //                   .contains(MaterialState.disabled)) {
+                      //                 return Colors.black.withAlpha(55);
+                      //               }
+                      //               return Colors.black;
+                      //             }),
+                      //             yearBackgroundColor:
+                      //                 MaterialStateProperty.resolveWith(
+                      //                     (states) {
+                      //               if (states
+                      //                   .contains(MaterialState.selected)) {
+                      //                 return MainStyle.secondaryColor;
+                      //               }
+                      //               return Colors.transparent;
+                      //             }),
+                      //             dayBackgroundColor:
+                      //                 MaterialStateProperty.resolveWith(
+                      //                     (states) {
+                      //               if (states
+                      //                   .contains(MaterialState.selected)) {
+                      //                 return MainStyle.secondaryColor;
+                      //               }
+                      //               return Colors.transparent;
+                      //             })),
+                      //         textButtonTheme: TextButtonThemeData(
+                      //           style: TextButton.styleFrom(
+                      //             foregroundColor: MainStyle
+                      //                 .primaryColor, // button text color
+                      //           ),
+                      //         ),
+                      //         textSelectionTheme: TextSelectionThemeData(
+                      //           cursorColor: MainStyle.primaryColor,
+                      //           selectionColor:
+                      //               MainStyle.primaryColor.withAlpha(155),
+                      //           selectionHandleColor: MainStyle.primaryColor,
+                      //         ),
+                      //       ),
+                      //       child: child ?? const SizedBox(),
+                      //     );
+                      //   },
+                      // );
 
                       // final time = await showTimePicker(
                       //     builder: (context, child) {
@@ -331,24 +342,40 @@ class _FilterTglState extends State<FilterTgl> {
                       //     context: context,
                       //     initialTime: TimeOfDay(hour: 0, minute: 0));
 
-                      if (date != null) {
-                        widget.today = (date.millisecondsSinceEpoch
-                            // (time.hour * 3600000) +
-                            // (time.minute * 60000)
+                      final r = await showDialog(
+                          context: context,
+                          builder: ((context) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(textScaleFactor: 0.93),
+                              child: PopupTgl(
+                                isLast: widget.lastValue,
+                                today: widget.today,
+                              ),
                             );
+                          }));
+
+                      if (r!=null) {
+                        // widget.today = (date.millisecondsSinceEpoch +
+                        //     (time!.hour * 3600000) +
+                        //     (time!.minute * 60000)
+                        //     ) ;
 
                         // DateFormat df2 = DateFormat("HH:00");
                         // widget.jamValue = df2.format(
                         //     (DateTime.fromMillisecondsSinceEpoch(
                         //         widget.today)));
 
-                        widget.today += (jam.indexOf(widget.jamValue) *
-                                3600000) -
-                            ((jam.indexOf(widget.jamValue) == (jam.length - 1)
-                                ? 60000
-                                : 0));
-                        setState(() {});
+                        // widget.today += (jam.indexOf(widget.jamValue) *
+                        //         3600000) -
+                        //     ((jam.indexOf(widget.jamValue) == (jam.length - 1)
+                        //         ? 60000
+                        //         : 0));
 
+                        widget.today = r;
+                        if(mounted){
+                          setState(() {});
+
+                        } 
                         widget.changePage();
                       }
                     },
@@ -357,7 +384,7 @@ class _FilterTglState extends State<FilterTgl> {
                         child: Row(
                           children: [
                             Container(
-                              width: lWidth < 900 ? 80 : 150,
+                              width: lWidth < 900 ? 150 : 200,
                               height: 30,
                               padding: EdgeInsets.only(
                                   left: lWidth < 900 ? 3 : 20,
@@ -395,30 +422,33 @@ class _FilterTglState extends State<FilterTgl> {
                               ),
                             ),
                             MainStyle.sizedBoxW10,
-                            MyDropDown(
-                                items: jam,
-                                value: widget.jamValue,
-                                onChange: (value) {
-                                  // DateTime now = DateTime.now();
-
-                                  DateTime today =
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          widget.today);
-
-                                  widget.today = DateTime(
-                                          today.year, today.month, today.day)
-                                      .millisecondsSinceEpoch;
-                                  widget.today += jam.indexOf(value!) *
-                                      (3600000 -
-                                          (jam.indexOf(value!) ==
-                                                  (jam.length - 1)
-                                              ? 60000
-                                              : 0));
-                                  setState(() {
-                                    widget.jamValue = value ?? "";
-                                  });
-                                  widget.changePage();
-                                }),
+                            Visibility(
+                              visible: false,
+                              child: MyDropDown(
+                                  items: jam,
+                                  value: widget.jamValue,
+                                  onChange: (value) {
+                                    // DateTime now = DateTime.now();
+                              
+                                    DateTime today =
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.today);
+                              
+                                    widget.today = DateTime(
+                                            today.year, today.month, today.day)
+                                        .millisecondsSinceEpoch;
+                                    widget.today += jam.indexOf(value!) *
+                                        (3600000 -
+                                            (jam.indexOf(value!) ==
+                                                    (jam.length - 1)
+                                                ? 60000
+                                                : 0));
+                                    setState(() {
+                                      widget.jamValue = value ?? "";
+                                    });
+                                    widget.changePage();
+                                  }),
+                            ),
                           ],
                         )
                         // Row(

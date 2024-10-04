@@ -1438,6 +1438,7 @@ PanelTable.maxDataNumDownload = 1;
           "isHover": false,
           "timeStamp_server": val["timeStamp_server"],
           "msg": isAlarm ? msg : "",
+           "isStart": val["isStart"],
           "tangkiData": isAlarm ? null : val["tangkiData"] as List<dynamic>
         });
       }

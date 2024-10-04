@@ -47,6 +47,8 @@ class Content_tv extends StatefulWidget {
 }
 
 class _Content_diagnosticState extends State<Content_tv> {
+
+  var isStartER2 = false;
   var alarm = [
     {
       "title": "Status",
@@ -1759,16 +1761,24 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  Center(
-                                                    child: Text(
-                                                      "Elektrolit",
-                                                      style: MyTextStyle
-                                                          .defaultFontCustom(
-                                                              MainStyle
-                                                                  .primaryColor,
-                                                              14,
-                                                              weight: FontWeight
-                                                                  .w900),
+                                                  SizedBox(
+                                                    width: 180,
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Elektrolit",
+                                                          style: MyTextStyle
+                                                              .defaultFontCustom(
+                                                                  MainStyle
+                                                                      .primaryColor,
+                                                                  14,
+                                                                  weight: FontWeight
+                                                                      .w900),
+                                                        ),
+                                                        MainStyle.sizedBoxW5,
+                                                        Text(lastUpdateElektrolit(), style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12),)
+                                                      ],
                                                     ),
                                                   ),
                                                   Row(
@@ -1861,13 +1871,34 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                               16),
                                                         ),
                                                       ),
-                                                      MainStyle.sizedBoxW5,
-                                                      Text(lastUpdateElektrolit(), style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 12),)
+                                                      // MainStyle.sizedBoxW5,
+                                                      
                                                     ],
                                                   ),
                                                 ],
                                               ),
                                             ),
+                                            MainStyle.sizedBoxW10,
+                                            Column(children: [
+                                              Text("ER2 sedang",
+                                               style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 15),
+                                              ),
+                                              Text(isStartER2 ? "BEROPERASI": "BERHENTI",
+                                               style: MyTextStyle.defaultFontCustom(isStartER2 ? Colors.green : Colors.red, 15),
+                                              ),
+                                            ],),
+                                            MainStyle.sizedBoxW10,
+                                            MyButton(color: isStartER2? Colors.red : MainStyle.primaryColor, text: isStartER2?"Stop" : "Start", onPressed: (){
+                                              mqtt.publish({}, "antam/device/start");
+                                              setState(() {
+                                                isStartER2 = !isStartER2;
+                                              });
+
+                                              if(isStartER2){
+                                                mqtt.publish({"tangki": 15, "node": 15, "command": "resetWaktu"}, "antam/command");
+                                              }
+                                              
+                                            }, textColor: Colors.white)
                                           ],
                                         ),
                                         Row(

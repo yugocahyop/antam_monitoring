@@ -244,7 +244,9 @@ class _PanelTableState extends State<PanelTable> {
                                   date: dataLog[index]["timeStamp_server"],
                                   title: isAlarm
                                       ? dataLog[index]["msg"]
-                                      : "Data ${index + 1}")))),
+                                      : dataLog[index]["isStart"] != null ? (dataLog[index]["isStart"] ==true ?"Proses ER2 dimulai" : 
+                                      "Proses ER2 berakhir") : ""
+                                      )))),
                     ),
             ),
           ),
