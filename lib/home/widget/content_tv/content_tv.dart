@@ -1453,6 +1453,27 @@ class _Content_diagnosticState extends State<Content_tv> {
     };
   }
 
+  initStartEr2() async {
+    ApiHelper api = ApiHelper();
+
+    final r = await api.callAPI("/monitoring/find/start/last", "POST", "", true);
+
+    if (r["error"] == null) {
+      final data = r["data"][0];
+
+      if (kDebugMode) {
+        print("isStart: $data");
+      }
+
+      isStartER2 = data["isStart"];
+
+      setState(() {
+        
+      });
+    }
+
+  }
+
   initTotalDataStatistic() async {
     ApiHelper api = ApiHelper();
 
@@ -1585,6 +1606,7 @@ class _Content_diagnosticState extends State<Content_tv> {
     initDiagData();
     initSelData();
     initTotalDataStatistic();
+    initStartEr2();
   }
 
   @override

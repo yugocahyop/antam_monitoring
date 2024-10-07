@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/content_dataLogger2.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
+import 'package:antam_monitoring/home/widget/filterInterval.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
 import 'package:antam_monitoring/home/widget/myDropDown.dart';
@@ -205,6 +206,8 @@ class _HomeMobileState extends State<DataLogger> {
   late FilterTgl filterTglHingga;
 
   late FilterTgl filterTglDari;
+
+  FilterInterval filterInterval = FilterInterval();
 
   filterChange() {
     dataLog.clear();
@@ -1152,7 +1155,7 @@ class _HomeMobileState extends State<DataLogger> {
     final r = await api.callAPI(
         "/monitoring/prepare",
         "POST",
-        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki}),
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki, "intervalT": filterInterval.interval}),
         true);
 
     if(r["file"] != null){
@@ -1538,21 +1541,27 @@ PanelTable.maxDataNumDownload = 1;
                 // width: 100,
                 // height: 50,
                 fit: BoxFit.fitHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    filterTglDari,
-                    // const SizedBox(
-                    //   width: 10,
-                    // ),
-                    MainStyle.sizedBoxW10,
-                    filterTglHingga,
-                    // const SizedBox(
-                    //   width: 10,
-                    // ),
-                    MainStyle.sizedBoxW10,
-                    filterTangki
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      filterTglDari,
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
+                      MainStyle.sizedBoxW10,
+                      filterTglHingga,
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
+                      MainStyle.sizedBoxW10,
+                      filterInterval,
+                      
+                      MainStyle.sizedBoxW10,
+                      filterTangki
+                    ],
+                  ),
                 ),
               ),
               // const SizedBox(

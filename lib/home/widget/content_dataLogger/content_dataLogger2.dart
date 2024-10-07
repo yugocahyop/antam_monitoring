@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
+import 'package:antam_monitoring/home/widget/filterInterval.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
 import 'package:antam_monitoring/home/widget/filterTgl.dart';
 import 'package:antam_monitoring/home/widget/mobilePage/dataloggerMobile.dart';
@@ -187,6 +188,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
   late FilterTgl filterTglHingga;
 
   late FilterTgl filterTglDari;
+
+  FilterInterval filterInterval = FilterInterval();
 
   filterChange() {
     // widget.changePage(1,
@@ -1369,7 +1372,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     final r = await api.callAPI(
         "/monitoring/prepare",
         "POST",
-        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki}),
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki, "intervalT": filterInterval.interval}),
         true);
 
     if(r["file"] != null){
@@ -2253,6 +2256,8 @@ PanelTable.maxDataNumDownload = 1;
                           // const SizedBox(
                           //   width: 10,
                           // ),
+                          MainStyle.sizedBoxW10,
+                          filterInterval,
                           MainStyle.sizedBoxW10,
                           filterTangki
                         ],
