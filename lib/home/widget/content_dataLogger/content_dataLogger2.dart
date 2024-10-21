@@ -189,7 +189,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
   late FilterTgl filterTglDari;
 
-  FilterInterval filterInterval = FilterInterval();
+  late FilterInterval filterInterval;
 
   filterChange() {
     // widget.changePage(1,
@@ -1376,8 +1376,8 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
         true);
 
     if(r["file"] != null){
-      final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
-
+      // final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
+      final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
       launchUrl(url);
     }
 
@@ -1865,6 +1865,8 @@ PanelTable.maxDataNumDownload = 1;
     }
   }
 
+  int offsetTime = 0;
+
   Future<void> getDataLog(int offsetNum,
       {bool setFilter = false, bool islimit = true}) async {
     // if (!setFilter) {
@@ -1886,28 +1888,38 @@ PanelTable.maxDataNumDownload = 1;
 
     // print("is alarm: $isAlarm");
 
+    if(offsetNum == 0){
+      maxDataNum = 20;
+      offsetTime =0 ;
+    }
+
     final r = await api.callAPI(
         "/${isAlarm ? "alarm" : "monitoring"}/find${!islimit ? "" : "?offset=$offsetNum&limit=$dataNum"}",
         "POST",
-        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today}),
+        jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "interval": filterInterval.interval, "offsetTime": offsetTime}),
         true);
 
     if (r["error"] == null) {
       // if (isAlarm) {
-      //   if (kDebugMode) {
-      //     print("alarm r: $r");
-      //   }
+        if (kDebugMode) {
+          print("data r: $r");
+        }
       // }
       List<dynamic> data = r['data'] as List<dynamic>;
 
       maxDataNum = r["count"];
+      offsetTime = r["intervalOffset"] ?? 0;
+
       if (mounted) setState(() {});
 
       // if (kDebugMode) {
       //   print("backend data2:  $data");
       // }
 
-      if (offsetNum == 0) dataLog.clear();
+      if (offsetNum == 0){ 
+        // offsetTime = 0;
+        dataLog.clear();
+      }
 
       for (var i = 0; i < data.length; i++) {
         final val = data[i];
@@ -1999,6 +2011,8 @@ PanelTable.maxDataNumDownload = 1;
       today: widget.dari ?? 0,
       changePage: () => filterChange(),
     );
+
+    filterInterval  = FilterInterval(onChange: ()=> filterChange());
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);
 

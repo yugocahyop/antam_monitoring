@@ -5,9 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FilterInterval extends StatefulWidget {
-   FilterInterval({super.key});
+   FilterInterval({super.key, required this.onChange});
 
   int interval =1;
+
+  Function onChange;
 
   @override
   State<FilterInterval> createState() => _FilterIntervalState();
@@ -59,6 +61,8 @@ class _FilterIntervalState extends State<FilterInterval> {
           setState(() {
             intervalText = "${r[0]} ${r[1]}";
           });
+
+          widget.onChange();
         }
         
       },

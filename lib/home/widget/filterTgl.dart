@@ -184,7 +184,7 @@ class _FilterTglState extends State<FilterTgl> {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              width: lWidth < 900 ? 190 : 450,
+              width: lWidth < 900 ? 190 : 350,
               decoration: BoxDecoration(
                   color: MainStyle.secondaryColor,
                   borderRadius: BorderRadius.circular(10),
@@ -380,11 +380,11 @@ class _FilterTglState extends State<FilterTgl> {
                       }
                     },
                     child: SizedBox(
-                        width: lWidth < 900 ? 190 : 320,
+                        width: lWidth < 900 ? 190 : 200,
                         child: Row(
                           children: [
                             Container(
-                              width: lWidth < 900 ? 150 : 200,
+                              width: lWidth < 900 ? 150 : 220,
                               height: 30,
                               padding: EdgeInsets.only(
                                   left: lWidth < 900 ? 3 : 20,

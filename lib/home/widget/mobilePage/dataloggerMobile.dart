@@ -207,7 +207,7 @@ class _HomeMobileState extends State<DataLogger> {
 
   late FilterTgl filterTglDari;
 
-  FilterInterval filterInterval = FilterInterval();
+  late FilterInterval filterInterval;
 
   filterChange() {
     dataLog.clear();
@@ -957,6 +957,10 @@ class _HomeMobileState extends State<DataLogger> {
       lastValue: false,
       today: widget.dari,
       changePage: () => filterChange(),
+    );
+
+    filterInterval = FilterInterval(
+      onChange: ()=> filterChange(),
     );
 
     account_alarm = Account_alarm(alarm: alarm, isAdmin: widget.isAdmin);

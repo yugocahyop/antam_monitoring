@@ -187,7 +187,10 @@ class _PopupTglState extends State<PopupTgl> {
                             );
                           },
                         );
-        
+
+                        // if(date != null){
+
+                        // }
                         final time = await showTimePicker(context: context,
                          initialTime: TimeOfDay(hour: 0, minute: 0),
                               builder: (context, Widget? child) {
