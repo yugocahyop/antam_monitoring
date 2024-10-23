@@ -107,7 +107,7 @@ class _FilterTglState extends State<FilterTgl> {
 
         widget.today =
             DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
-                ((widget.lastValue ? 0 : 56) * 86400000);
+                ((widget.lastValue ? 0 : 1) * 86400000);
 
         // widget.jamValue = widget.lastValue ? jam.last : jam.first;
         if (mounted) {
@@ -136,7 +136,7 @@ class _FilterTglState extends State<FilterTgl> {
 
       widget.today =
           DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
-              ((widget.lastValue ? 0 : 56) * 86400000);
+              ((widget.lastValue ? 0 : 1) * 86400000);
       widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
           ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
     }

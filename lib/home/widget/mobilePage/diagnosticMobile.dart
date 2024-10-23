@@ -12,6 +12,7 @@ import 'package:antam_monitoring/tools/apiHelper.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:antam_monitoring/widget/myButton.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -803,15 +804,18 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SizedBox(
-                                  width: 120,
-                                  child: MyButton(
-                                      color: MainStyle.primaryColor,
-                                      text: "Reset semua",
-                                      onPressed: () => promptToggle(
-                                          15, 15, false,
-                                          isResetEnergi: true),
-                                      textColor: Colors.white),
+                                Visibility(
+                                  visible: widget.isAdmin,
+                                  child: SizedBox(
+                                    width: 120,
+                                    child: MyButton(
+                                        color: MainStyle.primaryColor,
+                                        text: "Reset semua",
+                                        onPressed: () => promptToggle(
+                                            15, 15, false,
+                                            isResetEnergi: true),
+                                        textColor: Colors.white),
+                                  ),
                                 ),
                                 MainStyle.sizedBoxW5,
                                 MyButton(

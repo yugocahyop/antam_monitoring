@@ -1640,15 +1640,18 @@ class _Content_diagnosticState extends State<Content_diagnostic> {
                                               children: getDiagnostiWidget(70)),
                                           Align(
                                             alignment: Alignment.bottomRight,
-                                            child: SizedBox(
-                                              width: 120,
-                                              child: MyButton(
-                                                  color: MainStyle.primaryColor,
-                                                  text: "Reset semua",
-                                                  onPressed: () => promptToggle(
-                                                      15, 15, false,
-                                                      isResetEnergi: true),
-                                                  textColor: Colors.white),
+                                            child: Visibility(
+                                              visible: widget.isAdmin,
+                                              child: SizedBox(
+                                                width: 120,
+                                                child: MyButton(
+                                                    color: MainStyle.primaryColor,
+                                                    text: "Reset semua",
+                                                    onPressed: () => promptToggle(
+                                                        15, 15, false,
+                                                        isResetEnergi: true),
+                                                    textColor: Colors.white),
+                                              ),
                                             ),
                                           )
                                         ],

@@ -129,7 +129,7 @@ class _MytextfieldState extends State<Mytextfield> {
                     ),
               labelStyle: MyTextStyle.defaultFontCustom(
                   focused ? blue : Colors.black38, 14
-
+                  
                   // color: Color(0xff00FBC2),
                   ),
               labelText: widget.hintText,

@@ -15,10 +15,10 @@ import 'server.dart' if (dart.library.html) 'browser.dart' as mqttsetup;
 class MyMqtt {
   StreamSubscription? subs;
 
-  // MqttClient client = mqttsetup.setup('ws://${ApiHelper.url}',
-  //     "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
-  MqttClient client = mqttsetup.setup('ws://${"202.148.1.57"}',
+  MqttClient client = mqttsetup.setup('ws://${ApiHelper.url}',
       "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
+  // MqttClient client = mqttsetup.setup('ws://${"202.148.1.57"}',
+  //     "antam${DateTime.now().millisecondsSinceEpoch.toString()}${ApiHelper.tokenMain}");
   Function(Map<String, dynamic> json, String topic) onUpdate;
   Function(Map<String, dynamic> json)? onUpdateAlarm;
   Function(Map<String, dynamic> json)? onReply;
@@ -243,6 +243,7 @@ class MyMqtt {
       client.subscribe('antam/statistic', MqttQos.atLeastOnce);
       client.subscribe('antam/statusnode', MqttQos.atLeastOnce);
       client.subscribe('antam/statusNode', MqttQos.atLeastOnce);
+      client.subscribe('antam/banner', MqttQos.atLeastOnce);
       // client.subscribe('antam/reply', MqttQos.atLeastOnce);
     } catch (e) {
       if (kDebugMode) {
@@ -358,6 +359,7 @@ class MyMqtt {
       client.unsubscribe('antam/statistic');
       client.unsubscribe('antam/statusnode');
       client.unsubscribe('antam/statusNode');
+      client.unsubscribe('antam/banner');
       // client.unsubscribe('antam/reply');
     } catch (e) {
       if (kDebugMode) {
@@ -392,6 +394,7 @@ class MyMqtt {
       client.unsubscribe('antam/statistic');
       client.unsubscribe('antam/statusnode');
       client.unsubscribe('antam/statusNode');
+      client.unsubscribe('antam/banner');
       // client.unsubscribe('antam/reply');
     } catch (e) {
       if (kDebugMode) {

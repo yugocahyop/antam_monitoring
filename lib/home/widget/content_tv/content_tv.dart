@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../content_diagnostic/content_diagnostic.dart';
 import 'widget/panelNode.dart';
@@ -47,6 +48,8 @@ class Content_tv extends StatefulWidget {
 }
 
 class _Content_diagnosticState extends State<Content_tv> {
+  var textBanner = "";
+  var isBannerRed = false;
 
   var isStartER2 = false;
   var alarm = [
@@ -1116,7 +1119,26 @@ class _Content_diagnosticState extends State<Content_tv> {
         print("mqtt topic $topic");
       }
 
-      if (topic == "antam/statusNode" || topic == "antam/statusnode") {
+      if(topic == "antam/banner"){
+
+        if((data["alarm"] as String) != "none"){
+          textBanner = data["message"] as String;
+
+          isBannerRed = (data["alarm"] as String) == "red";
+
+          setState(() {
+            
+          });
+        }else{
+          textBanner = "";
+
+          setState(() {
+            
+          });
+        }
+        
+      }
+      else if (topic == "antam/statusNode" || topic == "antam/statusnode") {
         int tangki = data["tangki"] as int;
         int sel = data["node"] as int;
         String status = data["status"] as String;
@@ -1563,6 +1585,8 @@ class _Content_diagnosticState extends State<Content_tv> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    WakelockPlus.enable();
 
     timerRefreshDiagnostic = Timer(const Duration(minutes: 1), () {
       // getDiagnostiWidget(220);
@@ -2118,6 +2142,23 @@ class _Content_diagnosticState extends State<Content_tv> {
                   ),
                 ],
               )),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Visibility(
+                visible: textBanner.isNotEmpty,
+                child: Container(
+                  alignment: Alignment.center,
+                  width: lWidth * 0.9,
+                  height: 50,
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: isBannerRed? Colors.red : Colors.orange,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  ),
+                  child: Text(textBanner, style: MyTextStyle.defaultFontCustom(Colors.white, 17, weight: FontWeight.w600),),
+                ),
+              ),
+            )
         ],
       ),
     );
