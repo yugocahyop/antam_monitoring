@@ -52,6 +52,8 @@ class _Content_diagnosticState extends State<Content_tv> {
   var isBannerRed = false;
 
   var isStartER2 = false;
+  var isButtonStartFocus = false;
+
   var alarm = [
     {
       "title": "Status",
@@ -1930,21 +1932,103 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                style: MyTextStyle.defaultFontCustom(MainStyle.primaryColor, 15),
                                               ),
                                               Text(isStartER2 ? "BEROPERASI": "BERHENTI",
-                                               style: MyTextStyle.defaultFontCustom(isStartER2 ? Colors.green : Colors.red, 15),
+                                               style: MyTextStyle.defaultFontCustom(isStartER2 ? Colors.green : Colors.red, 15, weight: FontWeight.w800),
                                               ),
                                             ],),
                                             MainStyle.sizedBoxW10,
-                                            MyButton(color: isStartER2? Colors.red : MainStyle.primaryColor, text: isStartER2?"Stop" : "Start", onPressed: (){
-                                              mqtt.publish({}, "antam/device/start");
-                                              setState(() {
-                                                isStartER2 = !isStartER2;
-                                              });
+                                            // MyButton(color: isStartER2? Colors.red : MainStyle.primaryColor, text: isStartER2?"Stop" : "Start", onPressed: (){
+                                            //   mqtt.publish({}, "antam/device/start");
+                                            //     setState(() {
+                                            //       isStartER2 = !isStartER2;
+                                            //     });
 
-                                              if(isStartER2){
-                                                mqtt.publish({"tangki": 15, "node": 15, "command": "resetWaktu"}, "antam/command");
-                                              }
+                                            //     if(isStartER2){
+                                            //       mqtt.publish({"tangki": 15, "node": 15, "command": "resetWaktu"}, "antam/command");
+                                            //     }
                                               
-                                            }, textColor: Colors.white)
+                                            // }, textColor: Colors.white),
+                                            InkWell(
+                                               onHighlightChanged: (value) {
+                                                setState(() {
+                                                  isButtonStartFocus = value;
+                                                });
+                                              },
+                                              onFocusChange: (value) {
+                                                setState(() {
+                                                  isButtonStartFocus = value;
+                                                });
+                                                // isHovers[widget.menuItem.indexOf(e)] = value;
+                                              },
+                                              onHover: (value) {
+                                                setState(() {
+                                                  isButtonStartFocus = value;
+                                                });
+                                              },
+                                              onTap: () {
+                                                
+
+                                                final c = Controller();
+                                                c.goToDialog(
+                                                    context,
+                                                    AlertDialog(
+                                                      title: Text("Apakah anda ingin ${isStartER2? "memberhentikan" : "memulai"} proses ER2 ?"),
+                                                      actions: [
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: MyButton(
+                                                              color: MainStyle.primaryColor,
+                                                              textColor: Colors.white,
+                                                              onPressed: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              text: "No"),
+                                                        ),
+                                                        MainStyle.sizedBoxW10,
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: MyButton(
+                                                              color: MainStyle.primaryColor,
+                                                              textColor: Colors.white,
+                                                              onPressed: () {
+                                                                // dispose();
+
+                                                                mqtt.publish({}, "antam/device/start");
+                                                                setState(() {
+                                                                  isStartER2 = !isStartER2;
+                                                                });
+
+                                                                if(isStartER2){
+                                                                  mqtt.publish({"tangki": 15, "node": 15, "command": "resetWaktu"}, "antam/command");
+                                                                }
+                                                              
+                                                                Navigator.pop(context);
+
+                                                              
+                                                              },
+                                                              text: ("Yes")),
+                                                        ),
+                                                      ],
+                                                    ));
+                                              },
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  border:Border.all(color: isButtonStartFocus? MainStyle.primaryColor : Colors.transparent, width: 2)
+                                                  ,
+                                                ),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    color: !isStartER2 ? MainStyle.primaryColor : Colors.red
+                                                  ),
+                                                  child: Text(isStartER2 ? "Stop": "Start", style: MyTextStyle.defaultFontCustom(Colors.white, 15),),
+                                                ),
+                                              ),
+                                            )
                                           ],
                                         ),
                                         Row(

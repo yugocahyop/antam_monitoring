@@ -106,7 +106,7 @@ class _FilterTglState extends State<FilterTgl> {
         // widget.hariValue = widget.lastValue ? hari.last : hari[0];
 
         widget.today =
-            DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
+            DateTime(now.year, now.month, now.day, now.hour, now.minute).millisecondsSinceEpoch -
                 ((widget.lastValue ? 0 : 1) * 86400000);
 
         // widget.jamValue = widget.lastValue ? jam.last : jam.first;
@@ -135,10 +135,10 @@ class _FilterTglState extends State<FilterTgl> {
       widget.jamValue = widget.lastValue ? jam.last : jam.first;
 
       widget.today =
-          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch -
+          DateTime(now.year, now.month, now.day, now.hour, now.minute).millisecondsSinceEpoch -
               ((widget.lastValue ? 0 : 1) * 86400000);
-      widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
-          ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
+      // widget.today += ((jam.indexOf(widget.jamValue)) * 3600000) -
+      //     ((jam.indexOf(widget.jamValue) == (jam.length - 1) ? 60000 : 0));
     }
 
     // widget.today =
