@@ -1870,6 +1870,10 @@ PanelTable.maxDataNumDownload = 1;
   Future<void> getDataLog(int offsetNum,
       {bool setFilter = false, bool islimit = true}) async {
     // if (!setFilter) {
+    if(filterTglDari.today == 0 && filterTglHingga.today == 0){
+      return;
+    }
+    
     if (mounted) {
       setState(() {
         isLoading = true;
@@ -1892,6 +1896,8 @@ PanelTable.maxDataNumDownload = 1;
       maxDataNum = 20;
       offsetTime =0 ;
     }
+
+    
 
     final r = await api.callAPI(
         "/${isAlarm ? "alarm" : "monitoring"}/find${!islimit ? "" : "?offset=$offsetNum&limit=$dataNum"}",
