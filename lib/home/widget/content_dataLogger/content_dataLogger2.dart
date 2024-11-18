@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:antam_monitoring/home/widget/account_alarm.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFile.dart' if (dart.library.html)'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFileWeb.dart';
 import 'package:antam_monitoring/home/widget/content_dataLogger/widget/panelTable.dart';
 import 'package:antam_monitoring/home/widget/filterInterval.dart';
 import 'package:antam_monitoring/home/widget/filterTangki.dart';
@@ -1377,8 +1378,17 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
 
     if(r["file"] != null){
       // final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
-      final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
-      launchUrl(url);
+      // final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
+      // launchUrl(url);
+
+      if(kIsWeb){
+        // final data = await api.callAPIBytes("/monitoring/download?file=${r["file"]}", "GET", "",true);
+         
+        downloadFile('http://${ApiHelper.url}:7003/static/${r["file"]}', r["file"]);
+      }else{
+        final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
+        launchUrl(url);
+      }
     }
 
 PanelTable.maxDataNumDownload = 1;

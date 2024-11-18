@@ -78,8 +78,12 @@ Future<void> notificationTapForeground(
     try {
       Map<String, dynamic> data = jsonDecode(notificationResponse.payload!);
 
-      while (MyNotification.showNotif == null) {
-        await Future.delayed(const Duration(milliseconds: 500));
+      // while (MyNotification.showNotif == null) {
+      //   await Future.delayed(const Duration(milliseconds: 500));
+      // }
+
+      if(MyNotification.showNotif == null){
+        return;
       }
 
       if (kDebugMode) {
