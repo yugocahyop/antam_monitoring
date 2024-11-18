@@ -1382,9 +1382,10 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       // launchUrl(url);
 
       if(kIsWeb){
-        // final data = await api.callAPIBytes("/monitoring/download?file=${r["file"]}", "GET", "",true);
+        final data = await api.callAPIBytes("/monitoring/download?file=${r["file"]}", "GET", "",true);
          
-        downloadFile('http://${ApiHelper.url}:7003/static/${r["file"]}', r["file"]);
+        // downloadFile('http://${ApiHelper.url}:7003/static/${r["file"]}', r["file"]);
+        downloadFile(data, r["file"]);
       }else{
         final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
         launchUrl(url);

@@ -1,3 +1,5 @@
-downloadFile(String url, String fileName){
+import 'dart:typed_data';
+
+downloadFile(Uint8List url, String fileName){
 
 }

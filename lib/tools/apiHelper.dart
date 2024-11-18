@@ -148,7 +148,7 @@ class ApiHelper {
     }
   }
 
-  Future<List<int>> callAPIBytes(
+  Future<Uint8List> callAPIBytes(
       String api, String method, String data, bool useToken) async {
     final client = http.Client();
 
@@ -166,7 +166,7 @@ class ApiHelper {
       //
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return (await response.stream.toBytes()).toList();
+        return (await response.stream.toBytes());
       }
       //  else if (response.statusCode == 401) {
       //   print("refresh token");
@@ -188,12 +188,12 @@ class ApiHelper {
 
       
 
-      return (await response.stream.toBytes()).toList();
+      return (await response.stream.toBytes());
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
-      return [];
+      return utf8.encode("");
     }
   }
 }
