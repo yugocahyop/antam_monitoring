@@ -2057,7 +2057,15 @@ PanelTable.maxDataNumDownload = 1;
     initSelData();
     initTotalDataStatistic();
 
-    getDataLog(0);
+     if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
+
+    Future.delayed(const Duration(milliseconds: 1000), (){
+      getDataLog(0);
+    });
   }
 
   resetSelDataSort() {
