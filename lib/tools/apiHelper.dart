@@ -148,6 +148,55 @@ class ApiHelper {
     }
   }
 
+  Future<Map<String, dynamic>> callAPINoTimeout(
+      String api, String method, String data, bool useToken) async {
+    final client = http.Client();
+
+    // print("data  $data");
+
+    try {
+      final response = await client
+          .send(http.Request(
+              method, Uri.parse("http://${ApiHelper.url}:7003" + api))
+            ..headers["authorization"] = "Bearer $tokenMain"
+            ..headers["Content-Type"] = "application/json"
+            ..body = data);
+          // .timeout(const Duration(seconds: 60));
+
+      //
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(await response.stream.bytesToString());
+      }
+      //  else if (response.statusCode == 401) {
+      //   print("refresh token");
+
+      //   rcount++;
+      //   if (rcount > 10) {
+      //     rcount = 0;
+      //     return "{\"error\": \"can't contact server\"}";
+      //   } else {
+      //     print("refresh token");
+      //     getRefreshToken(ip, api, method, data, useToken);
+      //     return "";
+      //     // if (getRefreshToken()) {
+      //     //   rcount = 0;
+      //     //   return callAPI(ip, api, method, data, useToken);
+      //     // }
+      //   }
+      // }
+
+      String r = await response.stream.bytesToString();
+
+      return jsonDecode(r);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return jsonDecode("{\"error\": \"Tidak bisa menghubungi server\"}");
+    }
+  }
+
   Future<Uint8List> callAPIBytes(
       String api, String method, String data, bool useToken) async {
     final client = http.Client();

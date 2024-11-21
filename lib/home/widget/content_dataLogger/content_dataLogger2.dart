@@ -1370,7 +1370,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
       
     });
 
-    final r = await api.callAPI(
+    final r = await api.callAPINoTimeout(
         "/monitoring/prepare",
         "POST",
         jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki, "intervalT": filterInterval.interval}),

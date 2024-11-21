@@ -22,6 +22,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFile.dart' if (dart.library.html)'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFileWeb.dart';
 
 import '../../../style/mainStyle.dart';
 import '../../../style/textStyle.dart';
@@ -1156,20 +1157,30 @@ class _HomeMobileState extends State<DataLogger> {
       
     });
 
-    final r = await api.callAPI(
+    final r = await api.callAPINoTimeout(
         "/monitoring/prepare",
         "POST",
         jsonEncode({"from": filterTglDari.today, "to": filterTglHingga.today, "sel": currTangki, "intervalT": filterInterval.interval}),
         true);
 
     if(r["file"] != null){
-      final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
+      // final Uri url = Uri.parse('http://${ApiHelper.url}:7003/monitoring/download?file=${r["file"]}');
+      // final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
+      // launchUrl(url);
 
-      launchUrl(url);
+      if(kIsWeb){
+        final data = await api.callAPIBytes("/monitoring/download?file=${r["file"]}", "GET", "",true);
+         
+        // downloadFile('http://${ApiHelper.url}:7003/static/${r["file"]}', r["file"]);
+        downloadFile(data, r["file"]);
+      }else{
+        final Uri url = Uri.parse('http://${ApiHelper.url}:7003/static/${r["file"]}');
+        launchUrl(url);
+      }
     }
 
-PanelTable.maxDataNumDownload = 1;
-     Content_dataLogger2.fileNum =1;
+    PanelTable.maxDataNumDownload = 1;
+    Content_dataLogger2.fileNum =1;
     Content_dataLogger2.progress = 0;
 
     setState(() {

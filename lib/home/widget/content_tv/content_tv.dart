@@ -1588,7 +1588,10 @@ class _Content_diagnosticState extends State<Content_tv> {
     // TODO: implement initState
     super.initState();
 
-    WakelockPlus.enable();
+    if(!kIsWeb){
+      WakelockPlus.enable();
+    }
+    
 
     timerRefreshDiagnostic = Timer(const Duration(minutes: 1), () {
       // getDiagnostiWidget(220);
@@ -1968,6 +1971,8 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                 
 
                                                 final c = Controller();
+                                                FocusScope.of(context).unfocus();
+                                                
                                                 c.goToDialog(
                                                     context,
                                                     AlertDialog(
@@ -1981,7 +1986,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                               onPressed: () {
                                                                 Navigator.pop(context);
                                                               },
-                                                              text: "No"),
+                                                              text: "Tidak"),
                                                         ),
                                                         MainStyle.sizedBoxW10,
                                                         SizedBox(
@@ -2005,7 +2010,7 @@ class _Content_diagnosticState extends State<Content_tv> {
 
                                                               
                                                               },
-                                                              text: ("Yes")),
+                                                              text: ("Ya")),
                                                         ),
                                                       ],
                                                     ));
@@ -2023,7 +2028,7 @@ class _Content_diagnosticState extends State<Content_tv> {
                                                   alignment: Alignment.center,
                                                   decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.circular(10),
-                                                    color: !isStartER2 ? MainStyle.primaryColor : Colors.red
+                                                    color:  MainStyle.primaryColor
                                                   ),
                                                   child: Text(isStartER2 ? "Stop": "Start", style: MyTextStyle.defaultFontCustom(Colors.white, 15),),
                                                 ),
