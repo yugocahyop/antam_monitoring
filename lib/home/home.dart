@@ -14,6 +14,7 @@ import 'package:antam_monitoring/home/widget/content_diagnostic/content_diagnost
 import 'package:antam_monitoring/home/widget/content_home.dart';
 import 'package:antam_monitoring/home/widget/content_home_mobile.dart';
 import 'package:antam_monitoring/home/widget/content_setting/content_setting.dart';
+import 'package:antam_monitoring/home/widget/content_support/content_support.dart';
 import 'package:antam_monitoring/home/widget/content_tv/content_tv.dart';
 import 'package:antam_monitoring/home/widget/menu.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
@@ -575,6 +576,34 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
         setState(() {});
         break;
+
+        case 6:
+          c.saveSharedPref("antam.access", encrypt.encrypt("support"));
+          if (dari != null) {
+            menuItems.firstWhere(
+                (element) => element["isActive"] == true)["isActive"] = false;
+            menuItems[1]["isActive"] = true;
+          }
+          setState(() {
+            page = Content_support(
+                changePage: changePage,
+                isAdmin: isAdmin,
+                mqtt: mqtt,
+                scSel: ScrollController(),
+                selData: selData,
+                );
+            pageMobile = Content_home_mobile(
+              email: email,
+              page: 6,
+              changePage: changePage,
+              isAdmin: isAdmin,
+              mqtt: mqtt,
+              selData: selData,
+              scSel: ScrollController(),
+              menuItem: menuItems,
+            );
+          });
+          break;
     }
   }
 
@@ -1008,6 +1037,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           "icon": Icons.settings_outlined,
           "isActive": false,
           "function": () => changePage(4)
+        },
+        {
+          "title": "Supporting Files",
+          "icon": Icons.description_outlined,
+          "isActive": false,
+          "function": () => changePage(6)
         },
       ];
 

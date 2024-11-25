@@ -25,7 +25,7 @@ final grad_colors = [
 const double wide = 16 / 9;
 
 // final cc = Controller();
-List<bool> isHovers = [false, false, false, false, false];
+List<bool> isHovers = [false, false, false, false, false,false];
 
 class _MenuState extends State<Menu> {
   @override

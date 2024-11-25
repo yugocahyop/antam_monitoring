@@ -2036,23 +2036,38 @@ class _Content_diagnosticState extends State<Content_tv> {
                                             )
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            // MyButton(
-                                            //     color: MainStyle.primaryColor,
-                                            //     text: "Matikan semua",
-                                            //     onPressed: () =>
-                                            //         promptToggle(15, 15, true),
-                                            //     textColor: Colors.white),
-                                            // MainStyle.sizedBoxW5,
-                                            // MyButton(
-                                            //     color: MainStyle.primaryColor,
-                                            //     text: "Nyalakan semua",
-                                            //     onPressed: () =>
-                                            //         promptToggle(15, 15, false),
-                                            //     textColor: Colors.white),
-                                          ],
-                                        )
+                                        // Row(
+                                        //   children: [
+                                        //     // MyButton(
+                                        //     //     color: MainStyle.primaryColor,
+                                        //     //     text: "Matikan semua",
+                                        //     //     onPressed: () =>
+                                        //     //         promptToggle(15, 15, true),
+                                        //     //     textColor: Colors.white),
+                                        //     // MainStyle.sizedBoxW5,
+                                        //     // MyButton(
+                                        //     //     color: MainStyle.primaryColor,
+                                        //     //     text: "Nyalakan semua",
+                                        //     //     onPressed: () =>
+                                        //     //         promptToggle(15, 15, false),
+                                        //     //     textColor: Colors.white),
+                                        //   ],
+                                        // )
+                                        Visibility(
+                                        visible: textBanner.isNotEmpty,
+                                        // visible: true,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: 700,
+                                          height: 50,
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: isBannerRed? Colors.red : Colors.orange,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Text(textBanner, style: MyTextStyle.defaultFontCustom(Colors.white, 15, weight: FontWeight.w600),),
+                                        ),
+                                      ),
                                       ],
                                     ),
                                     const SizedBox(
@@ -2231,23 +2246,24 @@ class _Content_diagnosticState extends State<Content_tv> {
                   ),
                 ],
               )),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Visibility(
-                visible: textBanner.isNotEmpty,
-                child: Container(
-                  alignment: Alignment.center,
-                  width: lWidth * 0.9,
-                  height: 50,
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: isBannerRed? Colors.red : Colors.orange,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                  ),
-                  child: Text(textBanner, style: MyTextStyle.defaultFontCustom(Colors.white, 17, weight: FontWeight.w600),),
-                ),
-              ),
-            )
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Visibility(
+            //     visible: textBanner.isNotEmpty,
+            //     // visible: true,
+            //     child: Container(
+            //       alignment: Alignment.center,
+            //       width: lWidth * 0.9,
+            //       height: 50,
+            //       padding: EdgeInsets.all(5),
+            //       decoration: BoxDecoration(
+            //         color: isBannerRed? Colors.red : Colors.orange,
+            //         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            //       ),
+            //       child: Text(textBanner, style: MyTextStyle.defaultFontCustom(Colors.white, 17, weight: FontWeight.w600),),
+            //     ),
+            //   ),
+            // )
         ],
       ),
     );

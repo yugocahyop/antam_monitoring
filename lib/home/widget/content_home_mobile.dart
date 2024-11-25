@@ -2,6 +2,7 @@ import 'package:antam_monitoring/home/widget/mobilePage/callMobile.dart';
 import 'package:antam_monitoring/home/widget/mobilePage/dataloggerMobile.dart';
 import 'package:antam_monitoring/home/widget/mobilePage/diagnosticMobile.dart';
 import 'package:antam_monitoring/home/widget/mobilePage/settingMobile.dart';
+import 'package:antam_monitoring/home/widget/mobilePage/supportMobile.dart';
 import 'package:antam_monitoring/tools/mqtt/mqtt.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -196,6 +197,14 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                       selData: widget.selData,
                       scSel: ScrollController(),
                       menuItem: widget.menuItem),
+                  SupportMobile(
+                      // email: widget.email,
+                      changePage: changePage,
+                      isAdmin: widget.isAdmin,
+                      mqtt: widget.mqtt,
+                      selData: widget.selData,
+                      scSel: ScrollController(),
+                      menuItem: widget.menuItem),
                 ],
               )),
           Center(
@@ -341,7 +350,15 @@ class _Content_home_mobileState extends State<Content_home_mobile> {
                                 e["isActive"] = true;
                               });
 
-                              widget.changePage(widget.menuItem.indexOf(e));
+                              final indexPage = widget.menuItem.indexOf(e);
+
+                              if(indexPage == 5){
+                                widget.changePage(6);
+                              }else{
+                                widget.changePage(indexPage);
+                              }
+
+                              
 
                               await Future.delayed(
                                   const Duration(milliseconds: 200));
