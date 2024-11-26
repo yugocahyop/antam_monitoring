@@ -15,8 +15,8 @@ class ApiHelper {
   static const needleRegex = r'{#}';
   static const needle = '{#}';
 
-  static String url = '202.148.1.57';
-  // static String url = '172.24.7.110';
+  // static String url = '202.148.1.57';
+  static String url = '172.24.7.110';
   // static String url = "silver.best.antam.com";
   // static String url = 'localhost';
 

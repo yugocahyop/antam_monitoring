@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
           data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
         );
       },
-      initialRoute: "/login",
+      initialRoute: "/tv",
       routes: {
         "/login": (context) => Login(),
         "/home": (context) => Home(),

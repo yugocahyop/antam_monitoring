@@ -428,7 +428,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     switch (p) {
       case 0:
         if (widget.page == "tv") {
-          changePage(6);
+          changePage(5);
           return;
         }
         c.saveSharedPref("antam.access", encrypt.encrypt("home"));
@@ -552,7 +552,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         break;
 
       case 5:
-        c.saveSharedPref("antam.access", encrypt.encrypt("setting"));
+        c.saveSharedPref("antam.access", encrypt.encrypt("tv"));
         setState(() {
           page = Content_tv(
             changePage: changePage,
@@ -678,7 +678,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         Navigator.pop(context);
 
         Future.delayed(const Duration(seconds: 1), () {
-          changePage(6);
+          changePage(5);
         });
       } catch (e) {
         print("error login: $e");
