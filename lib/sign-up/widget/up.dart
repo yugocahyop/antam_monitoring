@@ -26,7 +26,7 @@ class Up extends StatelessWidget {
                       width: lWidth,
                       height: (e["index"] as int) == 2 ? 65 : 100,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(32),
+                          borderRadius:  (e["index"] as int) == 2 ? BorderRadius.vertical(bottom: Radius.circular(32))  :BorderRadius.circular(32),
                           color: e["color"] as Color,
                           boxShadow: [
                             BoxShadow(

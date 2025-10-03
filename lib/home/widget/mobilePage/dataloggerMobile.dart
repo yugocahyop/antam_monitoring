@@ -509,6 +509,7 @@ class _HomeMobileState extends State<DataLogger> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       selData.clear();
 
       List<dynamic> listTangkiZero = [];
@@ -1024,6 +1025,7 @@ class _HomeMobileState extends State<DataLogger> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;

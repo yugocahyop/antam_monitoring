@@ -652,6 +652,7 @@ class _Content_homeState extends State<Content_home> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       selData.clear();
 
       List<dynamic> listTangkiZero = [];
@@ -714,6 +715,7 @@ class _Content_homeState extends State<Content_home> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       try {
         final data = r["data"][0] as Map<String, dynamic>;
         arusAtas = data["arusAtas"] / 1;
@@ -1051,8 +1053,8 @@ class _Content_homeState extends State<Content_home> {
                     ? (data["arusTotal"] as double)
                     : (data["arusTotal"] as int).toDouble());
 
-        totalData
-                .firstWhere((element) => element["title"] == "Daya Total")["value"] =
+        totalData.firstWhere(
+                (element) => element["title"] == "Daya Total")["value"] =
             data["power"] == null
                 ? totalData
                     .where((element) => element["title"] == "Daya Total")
@@ -1160,6 +1162,7 @@ class _Content_homeState extends State<Content_home> {
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0];
 
       if (kDebugMode) {
@@ -1304,6 +1307,8 @@ class _Content_homeState extends State<Content_home> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
+
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
@@ -2085,7 +2090,7 @@ class _Content_homeState extends State<Content_home> {
                                                                   height: 35,
                                                                   child: Center(
                                                                     child: Text(
-                                                                      ((value / 1) as double).toStringAsFixed(key == "tangki" || key == "arus" || key =="suhu"
+                                                                      ((value / 1) as double).toStringAsFixed(key == "tangki" || key == "arus" || key == "suhu"
                                                                               ? 0
                                                                               : 2) +
                                                                           (key == "suhu" || key == "celcius"
@@ -2289,37 +2294,49 @@ class _Content_homeState extends State<Content_home> {
                                                                 offset: Offset(
                                                                     0, -3),
                                                                 child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
                                                                   children: [
                                                                     Text(
                                                                       (e["value"]
                                                                               as double)
-                                                                          .toStringAsFixed(
-                                                                            (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? 0:  2) ,
+                                                                          .toStringAsFixed((e["title"] == "Daya Total" || e["title"] == "Arus Total")
+                                                                              ? 0
+                                                                              : 2),
                                                                       textAlign:
                                                                           TextAlign
                                                                               .right,
                                                                       style: MainStyle
                                                                           .textStyleDefault25Primary,
                                                                     ),
-                                                                   (e["title"] == "Daya Total" || e["title"] == "Arus Total" ) ? Opacity(
-                                                                      opacity: 0,
-                                                                      child: Text(
-                                                                       "000" ,
-                                                                        textAlign:
-                                                                            TextAlign
-                                                                                .right,
-                                                                        style: MainStyle
-                                                                            .textStyleDefault25Primary,
-                                                                      ),
-                                                                    ) : SizedBox(width: 0,),
+                                                                    (e["title"] ==
+                                                                                "Daya Total" ||
+                                                                            e["title"] ==
+                                                                                "Arus Total")
+                                                                        ? Opacity(
+                                                                            opacity:
+                                                                                0,
+                                                                            child:
+                                                                                Text(
+                                                                              "000",
+                                                                              textAlign: TextAlign.right,
+                                                                              style: MainStyle.textStyleDefault25Primary,
+                                                                            ),
+                                                                          )
+                                                                        : SizedBox(
+                                                                            width:
+                                                                                0,
+                                                                          ),
                                                                   ],
-                                                                  
                                                                 ),
                                                               ),
                                                             ),
                                                             Container(
-                                                              padding: EdgeInsets.symmetric(horizontal: 15),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          15),
                                                               width: 100,
                                                               child: Text(
                                                                 e["unit"]

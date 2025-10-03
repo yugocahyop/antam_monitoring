@@ -186,7 +186,7 @@ class _Account_alarmState extends State<Account_alarm> {
                   Visibility(
                     visible: widget.isTv,
                     child: SvgPicture.asset(
-                      "assets/logo_antam.svg",
+                      "assets/logo_xirka.svg",
                       width: 150,
                     ),
                   ),

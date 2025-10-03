@@ -688,6 +688,7 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
         "/monitoring/find?limit=10", "POST", jsonEncode({"from": 0}), true);
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       List<dynamic> data = r['data'] as List<dynamic>;
 
       if (kDebugMode) {
@@ -724,6 +725,7 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       selData.clear();
 
       selData.add([
@@ -1004,6 +1006,7 @@ class _Content_dataLoggerState extends State<Content_dataLogger> {
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0];
 
       if (kDebugMode) {

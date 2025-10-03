@@ -147,33 +147,36 @@ class Login_controller extends Controller {
     final c = Controller();
     c.heroPageRoute(
         context,
-        MyForm(
-            title: "Lupa Password",
-            height: 420,
-            onSubmit: (mapTextField) async {
-              // print("object ${mapTextField["Nama"]}");
-
-              if (mapTextField["Email"]!.con.text.isEmpty) {
-                mapTextField["Email"]!.startShake();
-                return;
-              } else {
-                final rr =
-                    await requestOTP(mapTextField["Email"]!.con.text, context);
-
-                if (rr) {
-                  Navigator.pop(context);
-
-                  forgetPasswordChange(
-                      context, mapTextField["Email"]!.con.text);
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: MyForm(
+              title: "Lupa Password",
+              height: 420,
+              onSubmit: (mapTextField) async {
+                // print("object ${mapTextField["Nama"]}");
+          
+                if (mapTextField["Email"]!.con.text.isEmpty) {
+                  mapTextField["Email"]!.startShake();
+                  return;
+                } else {
+                  final rr =
+                      await requestOTP(mapTextField["Email"]!.con.text, context);
+          
+                  if (rr) {
+                    Navigator.pop(context);
+          
+                    forgetPasswordChange(
+                        context, mapTextField["Email"]!.con.text);
+                  }
                 }
-              }
-            },
-            listTextParam: [
-              {
-                "label": "Email",
-                "hint": "Email anda",
               },
-            ]));
+              listTextParam: [
+                {
+                  "label": "Email",
+                  "hint": "Email anda",
+                },
+              ]),
+        ));
   }
 
   Future<void> login(List<Mytextfield> inputs, BuildContext context,

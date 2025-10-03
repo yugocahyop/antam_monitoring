@@ -94,7 +94,7 @@ class _Content_signUpState extends State<Content_signUp> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    "assets/logo_antam.svg",
+                    "assets/logo_xirka.svg",
                     width: lWidth * 0.2,
                   ),
                   SizedBox(

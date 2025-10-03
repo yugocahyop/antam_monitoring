@@ -451,6 +451,7 @@ class _DiagnosticMobileState extends State<DiagnosticMobile> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       diagnosticData.clear();
 
       diagnosticData.addAll(r["data"][0]["diagnosticData"] ?? []);

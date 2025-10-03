@@ -1,7 +1,7 @@
 // import'dart:html';
 // import  'dart:io';
 
-import 'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFileWeb.dart' if (dart.library.html)'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFileWeb.dart';
+import 'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFile.dart' if (dart.library.html)'package:antam_monitoring/home/widget/content_dataLogger/tools/downloadFileWeb.dart';
 import 'package:antam_monitoring/style/mainStyle.dart';
 import 'package:antam_monitoring/style/textStyle.dart';
 import 'package:antam_monitoring/tools/apiHelper.dart';

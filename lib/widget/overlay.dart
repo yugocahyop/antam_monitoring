@@ -117,7 +117,7 @@ class MyOverlay extends StatelessWidget {
                           child: Hero(
                               tag: "logo",
                               child: SvgPicture.asset(
-                                "assets/logo_antam.svg",
+                                "assets/logo_xirka.svg",
                                 width: 350,
                                 color: Colors.white,
                               )))),

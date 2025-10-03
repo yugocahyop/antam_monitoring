@@ -106,18 +106,18 @@ class _Content_login_mobileState extends State<Content_login_mobile> {
                   height: 50,
                 ),
                 SvgPicture.asset(
-                  "assets/logo_antam.svg",
+                  "assets/logo_xirka.svg",
                   width: 250,
                 ),
-                const SizedBox(
-                  height: 50,
+                 SizedBox(
+                  height: lheight * 0.1,
                 ),
                 Transform.translate(
                   offset: const Offset(0, 0),
                   child: Container(
                     alignment: Alignment.center,
                     width: lWidth,
-                    height: 500,
+                    height: lheight * 0.60,
                     decoration: const BoxDecoration(
                         boxShadow: [
                           BoxShadow(

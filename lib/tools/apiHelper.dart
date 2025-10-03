@@ -15,8 +15,8 @@ class ApiHelper {
   static const needleRegex = r'{#}';
   static const needle = '{#}';
 
-  // static String url = '202.148.1.57';
-  static String url = '172.24.7.110';
+  static String url = '202.148.1.57';
+  // static String url = '172.24.7.110';
   // static String url = "silver.best.antam.com";
   // static String url = 'localhost';
 
@@ -106,7 +106,7 @@ class ApiHelper {
     // print("data  $data");
 
     try {
-      final response = await client
+      final response = await client 
           .send(http.Request(
               method, Uri.parse("http://${ApiHelper.url}:7003" + api))
             ..headers["authorization"] = "Bearer $tokenMain"

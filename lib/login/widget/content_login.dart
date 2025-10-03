@@ -106,7 +106,7 @@ class _Content_loginState extends State<Content_login> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    "assets/logo_antam.svg",
+                    "assets/logo_xirka.svg",
                     width: lWidth * 0.2,
                   ),
                   SizedBox(

@@ -543,6 +543,7 @@ class _Content_settingState extends State<Content_setting> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       selData.clear();
 
       selData.add([
@@ -960,12 +961,13 @@ class _Content_settingState extends State<Content_setting> {
     };
   }
 
-  initTotalDataStatistic() async {
+    initTotalDataStatistic() async {
     ApiHelper api = ApiHelper();
 
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0];
 
       if (kDebugMode) {
@@ -1091,6 +1093,7 @@ class _Content_settingState extends State<Content_setting> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;

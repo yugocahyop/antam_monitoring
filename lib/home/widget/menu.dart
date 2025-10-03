@@ -69,7 +69,7 @@ class _MenuState extends State<Menu> {
             Hero(
               tag: "logo",
               child: SvgPicture.asset(
-                "assets/logo_antam.svg",
+                "assets/logo_xirka.svg",
                 width: (lWidth / lheight) < wide ? 300 : 150,
               ),
             ),

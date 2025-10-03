@@ -91,17 +91,17 @@ class _Content_signUp_mobileState extends State<Content_signUp_mobile> {
                   height: 50,
                 ),
                 SvgPicture.asset(
-                  "assets/logo_antam.svg",
+                  "assets/logo_xirka.svg",
                   width: 250,
                 ),
-                const SizedBox(
-                  height: 50,
+                 SizedBox(
+                  height: lheight * 0.1,
                 ),
                 Transform.translate(
-                  offset: Offset(0, 15),
+                  offset: Offset(0, 0),
                   child: Container(
                     width: lWidth,
-                    // height: 500 ,
+                    height: lheight * 0.6 ,
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(

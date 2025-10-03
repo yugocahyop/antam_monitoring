@@ -552,6 +552,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       selData.clear();
 
       // selData.add([
@@ -662,6 +663,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
@@ -1040,6 +1042,7 @@ class _Content_dataLogger2State extends State<Content_dataLogger2> {
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0];
 
       if (kDebugMode) {

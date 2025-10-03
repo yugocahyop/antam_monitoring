@@ -588,6 +588,7 @@ class _Content_callState extends State<Content_support> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       selData.clear();
 
       selData.add([
@@ -687,6 +688,7 @@ class _Content_callState extends State<Content_support> {
     }
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
@@ -1050,6 +1052,7 @@ class _Content_callState extends State<Content_support> {
     final r = await api.callAPI("/statistic/find/last", "POST", "", true);
 
     if (r["error"] == null) {
+      if ((r["data"] as List).isEmpty) return;
       final data = r["data"][0];
 
       if (kDebugMode) {

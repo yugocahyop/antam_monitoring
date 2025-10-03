@@ -113,6 +113,7 @@ class _SettingMobileState extends State<SettingMobile> {
     }
 
     if (r["error"] == null) {
+      if((r["data"] as List).isEmpty) return;
       final data = r["data"][0] as Map<String, dynamic>;
 
       final listAlarmArus = data["listAlarmArus"] as List<dynamic>;
